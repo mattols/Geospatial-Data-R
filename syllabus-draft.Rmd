@@ -91,10 +91,31 @@ Syllabus draft and several course ideas were generated in collaboration with Cla
 
 *not definitive and subject to change*
 
+**Weekly topics**
+
+1. Github Basics and Rstudio setup
+2. Data types, basic R methods
+3. Better data visualizations 
+4. Data wrangling & statistical models
+5. Vector data 
+6. Vector analysis
+7. Raster data 
+8. Raster analysis
+9. Project proposals and interactive mapping
+10. Remote Sensing I
+11. Time-series datasets and temporal statistics
+12. Remote Sensing II
+13. Creating custom functions and modeling
+14-16. Project Workshops
+
+
+**or**
+
 * Week 1 - Course overview and introduction to geospatial data science, setting up R and spatial packages 
 * Week 2 - Introduction to R programming and syntax, working with spatial vector data   
 * Week 3 - Tidying, transforming, and exploring spatial data, spatial data visualization 
-* Week 4 - Spatial relationships and operations, interactive web mapping * Week 5 - Spatial joins and data aggregation, animated and small multiple maps 
+* Week 4 - Spatial relationships and operations, interactive web mapping 
+* Week 5 - Spatial joins and data aggregation, animated and small multiple maps 
 * Week 6 - Choropleth mapping and classification, spatial autocorrelation and clustering  
 * Week 7 - Spatial regression modeling, point pattern analysis 
 * Week 8 - Interpolation and kriging methods, Midterm Exam 

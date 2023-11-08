@@ -1,0 +1,68 @@
+---
+title: "Case Study 1"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+### Solar Farm Production Analysis
+
+You are an analyst at a solar power company. The director has asked you to analyze data on energy production at their solar farms to identify factors that influence and predict power output. 
+
+You are provided historical data on daily energy production, solar irradiation, temperature, and panel degradation at a solar farm over the last 30 days.
+
+Conduct an analysis on this sample data:
+
+#### Load data
+
+```r
+# 30 days of energy production (kWh)
+production <- c(1500, 1480, 1530, 1510, 1470, 1490, 1460, 1450, 1520, 1495,  
+                1510, 1520, 1500, 1490, 1540, 1560, 1480, 1470, 1500, 1480, 
+                1490, 1520, 1540, 1510, 1480, 1500, 1520, 1490, 1510, 1470)
+                
+# 30 days of solar irradiation (kW/m2) 
+irradiation <- c(0.8, 0.7, 0.9, 0.85, 0.6, 0.75, 0.65, 0.7, 0.8, 0.78,   
+                 0.82, 0.85, 0.78, 0.83, 0.86, 0.82, 0.8, 0.68, 0.92, 0.89,  
+                 0.82, 0.85, 0.86, 0.8, 0.73, 0.81, 0.85, 0.9, 0.92, 0.88)
+                 
+# 30 days of temperature (Celsius)
+temp <- c(18, 17, 22, 20, 15, 16, 12, 14, 19, 21,  
+          15, 17, 18, 21, 22, 23, 19, 11, 23, 25,
+          18, 21, 22, 20, 19, 15, 21, 25, 26, 20)
+          
+# 30 days of degradation (percentage)
+degrade <- c(10, 10, 10, 10, 10, 12, 12, 12, 12, 12,
+             10, 10, 10, 10, 10, 10, 10, 10, 10, 12, 
+             12, 12, 12, 12, 12, 12, 12, 12, 12, 12)
+```
+
+#### Analysis
+
+1) Calculate the mean production across the 30 days.
+
+2) Determine the maximum daily production.
+
+3) Calculate the standard deviation of the irradiation measurements.
+
+4) Build a linear model to predict production based on irradiation and temperature. Evaluate the model R^2. 
+
+5) Estimate average production if temperature was 5 degrees C higher, using your model.
+
+6) Make a scatterplot of production vs. irradiation and assess if the relationship appears linear.
+
+7) Calculate the mean degradation and analyze if degradation seems to impact production.
+
+8) Convert the average daily production from kWh to gigajoule (GJ), given the conversion factor 1 kWh = 0.0036 GJ.
+
+9) If the solar farm covers 5 km2, calculate the total kW generated over the 30 days
+
+### Submit
+
+Upload your script to our GitHub classroom with the following link:
+
+[GitHub Classroom Assignment](https://classroom.github.com)
+
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\
+
