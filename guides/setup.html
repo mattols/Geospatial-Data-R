@@ -11,7 +11,7 @@
 
 <meta name="author" content="Instructor" />
 
-<meta name="date" content="2023-11-07" />
+<meta name="date" content="2023-11-08" />
 
 <title>Geospatial Course R Setup</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Geospatial Course R Setup</h1>
 <h4 class="author">Instructor</h4>
-<h4 class="date">2023-11-07</h4>
+<h4 class="date">2023-11-08</h4>
 
 </div>
 
@@ -369,25 +369,16 @@ environment/history, files/plots/packages, and help/viewer pane
 layout.</p></li>
 </ol>
 </div>
-<div id="setting-up-rstudio-project" class="section level2">
-<h2>Setting Up RStudio Project</h2>
-<ol start="4" style="list-style-type: decimal">
-<li><p>Create a new RStudio project for the class, such as
-<code>geospatial_course</code>.</p></li>
-<li><p>Set the working directory to the project folder using Session
-&gt; Set Working Directory &gt; To Source File Location.</p></li>
-</ol>
-<p>Here is an additional section on installing geospatial dependencies
-like GDAL and PROJ4:</p>
-</div>
 <div id="installing-geospatial-dependencies" class="section level2">
 <h2>Installing Geospatial Dependencies</h2>
-<p>Some key R spatial packages rely on external geospatial libraries and
-dependencies. Installing these dependencies first can help avoid errors
-when installing the R packages. The primary libraries include GDAL, and
-PROJ4.</p>
-<div id="for-windows-users" class="section level3">
-<h3>For Windows Users</h3>
+<ol start="4" style="list-style-type: decimal">
+<li>Some key R spatial packages rely on external geospatial libraries
+and dependencies. Installing these dependencies first can help avoid
+errors when installing the R packages. The primary libraries include
+GDAL, and PROJ4.</li>
+</ol>
+<div id="windows-users" class="section level3">
+<h3>Windows Users</h3>
 <p>Here is the section on RTools focused on installing it from within
 R:</p>
 <div id="installing-rtools-from-r" class="section level4">
@@ -395,50 +386,42 @@ R:</p>
 <p>RTools provides Windows builds for many R packages. Installing RTools
 can help with package installation.</p>
 <p>To install RTools from within R:</p>
-<ol style="list-style-type: decimal">
+<ul>
 <li>Run the following R code to download the RTools installer:</li>
-</ol>
+</ul>
 <pre class="r"><code>download.file(
   url = &quot;https://cran.r-project.org/bin/windows/Rtools/Rtools40-x86_64.exe&quot;,
   destfile = &quot;Rtools.exe&quot;
 )</code></pre>
-<p>!!! Needs help</p>
 </div>
 </div>
-<div id="for-mac-and-linux-users" class="section level3">
-<h3>For Mac and Linux users</h3>
-<p>Rather than following the steps below, installing QGIS on your
-machine will automatically download both extenal libraries.</p>
-<p><strong>Otherwise, follow these steps:</strong></p>
-<div id="gdal" class="section level4">
-<h4>GDAL</h4>
+<div id="mac-and-linux-users" class="section level3">
+<h3>Mac and Linux users</h3>
+<p>Rather than following the steps below, simply <strong>installing
+QGIS</strong> on your machine will automatically download both extenal
+libraries.</p>
+<div id="otherwise-follow-these-steps" class="section level5">
+<h5><em>Otherwise, follow these steps:</em></h5>
+</div>
+<div id="gdal-proj-geos-manual-installation" class="section level5">
+<h5>GDAL, PROJ, GEOS manual installation</h5>
 <p>The Geospatial Data Abstraction Library (GDAL) provides capabilities
-for working with raster and vector data formats.</p>
+for working with raster and vector data formats. The PROJ library
+provides coordinate transformation capabilities. The GEOS library allows
+for 2D vector geometry operations.</p>
 <ul>
-<li><p>On Windows, download the GDAL Windows binaries from <a href="http://www.gisinternals.com/release.php" class="uri">http://www.gisinternals.com/release.php</a> and install
-them.</p></li>
-<li><p>On Mac, GDAL can be installed using Homebrew:</p></li>
+<li>On Mac, GDAL, PROJ, and GEOS can be installed using Homebrew:</li>
 </ul>
-<pre class="bash"><code>brew install gdal</code></pre>
+<pre class="bash"><code>brew install gdal
+brew install proj
+brew install geos</code></pre>
 <ul>
 <li>On Linux, GDAL is available through most package managers,
 e.g.:</li>
 </ul>
-<pre class="bash"><code>sudo apt-get install libgdal-dev</code></pre>
-</div>
-<div id="proj" class="section level4">
-<h4>PROJ</h4>
-<p>The PROJ library provides coordinate transformation capabilities.</p>
-<ul>
-<li><p>On Windows, download PROJ binaries from <a href="https://proj.org/download.html#download" class="uri">https://proj.org/download.html#download</a> and install
-them.</p></li>
-<li><p>On Mac, install with Homebrew:</p></li>
-</ul>
-<pre class="bash"><code>brew install proj</code></pre>
-<ul>
-<li>On Linux, install from repositories:</li>
-</ul>
-<pre class="bash"><code>sudo apt-get install proj-bin</code></pre>
+<pre class="bash"><code>sudo apt-get install libgdal-dev
+sudo apt-get install proj-bin
+# etc.</code></pre>
 <p>Once these dependencies are installed, R packages like sf, raster,
 and rgdal will be able to find them on your system. Let me know if you
 have any other questions!</p>
@@ -447,37 +430,56 @@ have any other questions!</p>
 </div>
 <div id="installing-packages" class="section level2">
 <h2>Installing Packages</h2>
-<ol start="6" style="list-style-type: decimal">
-<li>Install the <strong>sf</strong> package, which provides simple
-features access for vector data:</li>
+<p>One of the greatest benefits to an open-source tool like R is that
+individuals create custom toolboxes to perform interesting functions.
+You can install these tools (or packages) from several sources. CRAN is
+the best managed and default repository for R packages.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Install necessary packages. You don’t need to install everything
+now, but here are a few libraries we will be using.</li>
 </ol>
+<ul>
+<li>to install a new R package, you can use the
+<code>install.packages()</code> function, which uses the default CRAN
+repository.</li>
+</ul>
 <pre class="r"><code>#install.packages(&quot;sf&quot;)</code></pre>
-<ol start="7" style="list-style-type: decimal">
-<li>Install the <strong>tmap</strong> package for thematic mapping:</li>
-</ol>
-<pre class="r"><code>#install.packages(&quot;tmap&quot;)</code></pre>
-<ol start="8" style="list-style-type: decimal">
-<li>Install the <strong>raster</strong> package for raster data access
+<ul>
+<li>Install the <strong>sf</strong> package, which provides simple
+features access for vector data.</li>
+<li>Install the <strong>terra</strong> package for raster data access
 and analysis:</li>
-</ol>
-<pre class="r"><code>#install.packages(&quot;raster&quot;) </code></pre>
-<ol start="9" style="list-style-type: decimal">
-<li><p>Other useful packages to install include <strong>rgdal</strong>,
+<li>Install the <strong>tmap</strong> package for thematic mapping</li>
+<li>Install <strong>ggplot</strong> package for visualization</li>
+<li>Other useful packages to install include <strong>rgdal</strong>,
 <strong>rgeos</strong>, <strong>leaflet</strong>,
-<strong>tidyverse</strong>, and more. Install as needed.</p></li>
-<li><p>Use <code>library()</code> to load installed packages, such
-as:</p></li>
+<strong>tidyverse</strong>, <strong>ggmap</strong> and more. Install as
+needed.</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Use <code>library()</code> to load installed packages, such as:</li>
 </ol>
 <pre class="r"><code>#library(sf)</code></pre>
 </div>
 <div id="troubleshooting-issues" class="section level2">
 <h2>Troubleshooting Issues</h2>
 <ul>
+<li>Google any error messages and search online help forums to figure
+out how to solve your problem</li>
 <li>Try a different CRAN mirror if installation fails</li>
 <li>May need to upgrade R or RStudio versions<br />
 </li>
 <li>Review stack overflow posts for specific error messages</li>
 </ul>
+</div>
+<div id="setting-up-rstudio-project" class="section level2">
+<h2>Setting Up RStudio Project</h2>
+<ol start="7" style="list-style-type: decimal">
+<li><p>Create a new RStudio project for the class, such as
+<code>geospatial_course</code>.</p></li>
+<li><p>Set the working directory to the project folder using Session
+&gt; Set Working Directory &gt; To Source File Location.</p></li>
+</ol>
 <p>Please let me know if you encounter any setup issues or have
 additional questions! Proper installation now will save you time as we
 start working with geospatial data in R.</p>

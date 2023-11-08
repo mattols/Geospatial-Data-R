@@ -41,6 +41,7 @@ This course will largely focus on open-source software, texts, and other resourc
 ### Course Texts. 
 * [Geocomputation with R](https://r.geocompx.org/) by Robin Lovelace, Jakub Nowosad, Jannes Muenchow (ISBN 9781138304512) 
 * [R for Data Science](https://r4ds.hadley.nz/) by Hadley Wickam, Mine Cetinkaya-Rundel, and Garret Grolemund 
+* [R-spatial](https://r-spatial.org/)
 * Additional readings will be posted  
 
 ### Additional resources. 

@@ -17,18 +17,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 3. Open RStudio and you should see the R console, environment/history, files/plots/packages, and help/viewer pane layout.
 
-
-## Setting Up RStudio Project
-
-4. Create a new RStudio project for the class, such as `geospatial_course`. 
-
-5. Set the working directory to the project folder using Session > Set Working Directory > To Source File Location.
-
-Here is an additional section on installing geospatial dependencies like GDAL and PROJ4:
-
 ## Installing Geospatial Dependencies
 
-Some key R spatial packages rely on external geospatial libraries and dependencies. Installing these dependencies first can help avoid errors when installing the R packages. The primary libraries include GDAL, and PROJ4.
+4. Some key R spatial packages rely on external geospatial libraries and dependencies. Installing these dependencies first can help avoid errors when installing the R packages. The primary libraries include GDAL, and PROJ4.
 
 ### Windows Users
 
@@ -40,7 +31,7 @@ RTools provides Windows builds for many R packages. Installing RTools can help w
 
 To install RTools from within R:
 
-1. Run the following R code to download the RTools installer:
+- Run the following R code to download the RTools installer:
 
 ```r
 download.file(
@@ -49,78 +40,54 @@ download.file(
 )
 ```
 
-!!! Needs help
-
-
 ### Mac and Linux users
 
-Rather than following the steps below, installing QGIS on your machine will automatically download both extenal libraries.
+Rather than following the steps below, simply **installing QGIS** on your machine will automatically download both extenal libraries.
 
-**Otherwise, follow these steps:**
+##### *Otherwise, follow these steps:*
 
-#### GDAL
+##### GDAL, PROJ, GEOS manual installation
 
-The Geospatial Data Abstraction Library (GDAL) provides capabilities for working with raster and vector data formats.
+The Geospatial Data Abstraction Library (GDAL) provides capabilities for working with raster and vector data formats. The PROJ library provides coordinate transformation capabilities. The GEOS library allows for 2D vector geometry operations.
 
-- On Windows, download the GDAL Windows binaries from http://www.gisinternals.com/release.php and install them.
-
-- On Mac, GDAL can be installed using Homebrew:
+- On Mac, GDAL, PROJ, and GEOS can be installed using Homebrew:
 
 ```bash
 brew install gdal
+brew install proj
+brew install geos
 ```
 
 - On Linux, GDAL is available through most package managers, e.g.: 
 
 ```bash
 sudo apt-get install libgdal-dev
-```
-
-#### PROJ
-
-The PROJ library provides coordinate transformation capabilities.
-
-- On Windows, download PROJ binaries from https://proj.org/download.html#download and install them.
-
-- On Mac, install with Homebrew:
-
-```bash 
-brew install proj
-```
-
-- On Linux, install from repositories:
-
-```bash
 sudo apt-get install proj-bin
+# etc.
 ```
 
 Once these dependencies are installed, R packages like sf, raster, and rgdal will be able to find them on your system. Let me know if you have any other questions!
 
 ## Installing Packages
 
-6. Install the **sf** package, which provides simple features access for vector data:
+One of the greatest benefits to an open-source tool like R is that individuals create custom toolboxes to perform interesting functions. You can install these tools (or packages) from several sources. CRAN is the best managed and default repository for R packages.
+
+5. Install necessary packages. You don't need to install everything now, but here are a few libraries we will be using.
+
+- to install a new R package, you can use the `install.packages()` function, which uses the default CRAN repository.
 
 
 ```{r}
 #install.packages("sf")
 ```
 
-7. Install the **tmap** package for thematic mapping:
+- Install the **sf** package, which provides simple features access for vector data.
+- Install the **terra** package for raster data access and analysis:
+- Install the **tmap** package for thematic mapping
+- Install **ggplot** package for visualization
+- Other useful packages to install include **rgdal**, **rgeos**, **leaflet**, **tidyverse**, **ggmap** and more. Install as needed.
 
-
-```{r} 
-#install.packages("tmap")
-```
-
-8. Install the **terra** package for raster data access and analysis:
-
-```{r}
-#install.packages("terra") 
-```
-
-9. Other useful packages to install include **rgdal**, **rgeos**, **leaflet**, **tidyverse**, **ggmap** and more. Install as needed.
-
-10. Use `library()` to load installed packages, such as:
+6. Use `library()` to load installed packages, such as:
 
 ```{r}
 #library(sf)
@@ -128,8 +95,15 @@ Once these dependencies are installed, R packages like sf, raster, and rgdal wil
 
 ## Troubleshooting Issues
 
+- Google any error messages and search online help forums to figure out how to solve your problem
 - Try a different CRAN mirror if installation fails
 - May need to upgrade R or RStudio versions  
 - Review stack overflow posts for specific error messages
+
+## Setting Up RStudio Project
+
+7. Create a new RStudio project for the class, such as `geospatial_course`. 
+
+8. Set the working directory to the project folder using Session > Set Working Directory > To Source File Location.
 
 Please let me know if you encounter any setup issues or have additional questions! Proper installation now will save you time as we start working with geospatial data in R.
