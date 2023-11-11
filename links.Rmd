@@ -1,0 +1,18 @@
+---
+title: "Resources"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+
+### R books
+
+- [R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)
+
+
+### Tutorials
+
+
+### Other
+

@@ -1,0 +1,173 @@
+---
+title: "Geospatial basics in R"
+author: "Matt Olson"
+date: "2023-02-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Basics
+Andrew, you should have the `terra, raster, sp, sf, rgdal` packages already installed in R.
+
+You are going to learn a few simple methods to work with geospatial datasets. At the end I will give you a challenge, which you will complete in a new R script and send it back to me.
+Complete and send the "challenge" section by next time we meet
+
+#### 1. Raster data
+Raster data is read in using either the `raster` or the newer `terra` packages in R. One of the easiest raster datasets to use is a digital elevation model (or DEM), which you should already be used to. I quickly downloaded a 30-meter resolution [SRTM DEM](https://dwtkns.com/srtm30m/). You will need an [EarthData])(https://urs.earthdata.nasa.gov/) login, which you may not have yet, so I downloaded a tile which you can use in this project.
+
+First, let's read in the data and see what type of data we are working with:
+
+```{r}
+library(terra)
+dem <- rast("data/rast/N40W112.hgt")
+class(dem)
+```
+
+Great. You can see that this is raster data (or SpatRaster) read in with the `terra` package. We could also read this in with the `raster::raster()` function.
+
+Now let's visualize the data:
+
+```{r}
+plot(dem, main="SRTM Elevation (meters)")
+text(x=-111.7,y=40.05,"SRTM DEM - 30-meter spatial resolution",cex=0.6)
+```
+
+You could also zoom to a specific location or make other alterations to the way it is visualized.
+
+```{r}
+plot(dem, main="Elevation of Utah County", ylim=c(40,40.4),xlim=c(-112,-111.5))
+```
+
+There are many more sophisticated map layouts we could create (some of the best with `ggmap`) but we can save that for later.
+
+#### 2. Vector data
+
+Much of the power in GIS is the ability to handle both raster and vector datasets. libraries such as `rgeos, rgdal, and sp` have traditionally done most of this, however, now the `sf` package is the community favorite.
+
+I've included two vector datasets in this project,  one shows the municipal boundary for Orem and the other is point vector data of waste water treatment facilities in Utah Valley. Let's read in the data and see what this data looks like:
+
+```{r}
+library(sf)
+wwt <- read_sf("data/shp/WWTPs/WWTPs.shp")
+class(wwt)
+head(wwt)
+```
+
+You can see that the data type is `sf`, which stands for a simple feature, this particular data is `POINT` data. Note that the feature contains a table or dataframe as well which we can look at with `head()` to see other useful geospatial information. Note that sf objects are a special kind of object that work specifically with other libraries. Some older function may prefer objects created with `sp` or `rgdal`, however, most newer functions will prefer `sf`
+
+
+#### 3. Combing and altering geospatial data
+
+Let's bring in another feature, the boundary outline for Orem city.
+
+```{r}
+orem <- read_sf("data/shp/Orem/Orem.shp")
+str(orem)
+```
+The `str()` is a great way to observe the structure of a dataset. Again, we can see that this is a `sf` object with several different data fields.Let's plot the data quickly
+
+```{r}
+plot(orem[,2])
+```
+
+Note that I specified the field in the second column of the data table (County number). Otherwise several copies of this shape would be plotted to display the different data. 
+
+A good question that a geographer would ask at this point is: can I combine information from these two datasets in some way. One simple example of this might be: could we extract the elevation data contained only in Orem to see the range of elevation?
+
+Let's give it a try:
+
+```{r}
+plot(dem, main="Elevation near Orem, UT", ylim=c(40,40.4),xlim=c(-112,-111.5))
+plot(st_geometry(orem),add=T)
+```
+
+Well...that didn't work. Why not? We're still not thinking about these two datasets from a geographer's view point. Why might two spatial dataset not show up in the same place? We should have checked the coordinate systems and map projections of the two objects we are working with, we can use the `st_crs` function in the `sf` package to do so. 
+
+```{r}
+st_crs(dem)
+st_crs(orem)
+```
+This lists all the geospatial information including CRS, Projection, Datum, etc. for both datasets, and as you can see, they do not match. You could always include a way to check programatically that your spatial information matches with something like {st_crs(dem)==st_crs(orem)} at some point in a loop or model.
+
+Fortunately, it's very easy to reproject this data. Since the orem shapefile is using a good projection for Utah ("NAD83 / UTM zone 12N"), let's transform the dem to match the orem dataset. Based on the output above, we can use the EPSG ID to indicate that we want the UTM Zone 12N projection. *(Note: it might take a minute since the dem file is quite large)*
+
+```{r}
+dem_utm <- project(dem,"EPSG:26912")
+plot(dem_utm, main="Elevation for northern UT (m)")
+plot(st_geometry(orem),add=T)
+```
+
+Note, the `st_geometry` function extracts only the geometry so no values are displayed. Wow, orem looks like such a small place from this scale. Let's crop and mask the dem layer to the extent of the orem shapefile.
+
+```{r}
+dem_utm_orem <- crop(dem_utm, orem)
+dem_utm_orem <- mask(dem_utm_orem, orem)
+plot(dem_utm_orem, main="Elevation in Orem, UT (meters)")
+plot(st_geometry(orem),add=T,color='red',lwd=3)
+qtdem = round(quantile(values(dem_utm_orem,na.rm=T))) # calculate quantiles
+legend("bottomleft",paste(seq(0,100,25),"%",qtdem,"m"),title="Elevation quantiles",cex=0.75)
+```
+
+I added a quick legend that shows the different calculated percentiles for elevation within Orem, which shows the minimum (0%), maximum (100%), and median (50%) elevation values. 
+
+What if you wanted to do some arithmetic with two different raster object? Let's create a fake dem to demonstrate how to do so. Let's imagine that we had a dataset that gave us elevation from the early 1900s (something this old is very unlikely). We could do a dem difference between these layers to show how agriculture in Orem has caused sibsidence of the ground surface due to depletion of the aquifer.
+
+```{r}
+# create fake layer
+dem_1900 <- dem_utm_orem
+dem_1900[] <- mean(dem_1900,na.rm=T) - 10
+dem_1900 <- focal(dem_1900,focalMat(dem_1900, 250, "Gauss"))
+# dem differencing
+dem_diff <- dem_1900 - dem_utm_orem
+plot(dem_diff,main="Change in surface elevation (meters) from 1900-2016 in Orem, UT",col=heat.colors(20))
+```
+
+There are many ways of combining raster layers with simple arithmitic or statistics to observe how the environment has changed.
+
+#### 4. Extracting raster data to a vector format
+
+R can easily extract and overlay different types of geospatial information, as long as the projection and coordinate systems align. Here's another quick example of how to extract elevation values from different points in the valley. Let's return to our waste water treatment feature are located in the valley and extract the elevation at each point. Note that this data is in a different projection, and will need to be transformed. Reprojection for a vector object requires a different function.
+
+```{r}
+st_crs(dem_utm)==st_crs(wwt)
+wwt_utm <- st_transform(wwt,"EPSG:26912")
+plot(dem_utm, main="Elevation in UT (meters)",ylim=c(4430000,4480000))
+plot(st_geometry(wwt_utm),add=T,color='skyblue4',pch=16)
+```
+
+Keeping track of the projections and coordinate systems in R is essential, so that you can spatially compare data. For example, perhaps you need to find the waste water facility in Utah Valley with the lowest elevation. R can extract information between data types accurately as long as the spatial information is correct. 
+
+```{r}
+elev_ext <- extract(dem_utm,wwt_utm) # extract values
+wwt_utm$Elev <- elev_ext$N40W112 # add values to sf object
+head(wwt_utm)
+plot(wwt_utm["Elev"],pch=16, main="Elevation of Utah County Wastewater facilities")
+```
+
+We'll talk about other analyses you can perfom in the future. We will also spend some time learning about how to create better looking map figures that have useful map elements like a legend etc. In general, the `ggplot` library has many better options for creating figures.
+
+```{r}
+library(ggplot2) # ggplot 
+ggplot() +
+  geom_sf(data=wwt_utm, aes(color=Elev)) +
+  scale_colour_gradientn("Elevation (m)",colours = terrain.colors(10)) +
+  ylab("Latitude") + xlab("Longitude") + 
+  ggtitle("Utah waste water treatment facilities") +
+  geom_sf_text(data=wwt_utm,aes(label=Name),size=2.1,nudge_y=100,nudge_x=4000) +
+  theme_classic() + theme(axis.text.x=element_text(angle = 25,vjust=0.9,hjust=1)) +
+  coord_sf()
+```
+
+Making good final figures can be tedious and require several fine-tuning adjustments. I'll eventually teach you how to add a basemap and other map elements. For now you can just focus on understanding the GIS techniques.
+
+
+#### 5. Challenge
+
+Your challenge right now is pretty simple! I want you to **redo the dem differencing surface elevation lab you did in Adv. GIS.** Write a new stand alone R script or project and send me the script along with the data!
+
+Try to complete this before we meet again!
+
+**Good luck!**
