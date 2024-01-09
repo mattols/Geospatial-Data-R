@@ -6,9 +6,7 @@ output: html_document
 ---
 ## Exploring a dataset
 
-Here is your first task. It should be very straightforward. 
-
-You will be describing a built-in dataset using several base R functions and include at least one plot similar to the one below. As stated, you will be using base functions in R, which is to say that you do not need any additional libraries. *We'll learn several new, useful libraries throughout the semester.*
+In your second task you will be describing a built-in dataset using several base R functions and include at least one plot similar to the one below. As stated, you will be using base functions in R, which is to say that you do not need any additional libraries. *We'll learn several new, useful libraries throughout the semester.*
 
 **For this task** you will recreate the following graph:
 

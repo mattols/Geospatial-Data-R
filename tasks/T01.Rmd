@@ -1,0 +1,119 @@
+---
+title: "Task 1"
+author: "GEOG-490R"
+date: "Spring 2024 - Week 1"
+output: html_document
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## My First R Script 
+
+This is your first task in this class, which should be very straightforward. Learning programming basics can quickly become overwhelming. We will work together to better understanding basic and advanced functionality in this course.
+
+Throughout the semester we'll explore datasets in the Earth sciences. Let's start by looking at a few basic R data types and built-in functions. R (and most other software) is basically just a fancy calculator that can remember a wealth of information. We can create our own variables, named whatever we want, and assign them a value (or several values). 
+
+#### Step 1: Assign values
+
+Let's create variables for temperature and precipitation:
+
+```{r}
+temp <- 22.5 # temperature in Celsius 
+precip <- 1.5 # precipitation in inches
+```  
+
+#### Step 2: Vectors 
+
+We can store multiple measurements in a vector:
+
+```{r}
+monthly_temps <- c(17.2, 18.6, 21.4, 25.5) # in Celsius
+```
+
+#### Step 3: Statistics
+
+R also has several built-in tools, mostly related to statistical analysis. These can be useful for quickly summarizing values or calculating basic statistics.\
+
+Let's calculate some statistics:
+
+```{r}
+mean(monthly_temps)
+max(monthly_temps)
+min(monthly_temps) 
+```
+
+R makes it easy to compute basic stats!
+
+#### Step 4: Help 
+
+Get help on functions with the `?` operator, like:
+
+```{r}
+?mean
+```
+Several online resources also exist.\
+
+### **Your task**
+
+Use the knowledge above to work through the two tasks below, writing your own code in a new R script.
+
+#### Earthquakes
+
+Create a hypothetical dataset of 12 observed earthquakes. The first variable you will create is earthquake depths, varying anywhere from 2-60 km. Add another variable called magnitude that corresponds to each earthquake depth. \
+
+Answer the following:
+
+1) What is the maximum earthquake magnitude recorded in this dataset, and what is the corresponding depth?
+
+2) What is the mean and `median()` earthquake magnitude and depth?
+
+3) Based on the hypothetical data you created, is there a relationship between earthquake magnitude and depth? Explain.
+
+#### Air quality
+
+Next, you will work on a hypothetical air quality problem.
+
+Your environmental science class is studying air quality in your hometown. The local government has set up sensors around town to measure particulate matter (PM2.5) and ozone levels over the past month.
+
+Your assignment is to analyze the air quality data to identify potential issues and trends.
+
+Create (copy/paste) the following variables in your script:
+
+```
+# Sample data for pm25.csv 
+pm25 <- c(10, 15, 22, 18, 12, 23, 16, 20, 18, 14) 
+
+# Sample data for ozone.csv
+ozone <- c(65, 82, 71, 55, 63, 88, 79, 63, 72, 81)
+```
+
+Load the above variables and complete the following tasks:
+
+4) Calculate the mean PM2.5 and ozone levels across all sensors.
+
+5) Determine the maximum daily readings for PM2.5 and ozone.
+
+6) Assuming these are daily values that correspond to the dates of March 10-19, 2022, which day(s) have the highest and lowest PM2.5 and ozone?  
+
+7) Do these two variables appear to covary? i.e. do daily changes in these variables appear to follow the same pattern? Explain.
+
+8) Assume that you are concerned about pm 2.5 and ozone levels above 25 and 100 respectively. Does the data show any days exceeding these?
+
+9) Calculate the standard deviation of the PM2.5 and ozone readings. Look online to find the equation to use. What does this tell you about the spread of the data?
+
+10) On average, what is the percentage increase in PM2.5 levels from the cleanest day to the most polluted day? To calculate this, find the minimum and maximum PM2.5 values first.
+
+Provide all answers in a single script
+
+### Submitting
+
+Upload your script to our GitHub classroom with the following link:
+
+[GitHub Classroom Assignment](https://classroom.github.com)
+
+
+*Please reach out if you have any questions or concerns!*
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\
