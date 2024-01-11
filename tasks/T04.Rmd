@@ -1,0 +1,23 @@
+---
+title: "Task 4"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+## More Data Wrangling and Statistical Models
+
+### 1. Tidy Data
+
+### 2. The dplyr Package
+
+### 3. Data Wrangling Tips
+
+### 4. Statistical Modeling and Tests
+
+### Your Task
+
+
+
+
+- USGS water dataset

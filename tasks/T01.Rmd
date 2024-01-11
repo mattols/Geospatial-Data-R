@@ -1,7 +1,7 @@
 ---
 title: "Task 1"
 author: "GEOG-490R"
-date: "Spring 2024 - Week 1"
+date: "Spring 2024"
 output: html_document
 ---
 
@@ -9,34 +9,73 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## My First R Script 
+## Working with numbers
 
 This is your first task in this class, which should be very straightforward. Learning programming basics can quickly become overwhelming. We will work together to better understanding basic and advanced functionality in this course.
 
-Throughout the semester we'll explore datasets in the Earth sciences. Let's start by looking at a few basic R data types and built-in functions. R (and most other software) is basically just a fancy calculator that can remember a wealth of information. We can create our own variables, named whatever we want, and assign them a value (or several values). 
+Throughout the semester we'll explore datasets in the Earth sciences. Let's start by looking at a few basic R data types and built-in functions. R (and most other software) is basically just a fancy calculator that can remember a wealth of information and can be customized for specific tasks. We can create our own variables, named whatever we want, and assign values (or several values). 
 
-#### Step 1: Assign values
+#### Step 1: Basic Arithmetic
 
-Let's create variables for temperature and precipitation:
+Although we covered this during lecture, it might be useful for some of you to think about it again. R is capable of basic arithmetic.
+
+```{r}
+5 + 9
+(10 * 5) / 2
+```  
+
+Arithmetic operations are often at the center of a program. These define relationships between values (or variables). 
+
+In case you need a reminder, order of operations is important. The three lines of code below are not equal to one another. Determine the answer to each before running the code.
+
+```{r, eval=FALSE}
+6 + 2 * 2 - 8
+( ( 6 + 2 ) * 2 ) - 8
+( 6 + 2 )  * ( 2  - 8 ) 
+```  
+
+Programs need explicit instructions. One pair of parentheses might drastically alter your answer. \
+
+
+#### Step 2: Assign values
+
+We can also assign values to variables we create. These variables can be called whatever you want. Let's create variables for temperature and precipitation:
 
 ```{r}
 temp <- 22.5 # temperature in Celsius 
 precip <- 1.5 # precipitation in inches
 ```  
 
-#### Step 2: Vectors 
+Note that we can perform this basic arithmetic using these variables. This might be useful given some environmental context, as in the examples below.
 
-We can store multiple measurements in a vector:
+```{r}
+temp + 2.5 # increase of 2.5 C
+precip * 5 # total precip if 1.5 in fell each hr for 5 hours
+```  
+
+These operations are very simple, but this is where a program starts. \
+
+#### Step 3: Vectors 
+
+We can store multiple measurements in a vector. A vector is a list of items that are the same type. We can use the concatenate function `c()` to combine data of the same type into a single vector.
 
 ```{r}
 monthly_temps <- c(17.2, 18.6, 21.4, 25.5) # in Celsius
 ```
 
-#### Step 3: Statistics
+Note that a vector is not a list! A `list()` is a different type of object that we will talk more about next week.
 
-R also has several built-in tools, mostly related to statistical analysis. These can be useful for quickly summarizing values or calculating basic statistics.\
+#### Step 4: Statistics
 
-Let's calculate some statistics:
+Basic statistics, like the arithmetic mean, can be calculated.
+
+```{r}
+( 1 + 2 + 3 + 4 + 5 + 6 ) / 6
+```
+
+Fortunately, R has several built-in base functions we can use, mostly related to statistical analysis. These can be used to quickly summarize the values in our vector. \
+
+Let's calculate a few summary statistics of our monthly temperature vector:
 
 ```{r}
 mean(monthly_temps)
@@ -44,76 +83,77 @@ max(monthly_temps)
 min(monthly_temps) 
 ```
 
-R makes it easy to compute basic stats!
+R makes it easy to compute basic stats! But this is just the beginning.
 
-#### Step 4: Help 
+#### Step 5: Help 
 
-Get help on functions with the `?` operator, like:
+Get quick help on functions with the `?` operator, like:
 
 ```{r}
 ?mean
 ```
-Several online resources also exist.\
+
+Several online resources also exist. One of the great benefits of an open source language like R is that there are many online help forums. \
 
 ### **Your task**
 
-Use the knowledge above to work through the two tasks below, writing your own code in a new R script.
+Use the knowledge above to work through the two tasks below, writing your own code and responses in a new R script.
 
-#### Earthquakes
+#### 1. Earthquakes
 
-Create a hypothetical dataset of 12 observed earthquakes. The first variable you will create is earthquake depths, varying anywhere from 2-60 km. Add another variable called magnitude that corresponds to each earthquake depth. \
+Create a hypothetical dataset of 12 observed earthquakes. The first variable you will create is earthquake `depths`, varying anywhere from 2-60 km. Add another variable called `magnitude` that corresponds to the Richter scale magnitude (0.1-10) of each earthquake depth. Use whatever numbers you'd like that are within range. \
 
 Answer the following:
 
 1) What is the maximum earthquake magnitude recorded in this dataset, and what is the corresponding depth?
 
-2) What is the mean and `median()` earthquake magnitude and depth?
+2) What is the mean and median earthquake magnitude and depth? What do these statistics describe about your data?
 
-3) Based on the hypothetical data you created, is there a relationship between earthquake magnitude and depth? Explain.
+3) Based on the hypothetical data you created, is there a relationship between earthquake magnitude and depth? Explain. *(Support your answer with code if possible, no worries if you can't)*
 
-#### Air quality
+#### 2. Air quality
 
 Next, you will work on a hypothetical air quality problem.
 
-Your environmental science class is studying air quality in your hometown. The local government has set up sensors around town to measure particulate matter (PM2.5) and ozone levels over the past month.
+Situation: Your environmental science class is studying air quality in your hometown. The local government has set up sensors around town to measure particulate matter (PM2.5) and ozone levels over the past two weeks. There are two sites, one measuring both variables and the other only measuring PM2.5.
 
 Your assignment is to analyze the air quality data to identify potential issues and trends.
 
-Create (copy/paste) the following variables in your script:
+Copy the following variables to your script:
 
 ```
-# Sample data for pm25.csv 
-pm25 <- c(10, 15, 22, 18, 12, 23, 16, 20, 18, 14) 
+# Sample data for pm25 
+site1_pm25 <- c(10, 15, 22, 18, 12, 23, 16, 20, 18, 14, 15, 13, 12, 10) 
+site2_pm25 <- c(11, 17, 28, 21, 18, 23, 15, 22, 20, 15, 17, 17, 13, 12) 
 
-# Sample data for ozone.csv
-ozone <- c(65, 82, 71, 55, 63, 88, 79, 63, 72, 81)
+# Sample data for ozone
+site1_ozone <- c(65, 82, 71, 55, 63, 88, 79, 63, 72, 81, 89, 95, 70, 67)
 ```
 
 Load the above variables and complete the following tasks:
 
-4) Calculate the mean PM2.5 and ozone levels across all sensors.
+4) List the mean and median PM2.5 and ozone levels over the record. For PM2.5 provide a value for each site and an overall mean including data from both sites.
 
-5) Determine the maximum daily readings for PM2.5 and ozone.
+5) Assuming these are daily values that correspond to the dates of March 10-23, 2022, which day(s) have the highest and lowest PM2.5 and ozone?  
 
-6) Assuming these are daily values that correspond to the dates of March 10-19, 2022, which day(s) have the highest and lowest PM2.5 and ozone?  
+6) Does PM2.5 or ozone appear to be continually increasing or deacreasing? Do the variables appear to covary? *i.e. Does PM2.5 and ozone appear to follow the same daily pattern? How about the PM2.5 levels between sites.* Explain.
 
-7) Do these two variables appear to covary? i.e. do daily changes in these variables appear to follow the same pattern? Explain.
+7) What is the average difference in PM2.5 between sites?
 
-8) Assume that you are concerned about pm 2.5 and ozone levels above 25 and 100 respectively. Does the data show any days exceeding these?
+8) Assume that you are concerned about PM2.5 and ozone levels above 25 and 100 respectively. Does the data show any days exceeding these? If so, where and when?
 
-9) Calculate the standard deviation of the PM2.5 and ozone readings. Look online to find the equation to use. What does this tell you about the spread of the data?
+9) Calculate the standard deviation of the PM2.5 and ozone readings. *Look online to find the equation if needed.* What does this statistic tell you about the data?
 
-10) On average, what is the percentage increase in PM2.5 levels from the cleanest day to the most polluted day? To calculate this, find the minimum and maximum PM2.5 values first.
+10) On average, what is the percent increase in PM2.5 levels from the cleanest day to the most polluted day? List for each site.
 
-Provide all answers in a single script
+*Provide all answers in a single script with code and responses*
+
 
 ### Submitting
 
-Upload your script to our GitHub classroom with the following link:
-
-[GitHub Classroom Assignment](https://classroom.github.com)
+Upload a R script with responses to each question. Support your responses with stand-alone code. Comment out any text.
 
 
 *Please reach out if you have any questions or concerns!*
 
-**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\
+**This assignment is due in one week but may be turned in late with a late penalty of -5% per day**\

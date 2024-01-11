@@ -351,13 +351,13 @@ display: none;
 
 <h1 class="title toc-ignore">Task 1</h1>
 <h4 class="author">GEOG-490R</h4>
-<h4 class="date">Spring 2024 - Week 1</h4>
+<h4 class="date">Spring 2024</h4>
 
 </div>
 
 
-<div id="my-first-r-script" class="section level2">
-<h2>My First R Script</h2>
+<div id="working-with-numbers" class="section level2">
+<h2>Working with numbers</h2>
 <p>This is your first task in this class, which should be very
 straightforward. Learning programming basics can quickly become
 overwhelming. We will work together to better understanding basic and
@@ -365,109 +365,162 @@ advanced functionality in this course.</p>
 <p>Throughout the semester we’ll explore datasets in the Earth sciences.
 Let’s start by looking at a few basic R data types and built-in
 functions. R (and most other software) is basically just a fancy
-calculator that can remember a wealth of information. We can create our
-own variables, named whatever we want, and assign them a value (or
-several values).</p>
-<div id="step-1-assign-values" class="section level4">
-<h4>Step 1: Assign values</h4>
-<p>Let’s create variables for temperature and precipitation:</p>
+calculator that can remember a wealth of information and can be
+customized for specific tasks. We can create our own variables, named
+whatever we want, and assign values (or several values).</p>
+<div id="step-1-basic-arithmetic" class="section level4">
+<h4>Step 1: Basic Arithmetic</h4>
+<p>Although we covered this during lecture, it might be useful for some
+of you to think about it again. R is capable of basic arithmetic.</p>
+<pre class="r"><code>5 + 9</code></pre>
+<pre><code>## [1] 14</code></pre>
+<pre class="r"><code>(10 * 5) / 2</code></pre>
+<pre><code>## [1] 25</code></pre>
+<p>Arithmetic operations are often at the center of a program. These
+define relationships between values (or variables).</p>
+<p>In case you need a reminder, order of operations is important. The
+three lines of code below are not equal to one another. Determine the
+answer to each before running the code.</p>
+<pre class="r"><code>6 + 2 * 2 - 8
+( ( 6 + 2 ) * 2 ) - 8
+( 6 + 2 )  * ( 2  - 8 ) </code></pre>
+<p>Programs need explicit instructions. One pair of parentheses might
+drastically alter your answer.<br />
+</p>
+</div>
+<div id="step-2-assign-values" class="section level4">
+<h4>Step 2: Assign values</h4>
+<p>We can also assign values to variables we create. These variables can
+be called whatever you want. Let’s create variables for temperature and
+precipitation:</p>
 <pre class="r"><code>temp &lt;- 22.5 # temperature in Celsius 
 precip &lt;- 1.5 # precipitation in inches</code></pre>
-</div>
-<div id="step-2-vectors" class="section level4">
-<h4>Step 2: Vectors</h4>
-<p>We can store multiple measurements in a vector:</p>
-<pre class="r"><code>monthly_temps &lt;- c(17.2, 18.6, 21.4, 25.5) # in Celsius</code></pre>
-</div>
-<div id="step-3-statistics" class="section level4">
-<h4>Step 3: Statistics</h4>
-<p>R also has several built-in tools, mostly related to statistical
-analysis. These can be useful for quickly summarizing values or
-calculating basic statistics.<br />
+<p>Note that we can perform this basic arithmetic using these variables.
+This might be useful given some environmental context, as in the
+examples below.</p>
+<pre class="r"><code>temp + 2.5 # increase of 2.5 C</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code>precip * 5 # total precip if 1.5 in fell each hr for 5 hours</code></pre>
+<pre><code>## [1] 7.5</code></pre>
+<p>These operations are very simple, but this is where a program
+starts.<br />
 </p>
-<p>Let’s calculate some statistics:</p>
+</div>
+<div id="step-3-vectors" class="section level4">
+<h4>Step 3: Vectors</h4>
+<p>We can store multiple measurements in a vector. A vector is a list of
+items that are the same type. We can use the concatenate function
+<code>c()</code> to combine data of the same type into a single
+vector.</p>
+<pre class="r"><code>monthly_temps &lt;- c(17.2, 18.6, 21.4, 25.5) # in Celsius</code></pre>
+<p>Note that a vector is not a list! A <code>list()</code> is a
+different type of object that we will talk more about next week.</p>
+</div>
+<div id="step-4-statistics" class="section level4">
+<h4>Step 4: Statistics</h4>
+<p>Basic statistics, like the arithmetic mean, can be calculated.</p>
+<pre class="r"><code>( 1 + 2 + 3 + 4 + 5 + 6 ) / 6</code></pre>
+<pre><code>## [1] 3.5</code></pre>
+<p>Fortunately, R has several built-in base functions we can use, mostly
+related to statistical analysis. These can be used to quickly summarize
+the values in our vector.<br />
+</p>
+<p>Let’s calculate a few summary statistics of our monthly temperature
+vector:</p>
 <pre class="r"><code>mean(monthly_temps)</code></pre>
 <pre><code>## [1] 20.675</code></pre>
 <pre class="r"><code>max(monthly_temps)</code></pre>
 <pre><code>## [1] 25.5</code></pre>
 <pre class="r"><code>min(monthly_temps) </code></pre>
 <pre><code>## [1] 17.2</code></pre>
-<p>R makes it easy to compute basic stats!</p>
+<p>R makes it easy to compute basic stats! But this is just the
+beginning.</p>
 </div>
-<div id="step-4-help" class="section level4">
-<h4>Step 4: Help</h4>
-<p>Get help on functions with the <code>?</code> operator, like:</p>
+<div id="step-5-help" class="section level4">
+<h4>Step 5: Help</h4>
+<p>Get quick help on functions with the <code>?</code> operator,
+like:</p>
 <pre class="r"><code>?mean</code></pre>
-<p>Several online resources also exist.<br />
+<p>Several online resources also exist. One of the great benefits of an
+open source language like R is that there are many online help
+forums.<br />
 </p>
 </div>
 <div id="your-task" class="section level3">
 <h3><strong>Your task</strong></h3>
 <p>Use the knowledge above to work through the two tasks below, writing
-your own code in a new R script.</p>
+your own code and responses in a new R script.</p>
 <div id="earthquakes" class="section level4">
-<h4>Earthquakes</h4>
+<h4>1. Earthquakes</h4>
 <p>Create a hypothetical dataset of 12 observed earthquakes. The first
-variable you will create is earthquake depths, varying anywhere from
-2-60 km. Add another variable called magnitude that corresponds to each
-earthquake depth.<br />
+variable you will create is earthquake <code>depths</code>, varying
+anywhere from 2-60 km. Add another variable called
+<code>magnitude</code> that corresponds to the Richter scale magnitude
+(0.1-10) of each earthquake depth. Use whatever numbers you’d like that
+are within range.<br />
 </p>
 <p>Answer the following:</p>
 <ol style="list-style-type: decimal">
 <li><p>What is the maximum earthquake magnitude recorded in this
 dataset, and what is the corresponding depth?</p></li>
-<li><p>What is the mean and <code>median()</code> earthquake magnitude
-and depth?</p></li>
+<li><p>What is the mean and median earthquake magnitude and depth? What
+do these statistics describe about your data?</p></li>
 <li><p>Based on the hypothetical data you created, is there a
-relationship between earthquake magnitude and depth? Explain.</p></li>
+relationship between earthquake magnitude and depth? Explain.
+<em>(Support your answer with code if possible, no worries if you
+can’t)</em></p></li>
 </ol>
 </div>
 <div id="air-quality" class="section level4">
-<h4>Air quality</h4>
+<h4>2. Air quality</h4>
 <p>Next, you will work on a hypothetical air quality problem.</p>
-<p>Your environmental science class is studying air quality in your
-hometown. The local government has set up sensors around town to measure
-particulate matter (PM2.5) and ozone levels over the past month.</p>
+<p>Situation: Your environmental science class is studying air quality
+in your hometown. The local government has set up sensors around town to
+measure particulate matter (PM2.5) and ozone levels over the past two
+weeks. There are two sites, one measuring both variables and the other
+only measuring PM2.5.</p>
 <p>Your assignment is to analyze the air quality data to identify
 potential issues and trends.</p>
-<p>Create (copy/paste) the following variables in your script:</p>
-<pre><code># Sample data for pm25.csv 
-pm25 &lt;- c(10, 15, 22, 18, 12, 23, 16, 20, 18, 14) 
+<p>Copy the following variables to your script:</p>
+<pre><code># Sample data for pm25 
+site1_pm25 &lt;- c(10, 15, 22, 18, 12, 23, 16, 20, 18, 14, 15, 13, 12, 10) 
+site2_pm25 &lt;- c(11, 17, 28, 21, 18, 23, 15, 22, 20, 15, 17, 17, 13, 12) 
 
-# Sample data for ozone.csv
-ozone &lt;- c(65, 82, 71, 55, 63, 88, 79, 63, 72, 81)</code></pre>
+# Sample data for ozone
+site1_ozone &lt;- c(65, 82, 71, 55, 63, 88, 79, 63, 72, 81, 89, 95, 70, 67)</code></pre>
 <p>Load the above variables and complete the following tasks:</p>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Calculate the mean PM2.5 and ozone levels across all
-sensors.</p></li>
-<li><p>Determine the maximum daily readings for PM2.5 and
-ozone.</p></li>
+<li><p>List the mean and median PM2.5 and ozone levels over the record.
+For PM2.5 provide a value for each site and an overall mean including
+data from both sites.</p></li>
 <li><p>Assuming these are daily values that correspond to the dates of
-March 10-19, 2022, which day(s) have the highest and lowest PM2.5 and
+March 10-23, 2022, which day(s) have the highest and lowest PM2.5 and
 ozone?</p></li>
-<li><p>Do these two variables appear to covary? i.e. do daily changes in
-these variables appear to follow the same pattern? Explain.</p></li>
-<li><p>The limits are 25 and 100. Does the data show any days exceeding
-these?</p></li>
+<li><p>Does PM2.5 or ozone appear to be continually increasing or
+deacreasing? Do the variables appear to covary? <em>i.e. Does PM2.5 and
+ozone appear to follow the same daily pattern? How about the PM2.5
+levels between sites.</em> Explain.</p></li>
+<li><p>What is the average difference in PM2.5 between sites?</p></li>
+<li><p>Assume that you are concerned about PM2.5 and ozone levels above
+25 and 100 respectively. Does the data show any days exceeding these? If
+so, where and when?</p></li>
 <li><p>Calculate the standard deviation of the PM2.5 and ozone readings.
-Look online to find the equation to use. What does this tell you about
-the spread of the data?</p></li>
-<li><p>On average, what is the percentage increase in PM2.5 levels from
-the cleanest day to the most polluted day? To calculate this, find the
-minimum and maximum PM2.5 values first.</p></li>
+<em>Look online to find the equation if needed.</em> What does this
+statistic tell you about the data?</p></li>
+<li><p>On average, what is the percent increase in PM2.5 levels from the
+cleanest day to the most polluted day? List for each site.</p></li>
 </ol>
-<p>Provide all answers in a single script</p>
+<p><em>Provide all answers in a single script with code and
+responses</em></p>
 </div>
 </div>
 <div id="submitting" class="section level3">
 <h3>Submitting</h3>
-<p>Upload your script to our GitHub classroom with the following
-link:</p>
-<p><a href="https://classroom.github.com">GitHub Classroom
-Assignment</a></p>
+<p>Upload a R script with responses to each question. Support your
+responses with stand-alone code. Comment out any text.</p>
 <p><em>Please reach out if you have any questions or concerns!</em></p>
-<p><strong>This assignment is due in one week but may be turned for an
-additional week with a late penalty of -5%</strong><br />
+<p><strong>This assignment is due in one week but may be turned in late
+with a late penalty of -5% per day</strong><br />
 </p>
 </div>
 </div>

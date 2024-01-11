@@ -39,9 +39,9 @@ degrade <- c(10, 10, 10, 10, 10, 12, 12, 12, 12, 12,
 
 #### Analysis
 
-1) Calculate the mean production across the 30 days.
+1) !!! no Calculate the mean production across the 30 days.
 
-2) Determine the maximum daily production.
+2) Determine the maximum, minimum, and average daily production value.
 
 3) Calculate the standard deviation of the irradiation measurements.
 
@@ -57,11 +57,11 @@ degrade <- c(10, 10, 10, 10, 10, 12, 12, 12, 12, 12,
 
 9) If the solar farm covers 5 km2, calculate the total kW generated over the 30 days
 
+10)
+
 ### Submit
 
-Upload your script to our GitHub classroom with the following link:
-
-[GitHub Classroom Assignment](https://classroom.github.com)
+Upload a R script with responses to each question. Support your responses with stand-alone code. Comment out any text.
 
 
 **This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\

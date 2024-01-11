@@ -1,0 +1,84 @@
+---
+title: "Task 2"
+author: "GEOG-490R"
+date: 'Spring 2024'
+output: html_document
+---
+
+## Data types and basic visualizations
+
+In your second task you will be describing a built-in dataset using several base R functions and include at least one plot similar to the one below. As stated, you will be using base functions in R, which is to say that you do not need any additional libraries. *We'll learn several new, useful libraries throughout the semester.*
+
+**For this task** you will recreate the following graph:
+
+```{r, echo=FALSE}
+# Load iris dataset
+data(iris)
+
+# Scatterplot of Petal Width vs Petal Length
+plot(iris$Petal.Width, 
+     iris$Petal.Length,
+     main="Iris Flower Petal Dimensions",
+     xlab="Petal Width (cm)",
+     ylab="Petal Length (cm)")
+
+# Color code by iris species 
+colors <- c("red","green","blue")[iris$Species]
+points(iris$Petal.Width, iris$Petal.Length, col=colors)
+
+# Add legend
+legend("topleft", inset=.05,
+       c("Setosa", "Versicolor", "Virginica"),
+       fill=c("red","green","blue"))
+
+# Add regression line 
+abline(lm(iris$Petal.Length~iris$Petal.Width))
+```
+
+This code uses the famous `iris` dataset (Fisher and Anderson), which gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris.
+
+The code above creates a basic scatterplot of petal width vs petal length for all species, colors each point based on species, adds axis labels and a title, and plots a linear regression line. We will talk more about statistics and relationships throughout the semester, but it's useful to learn basic plotting techniques and simple relationships.
+
+The key functions from base R are:
+
+- `data()` to load a built-in dataset
+- `plot()` to create the initial scatterplot
+- `lm()` to fit linear model for the regression line
+- `abline()` to add a regression line
+
+To learn more about any function you can type in the function name, for example `plot` will show you the basic function. For a more detailed explanation of a function, type `?plot` to open the help window in the Rstudio console.
+
+### Data description
+
+In addition to recreating the plot above, you will need to describe the dataset we are using. There are many different kinds of data that can be used
+
+```{r, echo=FALSE}
+# First few rows 
+# head(iris, 3)
+print("...what is this?")
+```
+
+Here are some useful R functions to investigate a dataframe in R markdown, along with brief explanations:
+
+- `class()`: View kind of R object for any variable
+- `colnames()`: View column names of dataframe
+- `dim()`: View the dimension, or number of rows and columns 
+- `summary()`: Summary stats for each column
+- `head()/tail()`: View first/last few rows
+- several other functions exist as well
+
+### Your task
+
+For this assignment, you will write an R script that describes the `iris` dataset using the functions above. You also need to recreate the plot above. For each step, annotate your code. In other words, add a `#` to comment on the functions you are using and describe the code you write. Include a comment (paragraph) at the end of your script that summarizes the data and describes any relationships you found.
+
+
+#### Submitting
+
+Upload your script to our GitHub classroom with the following link:
+
+[GitHub Classroom Assignment](https://classroom.github.com/a/T_DG18zP)
+
+
+*Please reach out if you have any questions or concerns!*
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\

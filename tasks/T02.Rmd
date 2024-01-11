@@ -1,12 +1,186 @@
 ---
 title: "Task 2"
 author: "GEOG-490R"
-date: 'Spring 2024 - Week 2'
+date: "Spring 2024"
 output: html_document
 ---
-## Exploring a dataset
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-In your second task you will be describing a built-in dataset using several base R functions and include at least one plot similar to the one below. As stated, you will be using base functions in R, which is to say that you do not need any additional libraries. *We'll learn several new, useful libraries throughout the semester.*
+## Data Types, Structures, and Visualization
+
+This task will continue to familiarize you with basic data types and structures in R. You will also learn basic plotting.
+
+### 1. Data Types in R
+
+R has several basic data types that are important to understand when working with data:
+
+- Numeric - Numbers like 1, 2, 3.4  
+- Integer - Whole numbers like 1L, 2L
+- Character - Text data like "A", "fish"
+- Logical - True/False values like TRUE, FALSE 
+- Complex - Complex numbers with real & imaginary parts like 1+2i
+
+We explored some of this last week, but let's add a few other common data types. Note, this is not comprehensive.
+
+Understanding your data is key. It's essential to know the type of data you're working with. Some key functions to examine data types include:
+
+- `class()` - Get the class of any object
+- `is.numeric()` - Test if numeric 
+- `is.character()` - Test if character
+
+There are also functions to convert to a new format:
+
+- `as.numeric()` - Convert to numeric
+- `as.character()` - Convert to character
+
+Before jumping into any analysis, use these functions to get a better sense of the type of data you're dealing. As you may have learned in the past, understanding your data is more than half the battle.
+
+Let's define a few variables:
+
+```{r}
+x <- 2 # Numeric 
+y <- 2L # Integer
+z <- "Hello" # Character
+```
+
+Check the data type and convert to a new format:
+
+```{r, eval=FALSE}
+# Check class
+class(x) # "numeric" 
+class(y) # "integer"
+class(z) # "character"
+
+# Convert types
+as.numeric(z) # NA
+as.character(x) # "1.5" 
+```
+
+Character data is also referred to as a *string.* Note that our conversion from character to numeric produced a value that was non-existent or `NA` which stands for *Not Available.* We can combine these functions and test whether something is NA:
+
+```{r}
+is.na( as.character(x) )
+```
+
+It is useful to know how to deal with NA values, we'll talk more about them in the future.
+
+Logical statements are also frequently used. `TRUE` and `FALSE` are reserved characters *(similar to NA).*
+
+```{r}
+# Logical
+a <- TRUE
+as.numeric(a)
+```
+
+We'll go over logical operators in more detail later on in the course as well. 
+
+Checking data types and converting between types is critical for cleaning and wrangling data before analysis. This is what we are building toward over the next couple of weeks.
+
+### 2. Data Structures in R
+
+Beyond atomic data types, R has several data structures for storing data:
+
+- Vector - 1D array of values, all must be same basic type 
+- Matrix - 2D rectangular dataset
+- DataFrame - Tabular dataset with columns of different types
+- List - Container to store different objects
+
+These structures relate a series of data in different ways. Each have their use and there are several more we will learn about in the future. You're already familiar with vector data
+
+```{r}
+v <- c(1, 2, 3) # Vector
+sum(v * 4)
+```
+
+Matrices are the best way to store tabular data that is all in the same format
+
+```{r}
+m <- matrix(1:6, nrow = 2, ncol = 3) # Matrix  
+m
+```
+
+Vectors (1D) and Matrices (2D) are the foundational formats for storing geospatial data. *Vector* data is used both to describe a 1D array, as well as a *geospatial vector object* such as a point, line, or polygon (shapefile). We'll start working with geospatial data in a couple weeks after we have a better foundation in R.
+
+DataFrames are essential for many data analysis workflows, and we will spend a good amount of time working with them. You can think of a DataFrame as R's version of Excel, a way to organize data into rows and columns of different data types *(Only way way better than Excel).*
+
+```{r}
+# Create a DataFrame
+df <- data.frame(
+  name = c("John", "Mary"),
+  age = c(25, 31) 
+)
+df
+```
+
+Individual column vectors can be called on using `$` such as `df$name`.
+
+Other useful functions to investigate a DataFrame include:
+
+- `colnames()`: View column names of dataframe
+- `dim()`: View the dimension, or number of rows and columns 
+- `summary()`: Summary stats for each column
+- `head()/tail()`: View first/last few rows
+
+Lists can also be useful a useful format for storing infromation, particularly when aggregating different data types together or maintaining structure.
+
+```
+lst <- list(1, "Hello", TRUE) # List 
+```
+
+These data structures allow you to organize and store data in R. Data structures differ based on the situation but many of the formats above form the basis for most data analysis, and geospatial analysis.
+
+### 3. Plotting in Base R
+
+R has excellent built-in graphics capabilities. It is useful to observe values, potential trends, and relationships between variables. Here are some key plotting functions from base R:
+
+- `plot()` - Scatterplot
+- `hist()` - Histogram
+- `barplot()` - Bar chart
+- `boxplot()` - Boxplot 
+- `pie()` - Pie chart
+
+You can build almost any type of plot using `plot()` by specifying additional arguments. Plot types like scatterplots, histograms and boxplots are useful for initial visual exploration of data. Bar and pie charts can visualize categorical data.
+
+Here is an example with the `mtcars` dataset:
+
+```{r}
+# Scatterplot
+plot(mtcars$wt, mtcars$mpg)  
+# Histogram 
+hist(mtcars$mpg)
+```
+
+We'll explore plotting in greater detail later in the course and introduce another R packages for better visualization.
+
+Rememver, the first step of any analysis is to understand the data type, data structure, consider summary statistics, and create basic visualizations. \
+
+
+#### **Your Task**
+
+Complete the following tasks related to the content of this week.
+
+#### 1. The National Parks
+
+Write a script in R that performs the following tasks:
+
+1) Create a new DataFrame that includes information about 15 (or more) National Parks of your choice *(e.g. Bryce Canyon, Everglades, Olympic, etc.).* Add a column for the "name", one for date "established", another for "state", one for "area" of the park, and a field indicating the number of "visitors" in 2022. *You can find this information [here](https://en.wikipedia.org/wiki/List_of_national_parks_of_the_United_States). Advanced students should try to scrape the table of National Parks in the link above and respond to these questions using the full dataset*
+
+2) What is the average size of the National Parks in your DataFrame? What is the total area of all National Parks?
+
+3) Which National Parks in your list had the greatest and least visitation in 2022? What is the total number of visitors for all National Parks in 2022?
+
+4) What is the difference in years between the earliest established park and the latest park in your DataFrame? What is the difference in area between these two parks?
+
+5) Create a plot showing the date established vs. size from your data of National Parks. Create another plot showing park size vs visitation. Are there any potential relationships between these variables in the national parks.
+
+6) Describe your dataset using several functions listed above. Brainstorm a few other useful ways that you could either analyze or organize this dataset.
+
+
+#### 2. The Iris Dataset
+
+In the second part of your task this week, you will describe an existing dataset and recreate a plot. Your plot will use base functions in R, which is to say that you do not need any additional packages *We'll use several great R libraries throughout the semester.*
 
 **For this task** you will recreate the following graph:
 
@@ -30,53 +204,24 @@ legend("topleft", inset=.05,
        c("Setosa", "Versicolor", "Virginica"),
        fill=c("red","green","blue"))
 
-# Add regression line 
-abline(lm(iris$Petal.Length~iris$Petal.Width))
+# # Add regression line 
+# abline(lm(iris$Petal.Length~iris$Petal.Width))
 ```
 
-This code uses the famous `iris` dataset (Fisher and Anderson), which gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris.
+This code uses the famous `iris` dataset (Fisher and Anderson), which gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. You should be able to directly call the `iris` dataset in R at any time, if not, use `data(iris)` to load the DataFrame into memory
 
-The code above creates a basic scatterplot of petal width vs petal length for all species, colors each point based on species, adds axis labels and a title, and plots a linear regression line. We will talk more about statistics and relationships throughout the semester, but it's useful to learn basic plotting techniques and simple relationships.
+The code above creates a basic scatterplot of petal width vs petal length for all species, colors each point based on species, and adds axis labels and a title.Remember, for a more detailed explanation of a function, type `?plot` to open the help window in the Rstudio console.
 
-The key functions from base R are:
+7.) *(2 points)* Describe the iris dataset using the various functions we've discussed. Include information about the dimentions, data types, and data structure. Summary statistics can also be useful.
 
-- `data()` to load a built-in dataset
-- `plot()` to create the initial scatterplot
-- `lm()` to fit linear model for the regression line
-- `abline()` to add a regression line
+8.) *(2 points)* Recreate the plot above. Describe any relationships you find and suggest additional steps that you could take to better understand any relationship between variables.
 
-To learn more about any function you can type in the function name, for example `plot` will show you the basic function. For a more detailed explanation of a function, type `?plot` to open the help window in the Rstudio console.
-
-### Data description
-
-In addition to recreating the plot above, you will need to describe the dataset we are using. There are many different kinds of data that can be used
-
-```{r, echo=FALSE}
-# First few rows 
-# head(iris, 3)
-print("...what is this?")
-```
-
-Here are some useful R functions to investigate a dataframe in R markdown, along with brief explanations:
-
-- `class()`: View kind of R object for any variable
-- `colnames()`: View column names of dataframe
-- `dim()`: View the dimension, or number of rows and columns 
-- `summary()`: Summary stats for each column
-- `head()/tail()`: View first/last few rows
-- several other functions exist as well
-
-### Your task
-
-For this assignment, you will write an R script that describes the `iris` dataset using the functions above. You also need to recreate the plot above. For each step, annotate your code. In other words, add a `#` to comment on the functions you are using and describe the code you write. Include a comment (paragraph) at the end of your script that summarizes the data and describes any relationships you found.
+*For each step, annotate your code. In other words, add a `#` to comment on the functions you are using and describe the code you write.*
 
 
 #### Submitting
 
-Upload your script to our GitHub classroom with the following link:
-
-[GitHub Classroom Assignment](https://classroom.github.com/a/T_DG18zP)
-
+Upload a R script with responses to each question. Support your responses with stand-alone code. Comment out any text.
 
 *Please reach out if you have any questions or concerns!*
 

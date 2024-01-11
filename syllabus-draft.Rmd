@@ -1,17 +1,16 @@
 ---
-title: "Geospatial Data Science Course"
-author: "Matt Olson"
-date: '2023-11-08'
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
-# Special Topics GEOG 490R-001 
-### Fall 2023 
+## GEOG 490R Special Topics: Geospatial Data Science
+###  Spring 2024 
 
 > Instructor: Dr. Matt Olson  \
 > Email: use Canvas messaging or Matt.Olson@uvu.edu \
 > Time: Tues/Thurs 2:30-3:45pm \
 > Location: SB 175 (GIS Peper Lab) \
-> Office Hours: TBA, Book a time \
+> Office Hours: TBA, [Book a time](https://outlook.office.com/bookwithme/user/99affef35d9f4707be160110794033e8@uvu.edu?anonymous&ep=bwmEmailSignature) \
 
 ## Course Description. 
 
@@ -32,44 +31,47 @@ By the end of the course, students will be able to: \
 ### Class Format.  
 
 * Two 75-minute face-to-face class periods per week 
-* Class will consist of short lectures, group work, and individual help with tasks 
+* Class will consist of short lectures, group work, and individual help with assignments and projects
 * Skills acquired throughout the semester will culminate into a final project 
 
 ## Resources. 
-This course will largely focus on open-source software, texts, and other resources. Which means that everything is free for anyone anywhere to use, if you have access to a computer and the internet. Open-source resources and programs level the playing field and make science and learning more equitable. 
+This course will focus on open-source software, texts, and other resources. Which means that everything is free for anyone anywhere to use, if you have access to a computer and the internet. Open-source resources and programs level the playing field and make science and learning more equitable. 
 
-### Course Texts. 
+### Free Course Texts. 
 * [Geocomputation with R](https://r.geocompx.org/) by Robin Lovelace, Jakub Nowosad, Jannes Muenchow (ISBN 9781138304512) 
 * [R for Data Science](https://r4ds.hadley.nz/) by Hadley Wickam, Mine Cetinkaya-Rundel, and Garret Grolemund 
 * [R-spatial](https://r-spatial.org/)
 * Additional readings will be posted  
 
 ### Additional resources. 
-* Several other online resources can be useful! 
+* Several other online resources exist! We'll discover these throughout the semester.
 
 ### Software. 
 * R and RStudio (Free and open source) 
-* R packages including sf, tmap, leaflet, sp, rgdal, raster, terra, etc. * We may dabble in Google Earth Engine 
+  + important packages including sf, tmap, leaflet, sp, rgdal, raster, terra, etc. 
+* We may dabble in Google Earth Engine 
 * Possibly explore geoprocessing with python within QGIS or ArcGISPro (but probably not) 
 
 ## Course Structure. 
 
 ### Grading. 
-* **Tasks:** 30%   
-  + Tasks: Assigned near-weekly and will help students build necessary skills throughout the semester 
-* **Case Studies:** 25% 
-  + Case Studies: Assigned regularly and will challenge students to apply knowledge to solve a real-world geospatial or Earth science problem 
+* **Participation:** 15% 
+  + Participation: Attendance, group discussions, and notes from readings
+* **Tasks:** 20%   
+  + Tasks: Weekly assignments to build necessary skills throughout the semester, tasks will become progressively more difficult
+* **Case Studies:** 20% 
+  + Case Studies: Assigned regularly and will challenge students to apply knowledge to explore a real-world science question or geospatial problem 
 * **Skills Tests:** 15% 
-  + Skills tests: Short exams to test your skills in learning the programming language 
-* Final Project: 30% 
-  + Final Project: The culminating effort of this class will test your ability to apply what you have learned in a class project. The last several weeks of class will focus on preparing students for their project presentation.  
+  + Skills tests: Short exams to test your skills in learning the R programming language, expect 3-4 throughout the semester.
+* **Final Project:** 30% 
+  + Final Project: The culminating effort of this class will test your ability to apply what you have learned in a class project. The last several weeks of class will focus on preparing students for their project presentation
 
 ### Class policies. 
-* Assignments are due at 11:59 pm on due dates 
-* Late work will receive a 6% deduction per day 
+* All assignments must be complete and “solved” *on your OWN!* Learning to problem solve is a key aspect of data science
+* Assignments are due at 11:59 pm on due dates, typically one week after they are assigned
+* Late work will receive a 6% deduction per day
 * Makeups only given for excused absences with documentation 
-* All assignments must be complete and “solved” on your OWN! Learning to problem solve is a key aspect of data science. 
- 
+
 
 ### University Policies. 
 
@@ -91,60 +93,22 @@ Syllabus draft and several course ideas were generated in collaboration with Cla
 
 *not definitive and subject to change*
 
-**Weekly topics**
+**Tentative weekly topics**
 
-1. Github Basics and Rstudio setup
-2. Data types, basic R methods
-3. Better data visualizations 
+1. Introduction
+2. Basic Data types
+3. Visualizations and GitHub
 4. Data wrangling & statistical models
 5. Vector data 
 6. Vector analysis
 7. Raster data 
 8. Raster analysis
-9. Project proposals and interactive mapping
+9. Interactive mapping (Propose project)
 10. Remote Sensing I
-11. Time-series datasets and temporal statistics
+11. Space and time
 12. Remote Sensing II
-13. Creating custom functions and modeling
-14-16. Project Workshops
-
-
-**or**
-
-* Week 1 - Course overview and introduction to geospatial data science, setting up R and spatial packages 
-* Week 2 - Introduction to R programming and syntax, working with spatial vector data   
-* Week 3 - Tidying, transforming, and exploring spatial data, spatial data visualization 
-* Week 4 - Spatial relationships and operations, interactive web mapping 
-* Week 5 - Spatial joins and data aggregation, animated and small multiple maps 
-* Week 6 - Choropleth mapping and classification, spatial autocorrelation and clustering  
-* Week 7 - Spatial regression modeling, point pattern analysis 
-* Week 8 - Interpolation and kriging methods, Midterm Exam 
-* Week 9 - Remote sensing data and analysis, creating indices and classifications 
-* Week 10 - Environmental modeling applications, spatial optimization techniques 
-* Week 11 - Network and transport analysis, shortest paths and service areas 
-* Week 12 - Ethics in spatial data science, privacy, surveillance, and bias concerns 
-* Week 13 - Student project proposals, reproducible workflows and R Markdown 
-* Week 14 - Open lab time for projects, project check-ins and assistance * Week 15 - Student project presentations 
-
-**alternative**
-
-Week	Date	Presentation	Tasks	Case Study	DataCamp
-1	8/30/22		Getting Started	Your first script	
-2	9/6/22		Graphics Background and Getting started with RStudio	My grandfather says summers are getting hotter	Introduction to R
-3	9/13/22		Git Repository	Wealth over time	Introduction to Data Visualization with ggplot
-4	9/20/22		Data Wrangling 2	Farthest airport from New York City	Introduction to the Tidyverse
-5	9/27/22		Spatial Vector Data	Beware the Canadians!	Communicating with Data in the Tidyverse
-6	10/4/22		Spatial Raster Data	Find hottest country on each continent	Visualizing Geospatial Data in R
-7	10/11/22		Project Proposal	Getting Help!	Spatial Analysis in R with sf and raster
-8	10/18/22		Create Final Project Webpage	One Script, Many Products	Interactive maps with leaflet in R
-9	10/25/22		APIs, time-series, and weather Data	Tracking Hurricanes!	Intermediate Data Visualization with ggplot2
-10	11/1/22		Remote Sensing	Satellite Remote Sensing	Exploratory Data Analysis in R: Case Study
-11	11/8/22		Project First Draft	Parallel Computing with R	
-12	11/15/22		Project Peer Review	Dynamic HTML graph of Daily Temperatures	
-13	11/22/22		Thanksgiving Week (Tuesday Class Optional)		
-14	11/29/22		Project Workshop		
-15	12/6/22		Project Workshop	Project Workshop	
-
+13. Creating custom functions and tools
+14-16. Project work
 
 
 *Content is subject to change. Stay tuned for class updates and emails.* 
