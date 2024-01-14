@@ -29,11 +29,13 @@ Understanding your data is key. It's essential to know the type of data you're w
 - `class()` - Get the class of any object
 - `is.numeric()` - Test if numeric 
 - `is.character()` - Test if character
+- `is.factor()` - Test if factor
 
 There are also functions to convert to a new format:
 
 - `as.numeric()` - Convert to numeric
 - `as.character()` - Convert to character
+- `as.factor()` - Convert to factor
 
 Before jumping into any analysis, use these functions to get a better sense of the type of data you're dealing. As you may have learned in the past, understanding your data is more than half the battle.
 
@@ -74,7 +76,35 @@ a <- TRUE
 as.numeric(a)
 ```
 
-We'll go over logical operators in more detail later on in the course as well. 
+Logical operators can be useful when subsetting data, these are also known as logical boolean operators.
+
+A boolean expression is an expression that produces a boolean (logical) value, which can be used for a variety of to test parts of a program or parse data.
+
+Here are a few short examples of boolean expression:
+
+```{r}
+10 > 9 # greater than
+x == y # equal to
+10.1 != 10L # not equal to
+```
+
+Note that the `!` symbol is used to negate (i.e. "NOT"). Other boolean operators we can use include `&` for "AND" as well as `|` (pipe command) as "OR".
+
+```{r}
+!(5 > 4)
+TRUE & FALSE
+TRUE | FALSE
+```
+
+The final data type we'll discuss this week is a "factor". Factors are typically used for categorical information, which have a fixed and known set of possible values.
+
+```{r}
+is.factor(z)
+as.factor(z)
+factor(c("team 1","team 2","team 3", "team 1", "team 1", "team 3"))
+```
+
+Factors contain levels, which describe the available categories.
 
 Checking data types and converting between types is critical for cleaning and wrangling data before analysis. This is what we are building toward over the next couple of weeks.
 
@@ -103,6 +133,14 @@ m
 
 Vectors (1D) and Matrices (2D) are the foundational formats for storing geospatial data. *Vector* data is used both to describe a 1D array, as well as a *geospatial vector object* such as a point, line, or polygon (shapefile). We'll start working with geospatial data in a couple weeks after we have a better foundation in R.
 
+Lists can also be useful a useful format for storing information, particularly when aggregating different data types together or maintaining structure.
+
+```
+lst <- list(1, "Hello", TRUE) # List 
+```
+
+Lists are typically for specific situations. We will definitely use them later on, but likely less frequently. 
+
 DataFrames are essential for many data analysis workflows, and we will spend a good amount of time working with them. You can think of a DataFrame as R's version of Excel, a way to organize data into rows and columns of different data types *(Only way way better than Excel).*
 
 ```{r}
@@ -114,22 +152,22 @@ df <- data.frame(
 df
 ```
 
-Individual column vectors can be called on using `$` such as `df$name`.
+Individual column vectors can be called on using `$` such as `df$name`, which will return the data listed in the named column.
 
 Other useful functions to investigate a DataFrame include:
 
-- `colnames()`: View column names of dataframe
-- `dim()`: View the dimension, or number of rows and columns 
-- `summary()`: Summary stats for each column
+- `colnames()`: View column names of DataFrame
 - `head()/tail()`: View first/last few rows
+- `summary()`: Summary stats for each column
 
-Lists can also be useful a useful format for storing infromation, particularly when aggregating different data types together or maintaining structure.
+Descriptive functions to better understand data structure for any of the above examples include:
 
-```
-lst <- list(1, "Hello", TRUE) # List 
-```
+- `dim()`: The dimension, or number of rows and columns 
+- `length()`: The length of items, mainly used for vectors and lists
 
-These data structures allow you to organize and store data in R. Data structures differ based on the situation but many of the formats above form the basis for most data analysis, and geospatial analysis.
+Always use the functions above to gain an understanding of the type and structure of the data before performing any analysis.
+
+The different data structures presented above allow you to organize and store data in R. Data structures differ based on the situation but many of the formats above form the basis for most data analysis, and geospatial analysis.
 
 ### 3. Plotting in Base R
 
@@ -154,35 +192,55 @@ hist(mtcars$mpg)
 
 We'll explore plotting in greater detail later in the course and introduce another R packages for better visualization.
 
-Rememver, the first step of any analysis is to understand the data type, data structure, consider summary statistics, and create basic visualizations. \
+Remember, the first step of any analysis is to understand the data type, data structure, consider summary statistics, and create basic visualizations. \
 
 
 #### **Your Task**
 
-Complete the following tasks related to the content of this week.
+Complete the following tasks related to the content of this week. Be sure that each answer is given in the form of a coded solution. 
 
-#### 1. The National Parks
+*Tip: Use the `print()` and `paste()` functions to join variables and text in your responses.*
+
+#### 1. More on Numbers
+
+1) Find the length of the hypotenuse `c` of a right triangle using Pythagorean theorem with side `a=3` and side `b=6`. Add a line that checks whether your answer is in fact larger than both a and b using a boolean expression.
+
+2) Use the `seq()` function to create a regular sequence of numbers ranging from 10 to 25 by increments of 3 as your `y` values. Solve for all `x` values in the linear equation "4x + 5 = y" and plot your result. Add code that solves for the slope of the line based on your answer and checks that this value matches the value provided in the equation above using boolean expression. 
+
+#### 2. The National Parks
 
 Write a script in R that performs the following tasks:
 
-1) Create a new DataFrame that includes information about 15 (or more) National Parks of your choice *(e.g. Bryce Canyon, Everglades, Olympic, etc.).* Add a column for the "name", one for date "established", another for "state", one for "area" of the park, and a field indicating the number of "visitors" in 2022. *You can find this information [here](https://en.wikipedia.org/wiki/List_of_national_parks_of_the_United_States). Advanced students should try to scrape the table of National Parks in the link above and respond to these questions using the full dataset*
+3) Create a new DataFrame that includes information about 15 (or more) National Parks of your choice *(e.g. Bryce Canyon, Everglades, Olympic, etc.).* Add a column for the "name", one for date "established", another for "state", one for "area" of the park, and a field indicating the number of "visitors" in 2022. *You can find this information [here](https://en.wikipedia.org/wiki/List_of_national_parks_of_the_United_States). Advanced students should try to scrape the table of National Parks in the link above and respond to these questions using the full dataset*
 
-2) What is the average size of the National Parks in your DataFrame? What is the total area of all National Parks?
+4) What is the average size of the National Parks in your DataFrame? What is the total area of all National Parks?
 
-3) Which National Parks in your list had the greatest and least visitation in 2022? What is the total number of visitors for all National Parks in 2022?
+5) Which National Parks in your list had the greatest and least visitation in 2022? What is the percent difference in visitation between the two? Also list the total number of visitors for all National Parks in 2022 in your DataFrame?
 
-4) What is the difference in years between the earliest established park and the latest park in your DataFrame? What is the difference in area between these two parks?
+6) Create a histogram showing the National Parks by area. Use a boolean expression to show how many parks are larger than the median park area in your list.
 
-5) Create a plot showing the date established vs. size from your data of National Parks. Create another plot showing park size vs visitation. Are there any potential relationships between these variables in the national parks.
+7) Determine a rough estimate of the rate at which national parks were created based on the time period of your dataset. A very basic rate can be estimated by dividing the total number of occurrences by the time period (in years). If your answer is less than 1, convert your rate to indicate 1 parks/x years. What are some issues with this estimate? 
 
-6) Describe your dataset using several functions listed above. Brainstorm a few other useful ways that you could either analyze or organize this dataset.
+8) Create a plot showing the date established vs. size from your data of National Parks. Create another plot showing park size vs visitation. Are there any potential relationships between these variables in the national parks? Explain.
+
+9) Describe your dataset using several functions listed above. Brainstorm a few other useful ways that you could either analyze or organize this dataset, these do not need coded responses.
 
 
 #### 2. The Iris Dataset
 
-In the second part of your task this week, you will describe an existing dataset and recreate a plot. Your plot will use base functions in R, which is to say that you do not need any additional packages *We'll use several great R libraries throughout the semester.*
+In the second part of your task this week, you will describe an existing dataset and recreate a plot. Your plot will use base functions in R, which is to say that you do not need any additional packages. *We'll use several great R libraries throughout the semester.*
 
-**For this task** you will recreate the following graph:
+This section uses the famous `iris` dataset (Fisher and Anderson), which gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. It is built-in to R so you should be able to directly call the `iris` dataset in R at any time, if not, use `data(iris)` to load the DataFrame into memory.
+
+Perform the following **tasks.**
+
+10) Describe the iris dataset using the various functions we've discussed. Include information about the dimensions, data types, and data structure. Summary statistics can also be useful.
+
+11) What species of iris has a sepal length greater than or equal to 7 cm and petal length less than or equal to  5 cm? How about a sepal length greater than or equal to 7 cm and petal length less than or equal to  5.8 cm?
+
+12) *(3 points)* Recreate the plot below. Describe any relationships you find and suggest additional steps that you could take to better understand any relationship between variables.
+
+|    **Recreate the following graph:**
 
 ```{r, echo=FALSE}
 # Load iris dataset
@@ -204,19 +262,17 @@ legend("topleft", inset=.05,
        c("Setosa", "Versicolor", "Virginica"),
        fill=c("red","green","blue"))
 
-# # Add regression line 
-# abline(lm(iris$Petal.Length~iris$Petal.Width))
+# Add regression line
+abline(lm(iris$Petal.Length~iris$Petal.Width))
 ```
 
-This code uses the famous `iris` dataset (Fisher and Anderson), which gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. You should be able to directly call the `iris` dataset in R at any time, if not, use `data(iris)` to load the DataFrame into memory
+The code above creates a basic scatterplot of petal width vs petal length for all species, colors each point based on species, and adds axis labels and a title. Remember, for a more detailed explanation of a function, type `?plot` to open the help window in the Rstudio console.
 
-The code above creates a basic scatterplot of petal width vs petal length for all species, colors each point based on species, and adds axis labels and a title.Remember, for a more detailed explanation of a function, type `?plot` to open the help window in the Rstudio console.
+Linear regression can be performed using the `lm()` function and the line may be added with `abline()`.
 
-7.) *(2 points)* Describe the iris dataset using the various functions we've discussed. Include information about the dimentions, data types, and data structure. Summary statistics can also be useful.
+*Tip: the color argument must provide a vector of existing colors (e.g. `"red"`) that are the same length as the data being used*
 
-8.) *(2 points)* Recreate the plot above. Describe any relationships you find and suggest additional steps that you could take to better understand any relationship between variables.
-
-*For each step, annotate your code. In other words, add a `#` to comment on the functions you are using and describe the code you write.*
+**Remember to annotate your code in each question.** *In other words, add a `#` to comment on the functions you are using and describe the code you write.*
 
 
 #### Submitting
