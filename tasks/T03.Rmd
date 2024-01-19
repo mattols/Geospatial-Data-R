@@ -81,6 +81,13 @@ Indexing and subsetting can be performed when:
 - Specific cols df[, c("col1", "col2")]
 - Logical conditions are met
 
+You can also slice a subset of a vector of dataframe
+
+```r
+v <- seq(100,120)
+v[10:15] # [1] 109 110 111 112 113 114
+```
+
 Full rows, columns, and other DataFrames can also be added or removed with cbind(), rbind(), and subset(). 
 
 New columns can be added simply by assigning to the $ operator.
@@ -321,55 +328,6 @@ Answer the following 10 questions based on this week's content by writing an ann
 
 
 <><><><><><><><><><><><><>
-
-
- Here is an expanded version with more tutorial-style explanations:
-
-## Data Formatting and Basic Statistics
-
-### 1. Working with Different Data Formats in Base R
-
-
-
-**Factors** 
-
-- Factors represent categorical data like groups or labels
-- They are stored as integer codes mapped to category names
-- We create factors from vectors using as.factor()
-- Levels and labels can be customized
-- Useful for statistical models, plots, tables involving discrete groups      
-
-```r
-sex <- factor(c("male", "female", "female")) 
-levels(sex) # view factor levels
-```
-
-### 2. Indexing, Filtering, and Transforming DataFrames in Base R
-
-
-
-### 3. Reading and Writing Data in Base R
-
-
-
-- For more control over paths, use here() from the here package
-- Avoid hardcoded paths relative to the working directory
-
-### 4. Regular Expressions in Base R
-
-
-
-### 5. Basic Statistical Models in Base R
-
-
-
-Let me know if you need any clarification or have additional sections to expand!
-
-
-
-
-
-
 
 
 

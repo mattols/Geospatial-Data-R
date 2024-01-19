@@ -268,7 +268,7 @@ abline(lm(iris$Petal.Length~iris$Petal.Width))
 
 The code above creates a basic scatterplot of petal width vs petal length for all species, colors each point based on species, and adds axis labels and a title. Remember, for a more detailed explanation of a function, type `?plot` to open the help window in the Rstudio console.
 
-Linear regression can be performed using the `lm()` function and the line may be added with `abline()`.
+Linear regression can be performed using the `lm()` function and the line may be added with `abline()`. Adding this part is not required as we will go over it in more detail next week.
 
 *Tip: the color argument must provide a vector of existing colors (e.g. `"red"`) that are the same length as the data being used*
 

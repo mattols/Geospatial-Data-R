@@ -1,0 +1,127 @@
+---
+title: "Plot Guide"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+## Introduction to Data Visualization in R
+
+Below are a few examples of how to create basic graphs in R using the built-in graphics capabilities. We will use the `mtcars` dataset that comes with R.
+
+### Loading the mtcars dataset
+
+The `mtcars` dataset contains fuel economy data for 32 cars. Let's load it into R:
+
+```r
+data(mtcars)
+```
+
+### Scatterplot
+
+A scatterplot can be used to visualize the relationship between two continuous variables. Let's plot mileage (mpg) vs horsepower (hp):
+
+```r 
+plot(mtcars$hp, mtcars$mpg)
+```
+You can alter the point type of a scatterplot using the `pch` argument. 
+
+We should also add axis labels, a title, and customize other elements:
+
+```{r}
+plot(mtcars$hp, mtcars$mpg, 
+     main="Scatterplot of Horsepower vs Mileage",
+     xlab="Horsepower", ylab="Miles Per Gallon")
+```
+
+lines can also be added to plots
+
+```{r}
+plot(mtcars$hp, mtcars$mpg, pch = 17,
+     main="Scatterplot of Horsepower vs Mileage",
+     xlab="Horsepower", ylab="Miles Per Gallon")
+abline(a = 35, b = -0.1) # intercept and slope
+```
+
+The `abline` function will also accept model outputs and objects that contain the required coefficients. \
+\
+
+### Histogram 
+
+A histogram shows the distribution of a continuous variable. We can use `hist()` to plot a histogram of the mpg values:
+
+```r
+hist(mtcars$mpg)
+```
+
+Customize the number of bins, add labels and title:
+
+```r
+hist(mtcars$mpg, breaks=15, 
+     main="Histogram of Mileage",
+     xlab="Miles Per Gallon")
+```
+
+### Boxplot
+
+A boxplot visualizes numeric data by quartiles. Let's make a boxplot of mpg by number of cylinders:
+
+```r
+boxplot(mpg ~ cyl, data=mtcars)
+```
+
+Add axis labels:
+
+```{r}
+boxplot(mpg ~ cyl, data=mtcars, 
+        main="Mileage by Cylinders",
+        xlab="Number of Cylinders",
+        ylab="Miles Per Gallon")
+```
+
+### Bar Plot
+
+Use a barplot to compare numeric values across categories:
+
+```r
+barplot(table(mtcars$cyl))
+```
+
+Customize with axis labels, title, legend:
+
+```{r}
+barplot(table(mtcars$cyl), 
+        main="Number of Cars by Cylinders",
+        xlab="Number of Cylinders",
+        ylab="Frequency", col=c("red","green","blue"))
+legend("topright", legend=c("4", "6", "8"), fill=c("red","green","blue"))
+```
+
+### Pie Chart 
+
+A pie chart shows proportional values as slices of a pie. We can use `pie()` to plot a pie chart of the number of cars by cylinder:
+
+```r
+pie(table(mtcars$cyl), 
+    labels = c("4 cyl", "6 cyl", "8 cyl"),
+    main="Cars by Cylinders")
+```
+
+Add a legend:
+
+```{r}
+pie(table(mtcars$cyl), 
+    labels = c("4 cyl", "6 cyl", "8 cyl"),
+    col=c("red","green","blue"),
+    main="Cars by Cylinders")
+legend("topright", c("4 cyl", "6 cyl", "8 cyl"), fill=c("red", "green", "blue"))
+```
+
+The pie chart allows us to easily visualize the proportions for each cylinder category.
+
+In general, I would say that pie plots are bar plots are the least useful type of plot, there is typically a better way to show the information. However, in some instances, this can be the perfect type of visualization.
+
+\
+\
+
+
