@@ -5,15 +5,130 @@ date: "Spring 2024"
 output: html_document
 ---
 
-### Solar Farm Production Analysis
+### Hypothetical Case Studies
 
-You are an analyst at a solar power company. The director has asked you to analyze data on energy production at their solar farms to identify factors that influence and predict power output. 
+Your first Case Study will involve hypothetical data and situations. Future Case Study assignments will typically require you to work with real world data and focus on one question or solutions. This assignment has several sections with several different smaller solutions or case study examples. 
 
-You are provided historical data on daily energy production, solar irradiation, temperature, and panel degradation at a solar farm over the last 30 days.
+Take time to carefully consider how to solve each problem. While you are allowed to use online information for help on specific functions or steps, **you must solve each on your own.** You are only cheating yourself if you do not put in the work to creatively find a solution on your own. 
+
+\
+
+#### Computational Solutions in Earth Science
+
+Provide a code solution for each question below using for loops, if/else statements, or other functions. Don't over think this or feel the need to have a perfect solution. Solutions often has simplifications and inaccuracies.
+
+**Geology**
+
+You are working as a geologist analyzing the mineral content of volcanic rock samples taken from different locations around the world. 25 samples have been processed and the composition percentages of 3 key minerals (quartz, alkali feldspar, and plagioclase) have been calculated and normalized.
+
+You have been commissioned to conduct the preliminary analysis on this dataset using a classification commonly used to distinguish fine-grained igneous rocks based on the percentages of the above mineral compositions.
+
+Run the following code below to load the sample matrix into your R session. The data is organized as **Q**uartz, **A**lkali Feldspar, **P**lagioclase in columns 1-3 respectively.
+
+```r
+rock_comp <- matrix(c(43.18, 22.49, 34.33,  
+                      8.19, 34.61, 57.20,
+                      27.28, 55.12, 17.60,
+                      62.95, 16.55, 20.50, 
+                      47.83, 11.77, 40.39,
+                      58.92, 6.50, 34.58,
+                      18.42, 21.35, 60.23,
+                      18.38, 15.16, 66.47,
+                      19.41, 42.25, 38.34,
+                      65.16, 1.91, 32.93, 
+                      29.43, 24.08, 46.49,
+                      25.32, 36.72, 37.96,
+                      11.66, 46.38, 41.96,
+                      40.35, 23.41, 36.24,
+                      52.34, 38.90, 8.76,
+                      2.54, 67.07, 30.39,
+                      55.56, 39.70, 4.74,
+                      9.32, 20.84, 69.84,
+                      39.24, 27.34, 33.42,
+                      25.82, 40.90, 33.28,
+                      31.66, 36.99, 31.34,
+                      47.52, 27.74, 24.74,
+                      33.00, 60.59, 6.41, 
+                      45.33, 7.94, 46.73,
+                      14.68, 35.34, 49.99),
+                     nrow=25, ncol=3, byrow = TRUE)
+```
+
+Use the simplified IUGS tertiary QAP diagram below to distinguish between the fine-grained igneous rock samples:
+
+```{r QAP, echo = FALSE, out.width='50%', out.height='50%'}
+setwd(rprojroot::find_rstudio_root_file())
+knitr::include_graphics(file.path(getwd(), "img/mineralogy/QAP-LeMaitre2002.png"))
+```
+
+*Note: Any samples with greater than 60% Quartz content can be labeled as `NA` or "Unkown".*
+
+Source: Modified from Le Maitre et al., 2002
+
+*Tip: Tertiary diagrams use three variables to plot conditions or identity. Use the example below to observe how the location of a point may be mapped using the Q- Quartz and A- Alkali Feldspar percentages only:*
+
+```{r example, echo = FALSE, out.width='40%', out.height='40%'}
+setwd(rprojroot::find_rstudio_root_file())
+knitr::include_graphics(file.path(getwd(), "img/mineralogy/QAP-method1.png"))
+```
+
+1) *(4 points)* Provide your code solution to classifying the rock sample data based on the simplified QAP diagram above. Remember, your solution does not need to be perfect.
+
+2) Do you think your solution is *efficient* and correct? What are some limitations or areas where you think your code could improve?
+
+\
+
+**Geography**
+
+You are a geographer analyzing the climate of a remote region in South America. You have installed and compiled monthly precipitation data from a weather station in the region for the past five years. Additionally, you have the monthly average precipitation values for the past 30 years based on historical research nearby (`ave30`).
+
+Run the following code to import your data into R:
+
+```r
+precip_data <- data.frame(
+  month = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
+  year1 = c(3.879, 10.430, 6.991, 10.071, 17.864, 21.627, 20.853, 16.377, 10.000, 2.754, 3.507, 5.033),
+  year2 = c(4.540, 7.922, 8.719, 12.649, 19.564, 26.676, 19.410, 16.108, 12.000, 4.194, 2.943, -1.098),
+  year3 = c(8.117, 4.470, 8.637, 11.067, 17.948, 25.307, 21.790, 14.876, 13.000, 4.067, 2.914, 3.169),
+  year4 = c(5.141, 5.626, 9.217, 12.242, 18.542, 22.724, 21.756, 14.388, 15.000, 6.560, 5.737, 2.248),
+  year5 = c(5.259, 6.109, 8.888, 14.054, 18.750, 27.508, 21.643, 14.239, 18.000, 4.833, 2.548, 2.432),
+  ave30 = c(4.491, 6.015, 9.719, 14.322, 17.637, 23.872, 20.194, 14.301, 9.587, 3.585, 2.633, 1.460)
+)
+```
+
+Your task is to analyze the precipitation data for this region. Write a script to answer the following:
+
+3) *(2 points)* Create new columns or vectors for: the number of years with precipitation above the 30 year monthly average, number of years below monthly average. Display this information in one or two **plots**.
+
+4) *(2 points)* Calculate the monthly standard deviation and new monthly averages for the past five years based on your station data. Which months have the most variable precipitation? How does the five-year average differ from the 30-year average? Provide any plots you think might be necessary.
+
+5) *(2 points)* Based on your analysis above, and any other analysis you would like to preform, describe how precipitation in the past five years has changed with respect to the historical climatology of the region. If the observed patterns continue, how do you expect the climate in this area to change in the future? Describe any *trends* or patterns that seem telling.
+
+\
+
+**Environmental Science**
+
+You are an environmental scientist working for the Oregon Department of Water Quality, a state-level agency that enforces EPA standards. You have been collecting weekly stream samples at four monitoring sites throughout the state for the past year. Stakeholders will use this data to know how to best direct any remediation efforts.
+
+EPA regulation indicates that nitrate levels above 5 ppm and phosphate above 2 ppm exceed the accepted standard, in which case, some action will be required. High levels can be particularly worrisome when levels exceed limits by more than 3 consecutive weeks. There is also added concern when nitrate and phosphate limits exceed together during the same time period.
+
+Read in the `cs01_river_data.csv` *(available in Canvas)* to analyze the stream data, which provides values in parts per million (ppm). Respond to the following questions:
+
+6) *(2 points)* Report the number of occurrences (weeks) for each site in which limits for nitrate and phosphate were exceeded. Which site(s) seem to be the greatest concern.
+
+7) *(2 points)* Report any instances in which either chemical exceeded limits for more than three consecutive weeks and when nitrate and phosphate levels exceeded at the same time. Be sure to list the weeks or months in which this might be a concern for each site. 
+
+8) *(2 points)* Create two plots or figures that to present to stakeholders in a report in order to help focus remediation efforts for these different sites. Write a short statement with your recommendations or concerns to go alongisde the figures.
+
+\
+
+**Solar Farm Production Analyst**
+
+You are an analyst at a solar power company in Texas. Your manager has asked you to analyze data on energy production at one of the solar farms to identify factors that influence and predict power output. 
+
+You are provided historical data on daily energy production, solar irradiation, temperature, and panel degradation at a solar farm over a 30-day time period last year.
 
 Conduct an analysis on this sample data:
-
-#### Load data
 
 ```r
 # 30 days of energy production (kWh)
@@ -31,33 +146,31 @@ temp <- c(18, 17, 22, 20, 15, 16, 12, 14, 19, 21,
           15, 17, 18, 21, 22, 23, 19, 11, 23, 25,
           18, 21, 22, 20, 19, 15, 21, 25, 26, 20)
           
-# 30 days of degradation (percentage)
+# 30 days of degradation (per-mil)
 degrade <- c(10, 10, 10, 10, 10, 12, 12, 12, 12, 12,
              10, 10, 10, 10, 10, 10, 10, 10, 10, 12, 
              12, 12, 12, 12, 12, 12, 12, 12, 12, 12)
 ```
 
-#### Analysis
+*pay careful attention to units*
 
-1) !!! no Calculate the mean production across the 30 days.
+Answer the following questions:
 
-2) Determine the maximum, minimum, and average daily production value.
+9) Build a DataFrame using the above variables and provide a statistical summary of the information over this 30-day time period.
 
-3) Calculate the standard deviation of the irradiation measurements.
+10) Make a scatterplot of production vs. irradiation and assess if the relationship appears linear.
 
-4) Build a linear model to predict production based on irradiation and temperature. Evaluate the model R^2. 
+12) Build a linear model to predict production based on irradiation and temperature. Evaluate the model R^2 and p-value.
 
-5) Estimate average production if temperature was 5 degrees C higher, using your model.
+13) Using your model, estimate average production if temperature was 5 degrees C higher.
 
-6) Make a scatterplot of production vs. irradiation and assess if the relationship appears linear.
+14) Assess whether degradation seems to have an impact on production. Also report the cumulative degradation in the solar panels over the 30 day time period as a percent. 
 
-7) Calculate the mean degradation and analyze if degradation seems to impact production.
+15) Convert the average daily production from kWh to gigajoule (GJ), given the conversion factor 1 kWh = 0.0036 GJ. Report the total production in GJ over this 30 day time period. 
 
-8) Convert the average daily production from kWh to gigajoule (GJ), given the conversion factor 1 kWh = 0.0036 GJ.
+16) If the solar farm covers 5 km2, calculate the total kW generated over the 30 days
 
-9) If the solar farm covers 5 km2, calculate the total kW generated over the 30 days
-
-10)
+\
 
 ### Submit
 
@@ -66,3 +179,8 @@ Upload a R script with responses to each question. Support your responses with s
 
 **This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\
 
+\
+\
+References:
+
+Le Maitre, R.W., Streckeisen, A., Zanettin, M.J., Le Bas, M.J., Bonin, B., Bateman, P., Bellieni, G., Dudel, A., Efremova, S., Keller, J., Lameyre, J., Sabine, P.A., Schmid, R., Sørenson, H., and Wooley, A.R. (eds.), 2002, Igneous Rocks: A Classification and Glossary of Terms: Cambridge University Press, Cambridge, U.K.

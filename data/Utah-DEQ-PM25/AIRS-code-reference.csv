@@ -1,0 +1,26 @@
+County,EPA AIRS Code,Station Name,Monitoring Parameters,Station Address,UTM Coord. Northing,UTM Coord. Easting,Elevation (meters)
+Cache County,490050007,Smithfield - SM,"PM2.5 1-hour & 24-hour, O3, NO2, WS, WD, TEMP, SR, Speciation PM2.5","675 West 220 North, Smithfield",4632671,429270,1379
+Box Elder County,490030005,Brigham City - BG,"PM2.5, O3, NO2, WS, WD, TEMP, SR","W 1175 S, Brigham City",4593090,414712,1313
+Weber County,490571003,Harrisville - HV,"PM2.5 1-hour & 24-hour, PM10 1-hour & 24-hour, O3, CO, NO2, WS, WD, TEMP, SR","425 West 2550 North, Harrisville",4572825,417414,1331
+Davis County,490110004,Bountiful #2 - BV,"PM2.5 1-hour & 24-hour, PM10 1-hour & 24-hour, O3, NO2, WS, WD, TEMP, SR, Speciation PM2.5, Metals PM10","171 West 1370 North, Bountiful",4528360,425503,1309
+Davis County,490116001,Antelope Island - AI,"WS, WD, TEMP",Great Salt Lake,4543850,396506,1349
+Grand County,490190007,Moab - M7,"PM2.5 1-hour, O3, NO2, WS, WD, TEMP, SR","685 South Millcreek Dr., Moab",4269639,627443,1227
+Salt Lake County,490353006,Hawthorne - HW,"PM2.5 1-hour & 24-hour, PM10 1-hour & 24-hour, CO, O3, NO2, SO2, WS, WD, TEMP, SR, Ceilometer, Gas Chromatograph, Speciation PM2.5","1675 South 600 East, Salt Lake City",4509639,426361,1306
+Salt Lake County,490353013,Herriman #3 - H3,"PM2.5 1-hour, PM10 1-hour & 24-hour, O3, NO2, WD, WS, TEMP, SR","14058 Mirabella Drive, Herriman",4483371,412184,1530
+Salt Lake County,490352005,Copperview - CV,"PM2.5 1-hour & 24-hour, CO, O3, NO2, SO2 WD, WS, TEMP, SR","8449 South Monroe Street, Midvale",4494523,424343,1343
+Salt Lake County,490353016,Inland Port - ZZ,"PM2.5 1-hour, O3, NO2, WS, WD, TEMP, SR","1480 North 8000 West, Salt Lake City",4518001,408255,1286
+Salt Lake County,490353014,Lake Park - LP,"PM2.5 1-hour, O3, NO2, WS, WD, TEMP, SR","2782 South Corporate Park Dr., West Valley City",4507028,414790,1297
+Salt Lake County,490354002,Near Road - NR,"PM2.5 1-hour & 24-hour, CO, O3, NO2","5001 Galleria Dr., Murray",4507040,414798,1298
+Salt Lake County,490353010,Rose Park - RP,"PM2.5 1-hour & 24-hour, O3, CO, NO2, SO2, WS, WD, TEMP, SR","1400 West Goodwin Ave., Salt Lake City",4516479,421458,1295
+Salt Lake County,490353005,Saltair - SA,"WS, WD, TEMP","6640 West 1680 North, Salt Lake City",4517763,411460,1282
+Salt Lake County,490353015,Utah Technical Center - EQ,"PM2.5 1-hour & 24-hour, PM10 1-hour & 24-hour, O3, CO, NO2, SO2, WS, WD, TEMP, SR, Ceilometer","240 North 1950 West, Salt Lake City",4514443,420256,1283
+Salt Lake County,490353018,Red Butte - RB,"PM2.5 1-hour, O3, WS, WD, TEMP, SR, Ceilometer","Red Butte Canyon Rd., Salt Lake City",4513170,430088,1517
+Utah County,490494001,Lindon - LN,"PM2.5 1-hour & 24-hour, PM10 1-hour & 24-hour, O3, NO2, WS, WD, TEMP, SR, Speciation PM2.5","50 North Main Street, Lindon",4465692,439400,1442
+Utah County,490495010,Spanish Fork - SF,"PM2.5 1-hour & 24-hour, O3, WS, WD, TEMP, SR","Air Port, Spanish Fork",4443095,443951,1380
+Tooele County,490450004,Erda - ED,"PM2.5 1-hour & 24-hour, O3, RH, WS, WD, TEMP, SR","2163 West Erda Way, Erda",4495298,385291,1511
+Tooele County,490456001,Badger Island - BI,"WS, WD, TEMP",Great Salt Lake,4533506,368518,1282
+Duchesne County,490130002,Roosevelt - RS,"PM2.5 1-hour & 24-hour, PM10 1-hour & 24-hour, O3, NO2, RH, WD, WS, TEMP, SR","290 South 1000 West, Roosevelt, UT",4460894,584230,1587
+Uintah County,490471004,Vernal #4 - V4,"PM2.5 1-hour & 24-hour, O3, NO2, RH, WD, WS, TEMP, SR","600 North 1650 West, Vernal, UT",4480333,622012,1668
+Carbon County,490071003,Price #2 - P2,"PM2.5 1-hour, O3, NO2, RH, WD, WS, TEMP, SR","351 South 2500 East, Price, UT",4382915,519750,1740
+Iron County,490210005,Enoch - EN,"PM2.5 1-hour, O3, NO2, RH, WD, WS, TEMP, SR, BP","201 Thoroughbred Way, Enoch, UT",4179783,318904,1692
+Washington County,490530007,Hurricane - HC,"PM2.5 1-hour, O3, NO2, RH, WD, WS, TEMP, SR","147 North 870 West, Hurricane, UT",4117231,295368,992

@@ -17,6 +17,13 @@
 # pandemic response more visible in some counties?
 
 
+# or use hourly data?
+# https://air.utah.gov/dataarchive/archpm25.htm 
+# along with AIRS code reference table
+
+# - MC - Mass concentation in (micrograms per cubic meter)
+
+
 # path test
 "C:\Users\10504912\OneDrive - Utah Valley University\Projects\src\data\pm25_2018_2022"
 x <- readline() # enter path into prompt
