@@ -356,8 +356,8 @@ display: none;
 </div>
 
 
-<div id="data-formatting-and-simple-statistics" class="section level3">
-<h3>Data Formatting and Simple Statistics</h3>
+<div id="data-formatting-and-statistics" class="section level3">
+<h3>Data Formatting and Statistics</h3>
 <div id="additional-data-formats" class="section level4">
 <h4>1. Additional Data Formats</h4>
 <p>R provides specialized data structures beyond regular numeric vectors
@@ -376,14 +376,22 @@ as.POSIXct().</p>
 minutes, etc using built-in functions. Converting between formats is
 also simple:</p>
 <pre class="r"><code>now2 &lt;- as.Date(now) # convert to Date class
-as.POSIXlt(now2) # back to POSIXlt</code></pre>
+as.POSIXlt(now2) # back to POSIXlt
+as.Date(&quot;1969-08-15&quot;) # convert string to date (tries format &quot;%Y-%m-%d&quot; by default)</code></pre>
 <p>There are several ways to format and change date/time information. It
 can be a headache but is essential for some analysis.</p>
 <pre class="r"><code>today &lt;- Sys.Date()
 format(today, &quot;%d %b %Y&quot;)  # with month as a word</code></pre>
-<pre><code>## [1] &quot;14 Jan 2024&quot;</code></pre>
+<pre><code>## [1] &quot;23 Jan 2024&quot;</code></pre>
+<p>The format function can transform your date and time information,
+however, there are also other helpful functions to do so:</p>
+<pre class="r"><code>now &lt;- Sys.time() # current date and time
+format(now, &quot;%H&quot;) # extract hour of time stamp
+weekdays(now) # list the day of the week</code></pre>
 <p>Make sure your dates are formatted correctly, in some instances a
-correct timezone may even need to be specified.</p>
+correct timezone may even need to be specified. Time is an essential
+component in analysis, make sure that you understand how to work with
+dates and time.</p>
 <p>For dictionary-like data, R has lists which contain key-value pairs
 instead of just values like regular vectors. Lists are created with the
 list() function and elements are accessed using the $ operator. This
@@ -425,14 +433,22 @@ df[df$col1 &gt; 0, ] # logical subset rows where col1 is positive</code></pre>
 <p>Indexing and subsetting can be performed when: - Location is specifid
 - df[i, j] where i are rows, j are cols - Subsets are sliced df[1:5, ] -
 Specific cols df[, c(“col1”, “col2”)] - Logical conditions are met</p>
+<p>You can also slice a subset of a vector of DataFrame</p>
+<pre class="r"><code>v &lt;- seq(100,120)
+v[10:15] # [1] 109 110 111 112 113 114</code></pre>
+<p>Indexing can be very useful to subset data, either by providing the
+position of the elements you wish to extract
+<code>[numbers_to_keep]</code> or by giving a boolean vector of the same
+length indicating which <code>TRUE</code> values to keep.</p>
 <p>Full rows, columns, and other DataFrames can also be added or removed
-with cbind(), rbind(), and subset().</p>
-<p>New columns can be added simply by assigning to the $ operator.</p>
+with cbind(), rbind(), and subset(). New columns can be added simply by
+assigning to the $ operator.</p>
 <pre class="r"><code>df$new_col &lt;- df$col1 * 100 # add new column</code></pre>
 <p>Sorting is done via the order() and sort() functions.</p>
 <pre class="r"><code>sort(df$col1) # sort values
 df &lt;- df[order(df$col1),] # reorder data based on order of col1</code></pre>
-<p>This brings us to another method to handle NA values:</p>
+<p>This brings us to another method to handle NA values, which may be
+preferrable based on the situation:</p>
 <pre class="r"><code>vals &lt;- c(1, 2, NA, 4)
 vals[is.na(vals)] &lt;- 0 </code></pre>
 <p>When working with large datasets, you will likely need to subset and
@@ -507,8 +523,8 @@ for matches to argument pattern within each element of a character and
 differ in the format of and amount of detail in the results. Whereas
 functions like <code>sub</code> and <code>gsub</code> perform
 replacement of the first and all matches respectively.</p>
-<pre class="r"><code>grep(&quot;\\d&quot;, c(&quot;abc123&quot;, &quot;def&quot;)) # match strings containing digits
-grepl(&quot;[A-Z]&quot;, c(&quot;abc&quot;, &quot;XYZ&quot;)) # test for uppercase 
+<pre class="r"><code>grep(&quot;\\d&quot;, c(&quot;abc123&quot;, &quot;def&quot;, &quot;45def&quot;)) # match strings containing digits
+grepl(&quot;[A-Z]&quot;, c(&quot;abc&quot;, &quot;XYZ&quot;, &quot;AbC&quot;)) # test for uppercase 
 gsub(&quot;-&quot;, &quot;_&quot;, c(&quot;text-data&quot;, &quot;more-text&quot;)) # replace - with _
 gsub(&quot;[[:punct:]]&quot;, &quot;&quot;, c(&quot;Hi there!&quot;, &quot;How are you?&quot;)) # remove punctuation</code></pre>
 <p>Regular expressions provide a powerful pattern matching syntax for
@@ -617,75 +633,166 @@ cor.test(x, y) # correlation test </code></pre>
 <pre class="r"><code>cor.test(x, y) </code></pre>
 <p>&lt;&gt;&lt;&gt;</p>
 </div>
-</div>
-<div id="your-task" class="section level3">
-<h3>Your Task</h3>
-<p>Answer the following 10 questions based on this week’s content by
+<div id="your-task" class="section level4">
+<h4>Your Task</h4>
+<p>Answer the following questions based on this week’s content by
 writing an annotated R script.</p>
+</div>
+<div id="data-types-and-structures" class="section level4">
+<h4>1. Data types and structures</h4>
+<p>Using the start <em>(Jan, 8)</em> and end <em>(April, 23)</em> dates
+of the spring 2024 semester, answer questions 1-3:</p>
 <ol style="list-style-type: decimal">
-<li><p>Load the mtcars dataset and calculate the correlation between mpg
-and wt. Is this correlation statistically significant at the 0.05
-level?</p></li>
-<li><p>For the mtcars data, convert the vs variable from numeric to a
-factor. How many levels does this factor have?</p></li>
-<li><p>Write a regular expression that would match valid email addresses
-containing exactly one @ symbol and at least one period.</p></li>
-<li><p>Load the iris dataset and create a new column called sepal_area
-by multiplying sepal_length by sepal_width.</p></li>
-<li><p>Write a function that calculates the mean and standard deviation
-of a numeric vector passed as input. Have it return a named list with
-two elements.</p></li>
+<li><p>Find the number of days in the semester.</p></li>
+<li><p>Extract all dates that fall on a Saturday and count the total
+number of Saturdays in the semester.</p></li>
+<li><p>Round up and assume that we meet from 1-4PM (3 hrs) each day for
+this class. Use the dates of the semester and these details to calculate
+the number of hours you will spend in this class this semester. <em>(no
+need to consider holidays)</em></p></li>
+</ol>
+<p>Use regular expression and the following two vectors to respond to
+questions 4-5:</p>
+<pre class="r"><code># emails
+emails &lt;- c(&quot;w2u9q0g7z6@outlook.com&quot;, &quot;m7n4w6f1a0@outlook.com&quot;, &quot;withspaces@gmail.com&quot;,  
+           &quot;n7y4h5k0t6@gmail.com&quot;, &quot;@invalid&quot;, &quot;e2m5h7q1z0@outlook.com&quot;, 
+           &quot;invalid@&quot;, &quot;invalid@&quot;, &quot;invalid@&quot;,
+           &quot;g2b1j5u7o8@outlook.com&quot;, &quot;s1c8k0t6e7@gmail.com&quot;, &quot;f9m1a4z8h6@outlook.com&quot;,
+           &quot;e8c5f3v6k9@yahoo.com&quot;, &quot;missingdotgmail.com&quot;, &quot;invalid@email&quot;,
+           &quot;b6g3f0y4d2@gmail.com&quot;, &quot;k0p8i9s6o3@outlook.com&quot;, &quot;s8t7g2k9o5@yahoo.com&quot;, 
+           &quot;a9i7y1w5q0@gmail.com&quot;, &quot;r2g9y4l5i6@yahoo.com&quot;, &quot;b7d4a5u0j2@outlook.com&quot;,
+           &quot;l0a7z9m6r1@outlook.com&quot;, &quot;c4v2a7w6r1@yahoo.com&quot;, &quot;x1s3d8y5c6@yahoo.com&quot;,
+           &quot;@invalid&quot;, &quot;@invalid&quot;, &quot;@invalid&quot;,
+           &quot;@invalid&quot;, &quot;invalid@&quot;, &quot;e3k9x2m8t4@gmail.com&quot;,
+           &quot;invalidemail&quot;, &quot;k2a3b7l1n8@outlook.com&quot;, &quot;d0a6q9u2z4@yahoo.com&quot;,
+           &quot;i0f2z8c5x1@outlook.com&quot;, &quot;q4m0l5o6j2@outlook.com&quot;, &quot;v5h9a4f1q0@outlook.com&quot;,
+           &quot;@invalid&quot;, &quot;f0z3h5d1v2@gmail.com&quot;, &quot;g7k0u3a5s6@gmail.com&quot;,
+           &quot;@invalid&quot;, &quot;invalid@&quot;, &quot;@invalid&quot;, 
+           &quot;@invalid&quot;, &quot;n9t0h3e6i5@outlook.com&quot;, &quot;l2k1r6z0g5@outlook.com&quot;,
+           &quot;f9d7u5e1n8@outlook.com&quot;, &quot;n9o4s8a6b0@yahoo.com&quot;, &quot;@invalid&quot;,
+           &quot;s1b8q5i9z2@gmail.com&quot;, &quot;z7v3n1o0f9@outlook.com&quot;)
+
+# phone numbers
+phones &lt;- c(&quot;(525) 692-8788&quot;, &quot;(748) 654-2046&quot;, &quot;(865) 970-8066&quot;, &quot;(310) 472-4003&quot;, 
+           &quot;(689) 943-4206&quot;, &quot;920.680.4936&quot;, &quot;323.171.5088&quot;, &quot;265.687.3906&quot;, 
+           &quot;316.674.1293&quot;, &quot;389.240.9468&quot;, &quot;562 322 3503&quot;, &quot;140 627 7741&quot;, 
+           &quot;530 215 9943&quot;, &quot;189 705 9565&quot;, &quot;415 873 7128&quot;, &quot;133-854-8126&quot;, 
+           &quot;615-508-4357&quot;, &quot;112-407-4979&quot;, &quot;168-377-4229&quot;, &quot;994-188-6602&quot;,
+           &quot;123-456-789&quot;, &quot;abc-123-4567&quot;, &quot;123 45 6789&quot;, &quot;1a2b3c4d5e&quot;, 
+           &quot;12345&quot;, &quot;67890&quot;, &quot;1234&quot;, &quot;6789&quot;, &quot;12345678903&quot;, &quot;12345678901&quot;)</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li><p>With the emails vector, write a function to match only valid
+email addresses containing exactly one @ symbol and at least one period
+using regular expression.</p></li>
+<li><p>Using the phones vector, write a regular expression pattern that
+could be used with grepl() or grep() to identify all valid 10-digit
+phone numbers in the phones vector, regardless of how they are formatted
+with parentheses, spaces, dots, etc. <em>(Tip: consider the format of
+different 10-digit numbers and account for optional non-digit
+characters, 3 digits, optional non-digits, 3 digits, optional
+non-digits, and 4 digits)</em> - advanced students should write a script
+to check to try and double check that their responses are
+valid.</p></li>
+</ol>
+<p>Read in csv file provided in canvas. This file contains daily snow
+and meteorological data for 30 days from December, 24, 2023 to January,
+22 2024.</p>
+<p>After reading in the data, convert dates column to a date object and
+change the column names to more useful manageable names. Precipitation
+and Snow Water Equivalent units are in inches.</p>
+<p>Snow water equivalent is the amount of water in the snowpack.</p>
+<p>Respond to the following questions:</p>
+<ol start="6" style="list-style-type: decimal">
+<li><p>Is there a correlation between snow water equivalent and
+precipitation accumulation? How does the strength of this relationship
+change over the season?</p></li>
+<li><p>How well does the snow water equivalent track with the median
+historical values? When does it tend to be above or below
+normal?</p></li>
+<li><p>What is the relationship between air temperature and snow depth
+changes? How might rising temperatures impact total seasonal
+snowpack?</p></li>
+<li><p>What are the typical day-to-day changes in snow water equivalent?
+How much new snow is required to increase the snowpack?</p></li>
+<li><p>How often do major snowfall events (e.g. &gt;6 inches) occur? Do
+these events contribute significantly to the total seasonal
+snowpack?</p></li>
+</ol>
+<p>NEW</p>
+<ul>
+<li><p>how much snow was lost? over this time period</p></li>
+<li><p>using the equation swe = density * depth, determine the average
+and standard deviation density of the snowpack over this 30 day period.
+Express this number as a percentage and</p></li>
+</ul>
+<p>CHECK!</p>
+<p><br />
+</p>
+</div>
+<div id="statistics" class="section level4">
+<h4>2. Statistics</h4>
+<p>Use the <code>mtcars</code> dataset to understand basic relationships
+between variables.</p>
+<ul>
+<li><p>The relationship between horsepower and fuel efficiency (mpg). A
+scatterplot can show if they are linearly related. Is engine power
+related to gas mileage?</p></li>
+<li><p>The distribution of fuel efficiency (mpg). A histogram can show
+the overall spread and central tendency. How is gas mileage distributed
+across cars?</p></li>
+<li><p>Differences in fuel efficiency by number of cylinders. A grouped
+boxplot can highlight differences in mpg by the variable cyl. Do cars
+with more cylinders have lower average mpg?</p></li>
+<li><p>The relationship between weight and fuel efficiency. A
+scatterplot can show if heavier cars tend to have lower mpg. Does weight
+impact gas mileage?</p></li>
+<li><p>Differences in fuel efficiency by transmission type. Group the
+mpg by am (transmission) and compare with a boxplot or densities plot.
+Do automatic or manual transmissions have better mpg?</p></li>
+<li><p>Horsepower differences by number of cylinders. Use a violin plot
+or boxplot to compare hp by cyl. Do cars with more cylinders tend to
+have higher horsepower?</p></li>
+<li><p>Weight differences by number of cylinders. Use a grouped boxplot
+to see how weight varies by cyl. Do cars with more cylinders tend to be
+heavier?</p></li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li><p>Calculate the correlation between mpg and wt. Is this correlation
+statistically significant at the 0.05 level?</p></li>
 <li><p>Using the mtcars data, test whether the average mpg is different
 between cars with 4, 6, and 8 cylinders using ANOVA.</p></li>
-<li><p>Extract the year, month, and day components from the following
-date: “2023-03-14”</p></li>
-<li><p>List only the csv files in the current working
-directory.</p></li>
-<li><p>Read the mtcars CSV file from Github into R (url: <a href="https://raw.githubusercontent.com/plotly/datasets/master/mtcars.csv" class="uri">https://raw.githubusercontent.com/plotly/datasets/master/mtcars.csv</a>)</p></li>
 <li><p>Write a function that simulates 10 coin flips and returns the
 number of heads. Run this simulation 1000 times and plot the
 distribution of heads.</p></li>
 </ol>
 <p>&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;</p>
-<p>Here is an expanded version with more tutorial-style
-explanations:</p>
+<p>explore with the mtcars dataset:</p>
+<ul>
+<li><p>The relationship between horsepower and fuel efficiency (mpg). A
+scatterplot can show if they are linearly related. Is engine power
+related to gas mileage?</p></li>
+<li><p>The distribution of fuel efficiency (mpg). A histogram can show
+the overall spread and central tendency. How is gas mileage distributed
+across cars?</p></li>
+<li><p>Differences in fuel efficiency by number of cylinders. A grouped
+boxplot can highlight differences in mpg by the variable cyl. Do cars
+with more cylinders have lower average mpg?</p></li>
+<li><p>The relationship between weight and fuel efficiency. A
+scatterplot can show if heavier cars tend to have lower mpg. Does weight
+impact gas mileage?</p></li>
+<li><p>Differences in fuel efficiency by transmission type. Group the
+mpg by am (transmission) and compare with a boxplot or densities plot.
+Do automatic or manual transmissions have better mpg?</p></li>
+<li><p>Horsepower differences by number of cylinders. Use a violin plot
+or boxplot to compare hp by cyl. Do cars with more cylinders tend to
+have higher horsepower?</p></li>
+<li><p>Weight differences by number of cylinders. Use a grouped boxplot
+to see how weight varies by cyl. Do cars with more cylinders tend to be
+heavier?</p></li>
+</ul>
+</div>
 </div>
 <div id="data-formatting-and-basic-statistics" class="section level2">
-<h2>Data Formatting and Basic Statistics</h2>
-<div id="working-with-different-data-formats-in-base-r" class="section level3">
-<h3>1. Working with Different Data Formats in Base R</h3>
-<p><strong>Factors</strong></p>
-<ul>
-<li>Factors represent categorical data like groups or labels</li>
-<li>They are stored as integer codes mapped to category names</li>
-<li>We create factors from vectors using as.factor()</li>
-<li>Levels and labels can be customized</li>
-<li>Useful for statistical models, plots, tables involving discrete
-groups</li>
-</ul>
-<pre class="r"><code>sex &lt;- factor(c(&quot;male&quot;, &quot;female&quot;, &quot;female&quot;)) 
-levels(sex) # view factor levels</code></pre>
-</div>
-<div id="indexing-filtering-and-transforming-dataframes-in-base-r-1" class="section level3">
-<h3>2. Indexing, Filtering, and Transforming DataFrames in Base R</h3>
-</div>
-<div id="reading-and-writing-data-in-base-r" class="section level3">
-<h3>3. Reading and Writing Data in Base R</h3>
-<ul>
-<li>For more control over paths, use here() from the here package</li>
-<li>Avoid hardcoded paths relative to the working directory</li>
-</ul>
-</div>
-<div id="regular-expressions-in-base-r" class="section level3">
-<h3>4. Regular Expressions in Base R</h3>
-</div>
-<div id="basic-statistical-models-in-base-r" class="section level3">
-<h3>5. Basic Statistical Models in Base R</h3>
-<p>Let me know if you need any clarification or have additional sections
-to expand!</p>
-</div>
-</div>
-<div id="data-formatting-and-basic-statistics-1" class="section level2">
 <h2>Data Formatting and Basic Statistics</h2>
 <div id="additional-data-formats-1" class="section level3">
 <h3>1. Additional Data Formats</h3>

@@ -5,17 +5,57 @@ date: "Spring 2024"
 output: html_document
 ---
 
-## More Data Wrangling and Statistical Models
+### Streamlined workflows
 
-### 1. Tidy Data
+Nice work! You've made it through the first couple weeks learning many of the capabilities and tricks in R. One of the best aspects of an open-source programming language is that it is a community built tool and features thousands of useful packages to perform general or more specific analysis. You will learn about a few key packages this week.
 
-### 2. The dplyr Package
+You will also learn how to make functions in R. When you have a specific task, it can be useful to call a customized function rather than repeat unnecessary lines of code.
 
-### 3. Data Wrangling Tips
+\
 
-### 4. Statistical Modeling and Tests
+#### 1. Introducing Packages!
 
-### Your Task
+While there are several benefits in learning the base R functions, some of the added libraries we will use are much better. Having general familiarity with structures and workflows in base R will help you once we get to the geospatial data aspect of this class.
+
+This week we will move our data wrangling and analysis to incorporate a few key libraries in R. We will focus on the following packages, most of which are associated with the *tidyverse*:
+
+- `dplyr`
+- `tidy`
+- `ggplot`
+- `...`
+
+\
+
+A few key functions that we mentioned in class include: dplyr piping with `%>%` and data transformation with functions like `mutate()` and `filter()`, the ggplot structure, added statistical packages, and tidying data with special functions.
+
+\
+
+#### 2. Introducing Custom Functions!
+
+Wouldn't you like to build your own tool that is tailored for your need? Who wouldn't?
+
+Creating functions in R can make your code more compact and efficient. Rather than repeating your code or implimenting a for loop, consider creating a function to perform the task!
+
+We worked on the basics behind creating functions this week.
+
+
+\
+
+#### Your Task
+
+Your task this week is to read in, clean, and analyze the snotel (or USGS) csv file from Canvas. OR DAir Quality Data
+
+Be sure to answer all of the following questions in your analysis:
+
+* Transform the data to include the station name along with the code
+* ...
+
+
+#### 1. Tidy Data
+#### 2. The dplyr Package
+#### 3. Data Wrangling Tips
+#### 4. Statistical Modeling and Tests
+#### Your Task
 
 
 

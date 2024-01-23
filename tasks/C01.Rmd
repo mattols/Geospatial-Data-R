@@ -13,7 +13,7 @@ Take time to carefully consider how to solve each problem. While you are allowed
 
 \
 
-#### Computational Solutions in Earth Science
+#### Applications in Earth Science
 
 Provide a code solution for each question below using for loops, if/else statements, or other functions. Don't over think this or feel the need to have a perfect solution. Solutions often has simplifications and inaccuracies.
 
@@ -61,7 +61,7 @@ setwd(rprojroot::find_rstudio_root_file())
 knitr::include_graphics(file.path(getwd(), "img/mineralogy/QAP-LeMaitre2002.png"))
 ```
 
-*Note: Any samples with greater than 60% Quartz content can be labeled as `NA` or "Unkown".*
+*Note: Any samples with greater than 60% Quartz content can be labeled as `NA` or "Unknown".*
 
 Source: Modified from Le Maitre et al., 2002
 
@@ -72,7 +72,7 @@ setwd(rprojroot::find_rstudio_root_file())
 knitr::include_graphics(file.path(getwd(), "img/mineralogy/QAP-method1.png"))
 ```
 
-1) *(4 points)* Provide your code solution to classifying the rock sample data based on the simplified QAP diagram above. Remember, your solution does not need to be perfect.
+1) *(4 points)* Provide your code solution to classify rock sample data based on the simplified QAP diagram above. Remember, your solution does not need to be perfect.
 
 2) Do you think your solution is *efficient* and correct? What are some limitations or areas where you think your code could improve?
 
@@ -102,7 +102,7 @@ Your task is to analyze the precipitation data for this region. Write a script t
 
 4) *(2 points)* Calculate the monthly standard deviation and new monthly averages for the past five years based on your station data. Which months have the most variable precipitation? How does the five-year average differ from the 30-year average? Provide any plots you think might be necessary.
 
-5) *(2 points)* Based on your analysis above, and any other analysis you would like to preform, describe how precipitation in the past five years has changed with respect to the historical climatology of the region. If the observed patterns continue, how do you expect the climate in this area to change in the future? Describe any *trends* or patterns that seem telling.
+5) *(2 points)* Based on your analysis above, or any other analysis you would like to perform, describe how precipitation in the past five years has changed with respect to the historical climatology of the region. If the observed patterns continue, how do you expect the climate in this area to change in the future? Describe any *trends* or patterns that seem telling.
 
 \
 
@@ -118,7 +118,7 @@ Read in the `cs01_river_data.csv` *(available in Canvas)* to analyze the stream 
 
 7) *(2 points)* Report any instances in which either chemical exceeded limits for more than three consecutive weeks and when nitrate and phosphate levels exceeded at the same time. Be sure to list the weeks or months in which this might be a concern for each site. 
 
-8) *(2 points)* Create two plots or figures that to present to stakeholders in a report in order to help focus remediation efforts for these different sites. Write a short statement with your recommendations or concerns to go alongisde the figures.
+8) *(2 points)* Create two plots or figures to present to stakeholders in a report in order to help focus remediation efforts for these different sites. Write a short statement with your recommendations or concerns to go alongside the figures.
 
 \
 
@@ -128,7 +128,7 @@ You are an analyst at a solar power company in Texas. Your manager has asked you
 
 You are provided historical data on daily energy production, solar irradiation, temperature, and panel degradation at a solar farm over a 30-day time period last year.
 
-Conduct an analysis on this sample data:
+Conduct an analysis on this sample data and *pay careful attention to units*:
 
 ```r
 # 30 days of energy production (kWh)
@@ -152,23 +152,21 @@ degrade <- c(10, 10, 10, 10, 10, 12, 12, 12, 12, 12,
              12, 12, 12, 12, 12, 12, 12, 12, 12, 12)
 ```
 
-*pay careful attention to units*
-
 Answer the following questions:
 
 9) Build a DataFrame using the above variables and provide a statistical summary of the information over this 30-day time period.
 
 10) Make a scatterplot of production vs. irradiation and assess if the relationship appears linear.
 
-12) Build a linear model to predict production based on irradiation and temperature. Evaluate the model R^2 and p-value.
+11) Build a linear model to predict production based on irradiation and temperature. Evaluate the model R^2 and p-value.
 
-13) Using your model, estimate average production if temperature was 5 degrees C higher.
+12) Using your model, estimate average production if temperature was 5 degrees C higher.
 
-14) Assess whether degradation seems to have an impact on production. Also report the cumulative degradation in the solar panels over the 30 day time period as a percent. 
+13) Assess whether degradation seems to have an impact on production. Also report the cumulative degradation in the solar panels over the 30 day time period as a percent. 
 
-15) Convert the average daily production from kWh to gigajoule (GJ), given the conversion factor 1 kWh = 0.0036 GJ. Report the total production in GJ over this 30 day time period. 
+14) Convert the average daily production from kWh to gigajoule (GJ), given the conversion factor 1 kWh = 0.0036 GJ. Report the total production in GJ over this 30 day time period. 
 
-16) If the solar farm covers 5 km2, calculate the total kW generated over the 30 days
+15) If the solar farm covers 5 km2, calculate the total kW generated over the 30 days. Assume the solar panels receive on average 12 hours of sunlight.
 
 \
 

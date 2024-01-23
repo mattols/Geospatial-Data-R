@@ -5,7 +5,7 @@ date: "Spring 2024"
 output: html_document
 ---
 
-### Data Formatting and Simple Statistics
+### Data Formatting and Statistics
 
 #### 1. Additional Data Formats
 
@@ -24,6 +24,7 @@ We can easily extract components like year, month, day, hour, minutes, etc using
 ```r
 now2 <- as.Date(now) # convert to Date class
 as.POSIXlt(now2) # back to POSIXlt
+as.Date("1969-08-15") # convert string to date (tries format "%Y-%m-%d" by default)
 ```
 There are several ways to format and change date/time information. It can be a headache but is essential for some analysis.
 
@@ -32,7 +33,15 @@ today <- Sys.Date()
 format(today, "%d %b %Y")  # with month as a word
 ```
 
-Make sure your dates are formatted correctly, in some instances a correct timezone may even need to be specified. 
+The format function can transform your date and time information, however, there are also other helpful functions to do so:
+
+```r
+now <- Sys.time() # current date and time
+format(now, "%H") # extract hour of time stamp
+weekdays(now) # list the day of the week
+```
+
+Make sure your dates are formatted correctly, in some instances a correct timezone may even need to be specified. Time is an essential component in analysis, make sure that you understand how to work with dates and time. 
 
 For dictionary-like data, R has lists which contain key-value pairs instead of just values like regular vectors. Lists are created with the list() function and elements are accessed using the $ operator. This makes them useful for storing parameters, configurations, and custom data structures. 
 
@@ -81,16 +90,16 @@ Indexing and subsetting can be performed when:
 - Specific cols df[, c("col1", "col2")]
 - Logical conditions are met
 
-You can also slice a subset of a vector of dataframe
+You can also slice a subset of a vector of DataFrame
 
 ```r
 v <- seq(100,120)
 v[10:15] # [1] 109 110 111 112 113 114
 ```
 
-Full rows, columns, and other DataFrames can also be added or removed with cbind(), rbind(), and subset(). 
+Indexing can be very useful to subset data, either by providing the position of the elements you wish to extract `[numbers_to_keep]` or by giving a boolean vector of the same length indicating which `TRUE` values to keep. 
 
-New columns can be added simply by assigning to the $ operator.
+Full rows, columns, and other DataFrames can also be added or removed with cbind(), rbind(), and subset(). New columns can be added simply by assigning to the $ operator.
 
 ```r
 df$new_col <- df$col1 * 100 # add new column
@@ -103,7 +112,7 @@ sort(df$col1) # sort values
 df <- df[order(df$col1),] # reorder data based on order of col1
 ```
 
-This brings us to another method to handle NA values:
+This brings us to another method to handle NA values, which may be preferrable based on the situation:
 
 ```r
 vals <- c(1, 2, NA, 4)
@@ -170,8 +179,8 @@ strsplit("Jose_Gonzalez", "_") # [1] "Jose"     "Gonzalez"
 Other functions like `grep` and `grepl` search for matches to argument pattern within each element of a character and differ in the format of and amount of detail in the results. Whereas functions like `sub` and `gsub` perform replacement of the first and all matches respectively.
 
 ```r
-grep("\\d", c("abc123", "def")) # match strings containing digits
-grepl("[A-Z]", c("abc", "XYZ")) # test for uppercase 
+grep("\\d", c("abc123", "def", "45def")) # match strings containing digits
+grepl("[A-Z]", c("abc", "XYZ", "AbC")) # test for uppercase 
 gsub("-", "_", c("text-data", "more-text")) # replace - with _
 gsub("[[:punct:]]", "", c("Hi there!", "How are you?")) # remove punctuation
 ```
@@ -301,33 +310,139 @@ cor.test(x, y)
 <><>
 
 
-### Your Task 
+#### Your Task 
 
-Answer the following 10 questions based on this week's content by writing an annotated R script.
+Answer the following questions based on this week's content by writing an annotated R script.
 
-1. Load the mtcars dataset and calculate the correlation between mpg and wt. Is this correlation statistically significant at the 0.05 level?
+#### 1. Data types and structures
 
-2. For the mtcars data, convert the vs variable from numeric to a factor. How many levels does this factor have? 
+Using the start *(Jan, 8)* and end *(April, 23)* dates of the spring 2024 semester, answer questions 1-3:
 
-3. Write a regular expression that would match valid email addresses containing exactly one @ symbol and at least one period.
+1. Find the number of days in the semester.
 
-4. Load the iris dataset and create a new column called sepal_area by multiplying sepal_length by sepal_width. 
+2. Extract all dates that fall on a Saturday and count the total number of Saturdays in the semester.
 
-5. Write a function that calculates the mean and standard deviation of a numeric vector passed as input. Have it return a named list with two elements.
+3. Round up and assume that we meet from 1-4PM (3 hrs) each day for this class. Use the dates of the semester and these details to calculate the number of hours you will spend in this class this semester. *(no need to consider holidays)*
 
-6. Using the mtcars data, test whether the average mpg is different between cars with 4, 6, and 8 cylinders using ANOVA.
+Use regular expression and the following two vectors to respond to questions 4-5:
 
-7. Extract the year, month, and day components from the following date: "2023-03-14"
+```r
+# emails
+emails <- c("w2u9q0g7z6@outlook.com", "m7n4w6f1a0@outlook.com", "withspaces@gmail.com",  
+           "n7y4h5k0t6@gmail.com", "@invalid", "e2m5h7q1z0@outlook.com", 
+           "invalid@", "invalid@", "invalid@",
+           "g2b1j5u7o8@outlook.com", "s1c8k0t6e7@gmail.com", "f9m1a4z8h6@outlook.com",
+           "e8c5f3v6k9@yahoo.com", "missingdotgmail.com", "invalid@email",
+           "b6g3f0y4d2@gmail.com", "k0p8i9s6o3@outlook.com", "s8t7g2k9o5@yahoo.com", 
+           "a9i7y1w5q0@gmail.com", "r2g9y4l5i6@yahoo.com", "b7d4a5u0j2@outlook.com",
+           "l0a7z9m6r1@outlook.com", "c4v2a7w6r1@yahoo.com", "x1s3d8y5c6@yahoo.com",
+           "@invalid", "@invalid", "@invalid",
+           "@invalid", "invalid@", "e3k9x2m8t4@gmail.com",
+           "invalidemail", "k2a3b7l1n8@outlook.com", "d0a6q9u2z4@yahoo.com",
+           "i0f2z8c5x1@outlook.com", "q4m0l5o6j2@outlook.com", "v5h9a4f1q0@outlook.com",
+           "@invalid", "f0z3h5d1v2@gmail.com", "g7k0u3a5s6@gmail.com",
+           "@invalid", "invalid@", "@invalid", 
+           "@invalid", "n9t0h3e6i5@outlook.com", "l2k1r6z0g5@outlook.com",
+           "f9d7u5e1n8@outlook.com", "n9o4s8a6b0@yahoo.com", "@invalid",
+           "s1b8q5i9z2@gmail.com", "z7v3n1o0f9@outlook.com")
 
-8. List only the csv files in the current working directory.
+# phone numbers
+phones <- c("(525) 692-8788", "(748) 654-2046", "(865) 970-8066", "(310) 472-4003", 
+           "(689) 943-4206", "920.680.4936", "323.171.5088", "265.687.3906", 
+           "316.674.1293", "389.240.9468", "562 322 3503", "140 627 7741", 
+           "530 215 9943", "189 705 9565", "415 873 7128", "133-854-8126", 
+           "615-508-4357", "112-407-4979", "168-377-4229", "994-188-6602",
+           "123-456-789", "abc-123-4567", "123 45 6789", "1a2b3c4d5e", 
+           "12345", "67890", "1234", "6789", "12345678903", "12345678901")
+```
 
-9. Read the mtcars CSV file from Github into R (url: https://raw.githubusercontent.com/plotly/datasets/master/mtcars.csv)
+4. With the emails vector, write a function to match only valid email addresses containing exactly one @ symbol and at least one period using regular expression.
+
+5. Using the phones vector, write a regular expression pattern that could be used with grepl() or grep() to identify all valid 10-digit phone numbers in the phones vector, regardless of how they are formatted with parentheses, spaces, dots, etc. *(Tip: consider the format of different 10-digit numbers and account for optional non-digit characters, 3 digits, optional non-digits, 3 digits, optional non-digits, and 4 digits)* - advanced students should write a script to check to try and double check that their responses are valid.
+
+Read in csv file provided in canvas. This file contains daily snow and meteorological data for 30 days from December, 24, 2023 to January, 22 2024.
+
+After reading in the data, convert dates column to a date object and change the column names to more useful manageable names. Precipitation and Snow Water Equivalent units are in inches.
+
+Snow water equivalent is the amount of water in the snowpack.
+
+Respond to the following questions:
+
+6. Is there a correlation between snow water equivalent and precipitation accumulation? How does the strength of this relationship change over the season?
+
+
+
+7. How well does the snow water equivalent track with the median historical values? When does it tend to be above or below normal?
+
+
+
+8. What is the relationship between air temperature and snow depth changes? How might rising temperatures impact total seasonal snowpack?
+
+9. What are the typical day-to-day changes in snow water equivalent? How much new snow is required to increase the snowpack?
+
+10. How often do major snowfall events (e.g. >6 inches) occur? Do these events contribute significantly to the total seasonal snowpack?
+
+NEW
+
+- how much snow was lost? over this time period
+
+- using the equation swe = density * depth, determine the average and standard deviation density of the snowpack over this 30 day period. Express this number as a percentage and 
+
+CHECK!
+
+
+\
+
+#### 2. Statistics
+
+Use the `mtcars` dataset to understand basic relationships between variables. 
+
+- The relationship between horsepower and fuel efficiency (mpg). A scatterplot can show if they are linearly related. Is engine power related to gas mileage?
+
+- The distribution of fuel efficiency (mpg). A histogram can show the overall spread and central tendency. How is gas mileage distributed across cars?
+
+- Differences in fuel efficiency by number of cylinders. A grouped boxplot can highlight differences in mpg by the variable cyl. Do cars with more cylinders have lower average mpg?
+
+- The relationship between weight and fuel efficiency. A scatterplot can show if heavier cars tend to have lower mpg. Does weight impact gas mileage?
+
+- Differences in fuel efficiency by transmission type. Group the mpg by am (transmission) and compare with a boxplot or densities plot. Do automatic or manual transmissions have better mpg?
+
+- Horsepower differences by number of cylinders. Use a violin plot or boxplot to compare hp by cyl. Do cars with more cylinders tend to have higher horsepower?
+
+- Weight differences by number of cylinders. Use a grouped boxplot to see how weight varies by cyl. Do cars with more cylinders tend to be heavier?
+
+
+
+
+6. Calculate the correlation between mpg and wt. Is this correlation statistically significant at the 0.05 level?
+
+
+7. Using the mtcars data, test whether the average mpg is different between cars with 4, 6, and 8 cylinders using ANOVA.
+
+
 
 10. Write a function that simulates 10 coin flips and returns the number of heads. Run this simulation 1000 times and plot the distribution of heads.
 
 
 
 <><><><><><><><><><><><><>
+
+
+explore with the mtcars dataset:
+
+- The relationship between horsepower and fuel efficiency (mpg). A scatterplot can show if they are linearly related. Is engine power related to gas mileage?
+
+- The distribution of fuel efficiency (mpg). A histogram can show the overall spread and central tendency. How is gas mileage distributed across cars?
+
+- Differences in fuel efficiency by number of cylinders. A grouped boxplot can highlight differences in mpg by the variable cyl. Do cars with more cylinders have lower average mpg?
+
+- The relationship between weight and fuel efficiency. A scatterplot can show if heavier cars tend to have lower mpg. Does weight impact gas mileage?
+
+- Differences in fuel efficiency by transmission type. Group the mpg by am (transmission) and compare with a boxplot or densities plot. Do automatic or manual transmissions have better mpg?
+
+- Horsepower differences by number of cylinders. Use a violin plot or boxplot to compare hp by cyl. Do cars with more cylinders tend to have higher horsepower?
+
+- Weight differences by number of cylinders. Use a grouped boxplot to see how weight varies by cyl. Do cars with more cylinders tend to be heavier?
 
 
 

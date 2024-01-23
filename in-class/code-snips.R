@@ -15,8 +15,103 @@ format(today, "%d %b %Y")  # with month as a word
 # 2. Indexing
 df <- data.frame(col1 = -9:10, col2 = 11:30, col3 = 91:110)
 
+### Task 3 assign
+
+classes_start <- as.Date("2024-01-08")
+classes_end <- as.Date("2024-04-23")
+difftime(classes_end, classes_start, units = "days")
+
+semester = seq( classes_start, classes_end, by="day")
+dates[weekdays(semester) == "Saturday"]
+
+# semester hours
+semhrs = seq(as.POSIXct("2024-01-01"),as.POSIXct("2024-04-23"),by="hours")
+
+dz = weekdays(semhrs)
+
+hz = format(semhrs,"%H")
+
+sum((dz == "Tuesday" | dz == "Thursday") & (hz == 13 | hz == 14 | hz == 15))
 
 
+# emails
+
+# Generate 50 random usernames
+usernames <- sapply(1:50, function(x) {
+  paste0(sample(letters, 10), collapse='')  
+})
+# Sample domains  
+domains <- sample(c('gmail.com', 'yahoo.com', 'outlook.com'), 50, replace=TRUE)
+# Create emails
+emails <- paste0(usernames, '@', domains)
+# Add some invalid emails 
+emails <- c(emails, 'invalidemail', 'invalid@')
+# Check length
+length(emails) # 52
+# 
+# better
+# Generate valid emails
+usernames <- sapply(1:50, function(x) {
+  paste0(sample(letters, 5), sample(0:9, 5), collapse='')  
+})
+domains <- sample(c('gmail.com', 'yahoo.com', 'outlook.com'), 50, replace=TRUE)
+valid_emails <- paste0(usernames, '@', domains)
+
+# Generate invalid emails 
+invalid_emails <- c(
+  'invalidemail', 
+  'invalid@email',
+  'missingdotgmail.com',
+  'withspaces@gmail.com',
+  rep('@invalid', 10),
+  rep('invalid@', 5)
+)
+
+# Randomly insert invalid emails
+set.seed(123)
+insert_indices <- sample(1:length(valid_emails), size = length(invalid_emails))
+emails <- valid_emails
+emails[insert_indices] <- invalid_emails
+
+# Check
+length(emails) # 65
+table(grepl('@', emails)) # some without @
+table(grepl('\\.', emails)) # some without .
+emails
+
+matches <- grep('@.[a-zA-Z]*\\.', emails) # 32
+
+
+
+##### phone numbers
+
+# Valid phones 
+valid_phones <- c(
+  sprintf("(%03d) %03d-%04d", 
+          sample(100:999, 5), sample(100:999, 5), sample(1000:9999, 5)),
+  
+  sprintf("%03d.%03d.%04d",
+          sample(100:999, 5), sample(100:999, 5), sample(1000:9999, 5)),
+  
+  sprintf("%03d %03d %04d",  
+          sample(100:999, 5), sample(100:999, 5), sample(1000:9999, 5)),
+  
+  sprintf("%03d-%03d-%04d",
+          sample(100:999, 5), sample(100:999, 5), sample(1000:9999, 5))  
+)
+
+# Invalid phones
+invalid_phones <- c("123-456-789", "abc-123-4567", "123 45 6789",
+                    "1a2b3c4d5e", "12345", "67890", "1234", "6789", "12345678903", "12345678901")
+
+phones <- c(valid_phones, invalid_phones)
+
+phones
+pattern <- "^\\D?(\\d{3})\\D?(\\d{3})\\D?(\\d{4})$"
+matches <- grep(pattern, phones)
+phones[matches]
+
+##### _____________
 #####
 # CS01
 # data generation
