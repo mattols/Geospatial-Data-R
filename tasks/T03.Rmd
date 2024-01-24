@@ -314,7 +314,7 @@ cor.test(x, y)
 
 Answer the following questions based on this week's content by writing an annotated R script.
 
-#### 1. Data types and structures
+##### 1. Data types and structures
 
 Using the start *(Jan, 8)* and end *(April, 23)* dates of the spring 2024 semester, answer questions 1-3:
 
@@ -356,129 +356,57 @@ phones <- c("(525) 692-8788", "(748) 654-2046", "(865) 970-8066", "(310) 472-400
            "12345", "67890", "1234", "6789", "12345678903", "12345678901")
 ```
 
-4. With the emails vector, write a function to match only valid email addresses containing exactly one @ symbol and at least one period using regular expression.
+4. With the emails vector, write a function to identify only valid email addresses containing exactly one @ symbol and at least one period using regular expression. *(can use `grep()` or another)*
 
-5. Using the phones vector, write a regular expression pattern that could be used with grepl() or grep() to identify all valid 10-digit phone numbers in the phones vector, regardless of how they are formatted with parentheses, spaces, dots, etc. *(Tip: consider the format of different 10-digit numbers and account for optional non-digit characters, 3 digits, optional non-digits, 3 digits, optional non-digits, and 4 digits)* - advanced students should write a script to check to try and double check that their responses are valid.
+5. Using the phones vector, write a regular expression pattern to identify all valid 10-digit phone numbers in the phones vector, regardless of how they are formatted with parentheses, spaces, dots, etc. *(Tip: consider the format of different 10-digit numbers and account for optional non-digit characters, 3 digits, optional non-digits, 3 digits, optional non-digits, and 4 digits)* - advanced students should write a script to check to try and double check that their responses are valid.
 
-Read in csv file provided in canvas. This file contains daily snow and meteorological data for 30 days from December, 24, 2023 to January, 22 2024.
+6. Subset all valid phone numbers that contain the format XXX-XXX-XXXX and replace the "-" with "_" using `gsub` or other function.
 
-After reading in the data, convert dates column to a date object and change the column names to more useful manageable names. Precipitation and Snow Water Equivalent units are in inches.
+##### 2. Snotel data
 
-Snow water equivalent is the amount of water in the snowpack.
+Read in csv file provided in canvas. This file contains daily snow and meteorological data for 30 days from December, 24, 2023 to January, 22 2024 collected at the snow telemetry station at the Timpanogos Divide.
+
+After reading in the data, convert dates column to a date object and change the column names to more useful manageable names using `colnames()`. Precipitation and Snow Water Equivalent units are in inches.
+
+For context, snow water equivalent is the amount of water in the snowpack or a volume of snow and is calculated by multiplying the snow density ($\rho$) by depth (*d*):
+
+$$SWE = \rho * d$$
+a brief explanation of other variables are also listed:
+
+- swe - snow water equivalent (see above)
+- swe_med - historical median snow water equivalent value for 1991-2020
+- depth - snow depth in inches
+- prec_accum - 
+- prec_accum_med - historical median prec_accum value for 1991-2020
 
 Respond to the following questions:
 
-6. Is there a correlation between snow water equivalent and precipitation accumulation? How does the strength of this relationship change over the season?
+7. Use the equation above to estimate the density of the snowpack each day, add this as a new column to your DataFrame. List the maximum, minimum, average, and standard deviation of the snow density (*in percent*).
 
+8. How do density and snow depth vary over time? Create a single plot showing both snow depth and density as a function of time. *Note you can use the `lines()` or `points()` functions to add more to an existing scatter/line plot.* What day seems to mark the transition from clear to stormy weather?
 
+9. Is there a correlation between snow water equivalent and precipitation accumulation? Describe the strength and direction of any relationship.
 
-7. How well does the snow water equivalent track with the median historical values? When does it tend to be above or below normal?
+10. Create a new column called swe_perc showing the snow water equivalent as a percent of the median historical swe value for each day. Plot these values and describe how the swe values track with the median historical values? 
 
+11. How much snow (*depth*) was gained or lost from the start to end of time period? How much snow water equivalent was gained or lost? 
 
+12. Write a script to calculate the daily incremental change in both snow depth and swe over the 30 day period. Sum both the gains and losses from each and compare these values to the values in the previous question. What might account for the differences?
 
-8. What is the relationship between air temperature and snow depth changes? How might rising temperatures impact total seasonal snowpack?
+13. Is there a relationship between air temperature and snow depth? Run a linear model, plot the results (*showing scatterplot and linear model*), and report the $R^{2}$ and p-value. Run a correlation test as well.
 
-9. What are the typical day-to-day changes in snow water equivalent? How much new snow is required to increase the snowpack?
+14. Create a new DataFrame that is a subset your data based on the date when the storm arrived (*i.e. the day new snow started accumulating*). Only keep data after this date. Run another linear model on the subset of data and report similar statistics
 
-10. How often do major snowfall events (e.g. >6 inches) occur? Do these events contribute significantly to the total seasonal snowpack?
-
-NEW
-
-- how much snow was lost? over this time period
-
-- using the equation swe = density * depth, determine the average and standard deviation density of the snowpack over this 30 day period. Express this number as a percentage and 
-
-CHECK!
+15. Assess the relationship between snow density and minimum temperature and any other variables you think might relate to one another. Describe any patterns you notice in your initial analysis of this dataset.
 
 
 \
 
-#### 2. Statistics
 
-Use the `mtcars` dataset to understand basic relationships between variables. 
+#### Submitting
 
-- The relationship between horsepower and fuel efficiency (mpg). A scatterplot can show if they are linearly related. Is engine power related to gas mileage?
+Upload a R script with responses to each question. Support your responses with stand-alone code. Comment out any text.
 
-- The distribution of fuel efficiency (mpg). A histogram can show the overall spread and central tendency. How is gas mileage distributed across cars?
+*Please reach out if you have any questions or concerns!*
 
-- Differences in fuel efficiency by number of cylinders. A grouped boxplot can highlight differences in mpg by the variable cyl. Do cars with more cylinders have lower average mpg?
-
-- The relationship between weight and fuel efficiency. A scatterplot can show if heavier cars tend to have lower mpg. Does weight impact gas mileage?
-
-- Differences in fuel efficiency by transmission type. Group the mpg by am (transmission) and compare with a boxplot or densities plot. Do automatic or manual transmissions have better mpg?
-
-- Horsepower differences by number of cylinders. Use a violin plot or boxplot to compare hp by cyl. Do cars with more cylinders tend to have higher horsepower?
-
-- Weight differences by number of cylinders. Use a grouped boxplot to see how weight varies by cyl. Do cars with more cylinders tend to be heavier?
-
-
-
-
-6. Calculate the correlation between mpg and wt. Is this correlation statistically significant at the 0.05 level?
-
-
-7. Using the mtcars data, test whether the average mpg is different between cars with 4, 6, and 8 cylinders using ANOVA.
-
-
-
-10. Write a function that simulates 10 coin flips and returns the number of heads. Run this simulation 1000 times and plot the distribution of heads.
-
-
-
-<><><><><><><><><><><><><>
-
-
-explore with the mtcars dataset:
-
-- The relationship between horsepower and fuel efficiency (mpg). A scatterplot can show if they are linearly related. Is engine power related to gas mileage?
-
-- The distribution of fuel efficiency (mpg). A histogram can show the overall spread and central tendency. How is gas mileage distributed across cars?
-
-- Differences in fuel efficiency by number of cylinders. A grouped boxplot can highlight differences in mpg by the variable cyl. Do cars with more cylinders have lower average mpg?
-
-- The relationship between weight and fuel efficiency. A scatterplot can show if heavier cars tend to have lower mpg. Does weight impact gas mileage?
-
-- Differences in fuel efficiency by transmission type. Group the mpg by am (transmission) and compare with a boxplot or densities plot. Do automatic or manual transmissions have better mpg?
-
-- Horsepower differences by number of cylinders. Use a violin plot or boxplot to compare hp by cyl. Do cars with more cylinders tend to have higher horsepower?
-
-- Weight differences by number of cylinders. Use a grouped boxplot to see how weight varies by cyl. Do cars with more cylinders tend to be heavier?
-
-
-
-
-
-
-## Data Formatting and Basic Statistics
-
-### 1. Additional Data Formats
-
-#### Time Formats
-
-#### Dictionary-like Lists
-
-#### Additional 
-
-### 2. Regular Expression
-
-### 3. Indexing and Editing DataFrames (base R)
-
-### 4. Basic Models
-
-#### 4.1 Statistical Linear Models
-
-#### 4.2 Significance
-
-#### 4.3 ANOVA and T-tests
-
-#### 4.4 Chi-squared and Correlation
-
-### 5. Reading and Writing Files & Filepaths
-
-#### 5.1 Filepaths
-
-#### 5.2 Loading and Saving Real Data
-
-### Your Task
-
-Answer the following 10 question based on this week's content by writing an annotated R script.
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\

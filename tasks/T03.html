@@ -637,9 +637,8 @@ cor.test(x, y) # correlation test </code></pre>
 <h4>Your Task</h4>
 <p>Answer the following questions based on this week’s content by
 writing an annotated R script.</p>
-</div>
-<div id="data-types-and-structures" class="section level4">
-<h4>1. Data types and structures</h4>
+<div id="data-types-and-structures" class="section level5">
+<h5>1. Data types and structures</h5>
 <p>Using the start <em>(Jan, 8)</em> and end <em>(April, 23)</em> dates
 of the spring 2024 semester, answer questions 1-3:</p>
 <ol style="list-style-type: decimal">
@@ -681,165 +680,98 @@ phones &lt;- c(&quot;(525) 692-8788&quot;, &quot;(748) 654-2046&quot;, &quot;(86
            &quot;123-456-789&quot;, &quot;abc-123-4567&quot;, &quot;123 45 6789&quot;, &quot;1a2b3c4d5e&quot;, 
            &quot;12345&quot;, &quot;67890&quot;, &quot;1234&quot;, &quot;6789&quot;, &quot;12345678903&quot;, &quot;12345678901&quot;)</code></pre>
 <ol start="4" style="list-style-type: decimal">
-<li><p>With the emails vector, write a function to match only valid
+<li><p>With the emails vector, write a function to identify only valid
 email addresses containing exactly one @ symbol and at least one period
-using regular expression.</p></li>
-<li><p>Using the phones vector, write a regular expression pattern that
-could be used with grepl() or grep() to identify all valid 10-digit
-phone numbers in the phones vector, regardless of how they are formatted
-with parentheses, spaces, dots, etc. <em>(Tip: consider the format of
-different 10-digit numbers and account for optional non-digit
-characters, 3 digits, optional non-digits, 3 digits, optional
-non-digits, and 4 digits)</em> - advanced students should write a script
-to check to try and double check that their responses are
-valid.</p></li>
+using regular expression. <em>(can use <code>grep()</code> or
+another)</em></p></li>
+<li><p>Using the phones vector, write a regular expression pattern to
+identify all valid 10-digit phone numbers in the phones vector,
+regardless of how they are formatted with parentheses, spaces, dots,
+etc. <em>(Tip: consider the format of different 10-digit numbers and
+account for optional non-digit characters, 3 digits, optional
+non-digits, 3 digits, optional non-digits, and 4 digits)</em> - advanced
+students should write a script to check to try and double check that
+their responses are valid.</p></li>
+<li><p>Subset all valid phone numbers that contain the format
+XXX-XXX-XXXX and replace the “-” with “_” using <code>gsub</code> or
+other function.</p></li>
 </ol>
+</div>
+<div id="snotel-data" class="section level5">
+<h5>2. Snotel data</h5>
 <p>Read in csv file provided in canvas. This file contains daily snow
 and meteorological data for 30 days from December, 24, 2023 to January,
-22 2024.</p>
+22 2024 collected at the snow telemetry station at the Timpanogos
+Divide.</p>
 <p>After reading in the data, convert dates column to a date object and
-change the column names to more useful manageable names. Precipitation
-and Snow Water Equivalent units are in inches.</p>
-<p>Snow water equivalent is the amount of water in the snowpack.</p>
-<p>Respond to the following questions:</p>
-<ol start="6" style="list-style-type: decimal">
-<li><p>Is there a correlation between snow water equivalent and
-precipitation accumulation? How does the strength of this relationship
-change over the season?</p></li>
-<li><p>How well does the snow water equivalent track with the median
-historical values? When does it tend to be above or below
-normal?</p></li>
-<li><p>What is the relationship between air temperature and snow depth
-changes? How might rising temperatures impact total seasonal
-snowpack?</p></li>
-<li><p>What are the typical day-to-day changes in snow water equivalent?
-How much new snow is required to increase the snowpack?</p></li>
-<li><p>How often do major snowfall events (e.g. &gt;6 inches) occur? Do
-these events contribute significantly to the total seasonal
-snowpack?</p></li>
-</ol>
-<p>NEW</p>
+change the column names to more useful manageable names using
+<code>colnames()</code>. Precipitation and Snow Water Equivalent units
+are in inches.</p>
+<p>For context, snow water equivalent is the amount of water in the
+snowpack or a volume of snow and is calculated by multiplying the snow
+density (<span class="math inline">\(\rho\)</span>) by depth
+(<em>d</em>):</p>
+<p><span class="math display">\[SWE = \rho * d\]</span> a brief
+explanation of other variables are also listed:</p>
 <ul>
-<li><p>how much snow was lost? over this time period</p></li>
-<li><p>using the equation swe = density * depth, determine the average
-and standard deviation density of the snowpack over this 30 day period.
-Express this number as a percentage and</p></li>
+<li>swe - snow water equivalent (see above)</li>
+<li>swe_med - historical median snow water equivalent value for
+1991-2020</li>
+<li>depth - snow depth in inches</li>
+<li>prec_accum -</li>
+<li>prec_accum_med - historical median prec_accum value for
+1991-2020</li>
 </ul>
-<p>CHECK!</p>
+<p>Respond to the following questions:</p>
+<ol start="7" style="list-style-type: decimal">
+<li><p>Use the equation above to estimate the density of the snowpack
+each day, add this as a new column to your DataFrame. List the maximum,
+minimum, average, and standard deviation of the snow density (<em>in
+percent</em>).</p></li>
+<li><p>How do density and snow depth vary over time? Create a single
+plot showing both snow depth and density as a function of time. <em>Note
+you can use the <code>lines()</code> or <code>points()</code> functions
+to add more to an existing scatter/line plot.</em> What day seems to
+mark the transition from clear to stormy weather?</p></li>
+<li><p>Is there a correlation between snow water equivalent and
+precipitation accumulation? Describe the strength and direction of any
+relationship.</p></li>
+<li><p>Create a new column called swe_perc showing the snow water
+equivalent as a percent of the median historical swe value for each day.
+Plot these values and describe how the swe values track with the median
+historical values?</p></li>
+<li><p>How much snow (<em>depth</em>) was gained or lost from the start
+to end of time period? How much snow water equivalent was gained or
+lost?</p></li>
+<li><p>Write a script to calculate the daily incremental change in both
+snow depth and swe over the 30 day period. Sum both the gains and losses
+from each and compare these values to the values in the previous
+question. What might account for the differences?</p></li>
+<li><p>Is there a relationship between air temperature and snow depth?
+Run a linear model, plot the results (<em>showing scatterplot and linear
+model</em>), and report the <span class="math inline">\(R^{2}\)</span>
+and p-value. Run a correlation test as well.</p></li>
+<li><p>Create a new DataFrame that is a subset your data based on the
+date when the storm arrived (<em>i.e. the day new snow started
+accumulating</em>). Only keep data after this date. Run another linear
+model on the subset of data and report similar statistics</p></li>
+<li><p>Assess the relationship between snow density and minimum
+temperature and any other variables you think might relate to one
+another. Describe any patterns you notice in your initial analysis of
+this dataset.</p></li>
+</ol>
 <p><br />
 </p>
 </div>
-<div id="statistics" class="section level4">
-<h4>2. Statistics</h4>
-<p>Use the <code>mtcars</code> dataset to understand basic relationships
-between variables.</p>
-<ul>
-<li><p>The relationship between horsepower and fuel efficiency (mpg). A
-scatterplot can show if they are linearly related. Is engine power
-related to gas mileage?</p></li>
-<li><p>The distribution of fuel efficiency (mpg). A histogram can show
-the overall spread and central tendency. How is gas mileage distributed
-across cars?</p></li>
-<li><p>Differences in fuel efficiency by number of cylinders. A grouped
-boxplot can highlight differences in mpg by the variable cyl. Do cars
-with more cylinders have lower average mpg?</p></li>
-<li><p>The relationship between weight and fuel efficiency. A
-scatterplot can show if heavier cars tend to have lower mpg. Does weight
-impact gas mileage?</p></li>
-<li><p>Differences in fuel efficiency by transmission type. Group the
-mpg by am (transmission) and compare with a boxplot or densities plot.
-Do automatic or manual transmissions have better mpg?</p></li>
-<li><p>Horsepower differences by number of cylinders. Use a violin plot
-or boxplot to compare hp by cyl. Do cars with more cylinders tend to
-have higher horsepower?</p></li>
-<li><p>Weight differences by number of cylinders. Use a grouped boxplot
-to see how weight varies by cyl. Do cars with more cylinders tend to be
-heavier?</p></li>
-</ul>
-<ol start="6" style="list-style-type: decimal">
-<li><p>Calculate the correlation between mpg and wt. Is this correlation
-statistically significant at the 0.05 level?</p></li>
-<li><p>Using the mtcars data, test whether the average mpg is different
-between cars with 4, 6, and 8 cylinders using ANOVA.</p></li>
-<li><p>Write a function that simulates 10 coin flips and returns the
-number of heads. Run this simulation 1000 times and plot the
-distribution of heads.</p></li>
-</ol>
-<p>&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;</p>
-<p>explore with the mtcars dataset:</p>
-<ul>
-<li><p>The relationship between horsepower and fuel efficiency (mpg). A
-scatterplot can show if they are linearly related. Is engine power
-related to gas mileage?</p></li>
-<li><p>The distribution of fuel efficiency (mpg). A histogram can show
-the overall spread and central tendency. How is gas mileage distributed
-across cars?</p></li>
-<li><p>Differences in fuel efficiency by number of cylinders. A grouped
-boxplot can highlight differences in mpg by the variable cyl. Do cars
-with more cylinders have lower average mpg?</p></li>
-<li><p>The relationship between weight and fuel efficiency. A
-scatterplot can show if heavier cars tend to have lower mpg. Does weight
-impact gas mileage?</p></li>
-<li><p>Differences in fuel efficiency by transmission type. Group the
-mpg by am (transmission) and compare with a boxplot or densities plot.
-Do automatic or manual transmissions have better mpg?</p></li>
-<li><p>Horsepower differences by number of cylinders. Use a violin plot
-or boxplot to compare hp by cyl. Do cars with more cylinders tend to
-have higher horsepower?</p></li>
-<li><p>Weight differences by number of cylinders. Use a grouped boxplot
-to see how weight varies by cyl. Do cars with more cylinders tend to be
-heavier?</p></li>
-</ul>
 </div>
-</div>
-<div id="data-formatting-and-basic-statistics" class="section level2">
-<h2>Data Formatting and Basic Statistics</h2>
-<div id="additional-data-formats-1" class="section level3">
-<h3>1. Additional Data Formats</h3>
-<div id="time-formats" class="section level4">
-<h4>Time Formats</h4>
-</div>
-<div id="dictionary-like-lists" class="section level4">
-<h4>Dictionary-like Lists</h4>
-</div>
-<div id="additional" class="section level4">
-<h4>Additional</h4>
-</div>
-</div>
-<div id="regular-expression-1" class="section level3">
-<h3>2. Regular Expression</h3>
-</div>
-<div id="indexing-and-editing-dataframes-base-r" class="section level3">
-<h3>3. Indexing and Editing DataFrames (base R)</h3>
-</div>
-<div id="basic-models-1" class="section level3">
-<h3>4. Basic Models</h3>
-<div id="statistical-linear-models" class="section level4">
-<h4>4.1 Statistical Linear Models</h4>
-</div>
-<div id="significance" class="section level4">
-<h4>4.2 Significance</h4>
-</div>
-<div id="anova-and-t-tests" class="section level4">
-<h4>4.3 ANOVA and T-tests</h4>
-</div>
-<div id="chi-squared-and-correlation-1" class="section level4">
-<h4>4.4 Chi-squared and Correlation</h4>
-</div>
-</div>
-<div id="reading-and-writing-files-filepaths-1" class="section level3">
-<h3>5. Reading and Writing Files &amp; Filepaths</h3>
-<div id="filepaths" class="section level4">
-<h4>5.1 Filepaths</h4>
-</div>
-<div id="loading-and-saving-real-data" class="section level4">
-<h4>5.2 Loading and Saving Real Data</h4>
-</div>
-</div>
-<div id="your-task-1" class="section level3">
-<h3>Your Task</h3>
-<p>Answer the following 10 question based on this week’s content by
-writing an annotated R script.</p>
+<div id="submitting" class="section level4">
+<h4>Submitting</h4>
+<p>Upload a R script with responses to each question. Support your
+responses with stand-alone code. Comment out any text.</p>
+<p><em>Please reach out if you have any questions or concerns!</em></p>
+<p><strong>This assignment is due in one week but may be turned for an
+additional week with a late penalty of -5%</strong><br />
+</p>
 </div>
 </div>
 
