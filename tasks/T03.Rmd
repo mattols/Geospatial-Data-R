@@ -5,7 +5,7 @@ date: "Spring 2024"
 output: html_document
 ---
 
-### Data Formatting and Statistics
+### Data Formatting and Variable Relationships
 
 #### 1. Additional Data Formats
 
@@ -196,119 +196,59 @@ Some useful special characters for matching patterns include:
 
 By combining these special characters with repetition qualifiers like * and +, we can create complex regex patterns to match all sorts of text-based formats. Here's a [cheatsheet](https://hypebright.nl/index.php/en/2020/05/25/ultimate-cheatsheet-for-regex-in-r-2/) if you want to know more.
 
-#### 5. Basic Models
+#### 5. Basic Data Relationships
+
+Interpreting the strength and direction of relationships between variables is very important in any analysis. Although a simple scatterplot can give you a good initial idea of the relationship between two variables, it is necessary to have statistical values to support any observations or hypothesis testing. 
+
+This class is not a substitute for a statistics class, and in reality, you should have already taken a stats course or enroll in one soon.
 
 **Linear Models**
 
+R comes equipped out of the box with all of the standard statistical tests and models used in data analysis. Linear models can be fit using the `lm()` function and analyzed with `summary()`, `confint()`, and extractor functions for residuals, predictions, etc. 
+
+```r 
+fit <- lm(y ~ x1 , data=mydata) # can use simple or multiple linear regression (y ~ x1 + x2)
+summary(fit) # view model summary
+confint(fit) # 95% CIs for coefficients 
+```
+
+The general steps and useful functions for linear models include:
 - Fit linear regression models with the lm() function
-- Specify formula like y ~ x1 + x2
+- Specify formula like y ~ x1 
 - summary() shows model coefficients, p-values
 - fitted() and residuals() extract fitted values and residuals
 - confint() gives confidence intervals for coefficients
 - Should check model diagnostics like residual plots  
 
-```r
-fit <- lm(y ~ x1 + x2, data=mydata)
-summary(fit) 
-```
-<><><>
-
-R comes equipped out of the box with all of the standard statistical tests and models used in data analysis. Linear models can be fit using the `lm()` function and analyzed with `summary()`, `confint()`, and extractor functions for residuals, predictions, etc. 
-
-We can fit simple linear regression models in R with the lm() function. It takes a formula as input describing the relationship between variables:
-
-```r 
-fit <- lm(y ~ x1 + x2, data=mydata)
-summary(fit) # view model summary
-confint(fit) # 95% CIs for coefficients 
-```
-
-Model residuals, predictions, diagnostics, and additional details can be extracted with extractor functions. We should check residuals for normality and homoscedasticity.
-
-**significance**
-
-Statistical tests like linear models produce p-values to test null hypotheses. P-values below 0.05 are often considered statistically significant:
+Model residuals, predictions, diagnostics, and additional details can be extracted with extractor functions. For example, statistical tests like linear models produce p-values to test null hypotheses. P-values below 0.05 are often considered statistically significant:
 
 ```r
 coef(summary(fit)) # view p-values for each coefficient
 ```
 
-Get back t-statistic, degrees of freedom, p-value
+**Hypothesis testing** 
 
-However, with many comparisons, false positives become likely by chance (multiple comparisons problem). Adjustments like Bonferroni correction may be necessary.
+T-tests, chi-squared, ANOVA, and correlation tests can be carried out for hypothesis testing. T-tests compare the distribution of two groups while ANOVA compares the distribution of more than two groups. Chi-squared tests allow analyzing relationships between categorical variables ANOVA is for factor-based group comparisons, in which post-hoc comparison tests, like `TukeyHSD`, can help determine which groups differ. 
 
-- fitted() and residuals() extract fitted values and residuals
-
-**ANOVA and T-tests** 
-
-Hypothesis tests like t-tests, ANOVA, correlation tests are carried out with t.test(), aov(), and cor.test().
-
-For group differences, R provides 1 and 2 sample t-tests, as well as ANOVA for factor-based group comparisons:
+For group differences and hypothesis testing, R provides some of the following functions:
 
 ```r
 t.test(x, y) # two sample t-test
-
+chisq.test(table(x, y)) 
 aov(y ~ groups, data=mydata) # one-way ANOVA 
 ```
 
-These tests make assumptions like normality and equal variance that should be checked. If violated, non-parametric tests may be better.
+These tests make assumptions like normality and equal variance that should be checked. If violated, non-parametric tests may be better. You can read more about these tests [here](https://www.voxco.com/blog/anova-vs-t-test-with-a-comparison-chart/) or elsewhere online.
 
-#### 4.4 Chi-squared and Correlation
-
-Chi-squared tests allow analyzing relationships between categorical variables. Correlation like Pearson's r characterize numeric associations: 
+Correlation can be calculated using standard methods like Pearson's r (for linear) or Spearman (for monotonic) to characterize association between variables: 
 
 ```r
-chisq.test(table(x, y)) 
-
 cor.test(x, y) # correlation test 
 ```
 
-Pearson for linear, Spearman for monotonic relationships
+While this is not a statistics class, we will be using statistical tests and models to analyze data regularly. If you need it, read up on some of the definitions and concepts on your own time.
 
-Scatterplots also help visualize correlations.
-
-
-<><>
-
-
-
-**t-tests** 
-
-- Compare two groups with t.test()
-- Specify the two samples with formula like x ~ y
-- Get back t-statistic, degrees of freedom, p-value
-- Paired (repeated measures) or unpaired (independent samples)
-
-```r
-t.test(x, y)
-```
-
-**ANOVA**
-
-- Compare more than two groups with one-way ANOVA 
-- aov(y ~ groups, data=mydata)
-- Get F-statistic, p-value 
-- Determine which groups differ using post-hoc tests like Tukey's 
-
-```r
-aov(y ~ groups, data=mydata)
-```
-
-**Correlation** 
-
-- Test correlation between two numeric variables with cor.test()
-- Get correlation coefficient and p-value
-- Visualize with scatterplot and fitted line
-- Pearson for linear, Spearman for monotonic relationships   
-
-```r  
-cor.test(x, y) 
-```
-
-
-
-<><>
-
+\
 
 #### Your Task 
 
@@ -366,22 +306,26 @@ phones <- c("(525) 692-8788", "(748) 654-2046", "(865) 970-8066", "(310) 472-400
 
 Read in csv file provided in canvas. This file contains daily snow and meteorological data for 30 days from December, 24, 2023 to January, 22 2024 collected at the snow telemetry station at the Timpanogos Divide.
 
-After reading in the data, convert dates column to a date object and change the column names to more useful manageable names using `colnames()`. Precipitation and Snow Water Equivalent units are in inches.
+After reading in the data, convert dates column to a date format and . Precipitation and Snow Water Equivalent units are in inches.
 
 For context, snow water equivalent is the amount of water in the snowpack or a volume of snow and is calculated by multiplying the snow density ($\rho$) by depth (*d*):
 
 $$SWE = \rho * d$$
 a brief explanation of other variables are also listed:
 
-- swe - snow water equivalent (see above)
-- swe_med - historical median snow water equivalent value for 1991-2020
-- depth - snow depth in inches
-- prec_accum - 
-- prec_accum_med - historical median prec_accum value for 1991-2020
+- date - Date string corresponding to local time
+- swe - Snow water equivalent at the start of the day (inches)
+- swe_med - Historical median swe at the start of the day for 1991-2020 (inches)
+- depth - Snow depth (inches)
+- prec_accum - Total accumulated (cumulative) water for current water year (Oct 1st) (inches)
+- prec_med - historical median prec_accum for 1991-2020 (inches)
+- t_max - Air temperature maximum of the day ($^{o}F$) 
+- t_min - Air temperature minimum of the day ($^{o}F$) 
+- t_ave - Air temperature average of the day ($^{o}F$) 
 
 Respond to the following questions:
 
-7. Use the equation above to estimate the density of the snowpack each day, add this as a new column to your DataFrame. List the maximum, minimum, average, and standard deviation of the snow density (*in percent*).
+7. Use the equation above to estimate the density of the snowpack each day, add this as a new column to your DataFrame. List the average and standard deviation of the following: snow density (*in percent*), snow depth, and average temperature. Also list the snow warmest and coldest temperature recorded during the time period. Concatenate this information into a single `print` or `cat` statement.
 
 8. How do density and snow depth vary over time? Create a single plot showing both snow depth and density as a function of time. *Note you can use the `lines()` or `points()` functions to add more to an existing scatter/line plot.* What day seems to mark the transition from clear to stormy weather?
 
@@ -391,13 +335,13 @@ Respond to the following questions:
 
 11. How much snow (*depth*) was gained or lost from the start to end of time period? How much snow water equivalent was gained or lost? 
 
-12. Write a script to calculate the daily incremental change in both snow depth and swe over the 30 day period. Sum both the gains and losses from each and compare these values to the values in the previous question. What might account for the differences?
+12. Write a script to calculate the daily incremental change in both snow depth and SWE over the 30 day period. Sum both the gains and losses from each and compare these values to the values in the previous question. What might account for the differences?
 
 13. Is there a relationship between air temperature and snow depth? Run a linear model, plot the results (*showing scatterplot and linear model*), and report the $R^{2}$ and p-value. Run a correlation test as well.
 
-14. Create a new DataFrame that is a subset your data based on the date when the storm arrived (*i.e. the day new snow started accumulating*). Only keep data after this date. Run another linear model on the subset of data and report similar statistics
+14. Create a new DataFrame that is a subset of this data and only include dates after the storms arrived (*i.e. keep days after new snow started accumulating*). Run the same tests as in the previous question and compare the statistical strength. How has the relationship changed at all?
 
-15. Assess the relationship between snow density and minimum temperature and any other variables you think might relate to one another. Describe any patterns you notice in your initial analysis of this dataset.
+15. Assess the relationship between snow density and temperature, as well as any other variables you think might relate to one another. Describe any patterns or relationships you notice in your initial analysis of this dataset. Advanced students should try multiple linear regression.
 
 
 \
@@ -405,7 +349,7 @@ Respond to the following questions:
 
 #### Submitting
 
-Upload a R script with responses to each question. Support your responses with stand-alone code. Comment out any text.
+Upload either a single document showing code, responses, and plots... or a separate R script with a word doc or pdf containing all plots and responses. Be sure to support your responses with stand-alone code. Comment out any text and annotate each step well.
 
 *Please reach out if you have any questions or concerns!*
 

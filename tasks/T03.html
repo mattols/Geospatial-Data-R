@@ -356,8 +356,8 @@ display: none;
 </div>
 
 
-<div id="data-formatting-and-statistics" class="section level3">
-<h3>Data Formatting and Statistics</h3>
+<div id="data-formatting-and-variable-relationships" class="section level3">
+<h3>Data Formatting and Variable Relationships</h3>
 <div id="additional-data-formats" class="section level4">
 <h4>1. Additional Data Formats</h4>
 <p>R provides specialized data structures beyond regular numeric vectors
@@ -382,7 +382,7 @@ as.Date(&quot;1969-08-15&quot;) # convert string to date (tries format &quot;%Y-
 can be a headache but is essential for some analysis.</p>
 <pre class="r"><code>today &lt;- Sys.Date()
 format(today, &quot;%d %b %Y&quot;)  # with month as a word</code></pre>
-<pre><code>## [1] &quot;23 Jan 2024&quot;</code></pre>
+<pre><code>## [1] &quot;25 Jan 2024&quot;</code></pre>
 <p>The format function can transform your date and time information,
 however, there are also other helpful functions to do so:</p>
 <pre class="r"><code>now &lt;- Sys.time() # current date and time
@@ -545,93 +545,62 @@ are lowercase letters)</em></li>
 text-based formats. Here’s a <a href="https://hypebright.nl/index.php/en/2020/05/25/ultimate-cheatsheet-for-regex-in-r-2/">cheatsheet</a>
 if you want to know more.</p>
 </div>
-<div id="basic-models" class="section level4">
-<h4>5. Basic Models</h4>
+<div id="basic-data-relationships" class="section level4">
+<h4>5. Basic Data Relationships</h4>
+<p>Interpreting the strength and direction of relationships between
+variables is very important in any analysis. Although a simple
+scatterplot can give you a good initial idea of the relationship between
+two variables, it is necessary to have statistical values to support any
+observations or hypothesis testing.</p>
+<p>This class is not a substitute for a statistics class, and in
+reality, you should have already taken a stats course or enroll in one
+soon.</p>
 <p><strong>Linear Models</strong></p>
-<ul>
-<li>Fit linear regression models with the lm() function</li>
-<li>Specify formula like y ~ x1 + x2</li>
-<li>summary() shows model coefficients, p-values</li>
-<li>fitted() and residuals() extract fitted values and residuals</li>
-<li>confint() gives confidence intervals for coefficients</li>
-<li>Should check model diagnostics like residual plots</li>
-</ul>
-<pre class="r"><code>fit &lt;- lm(y ~ x1 + x2, data=mydata)
-summary(fit) </code></pre>
-<p>&lt;&gt;&lt;&gt;&lt;&gt;</p>
 <p>R comes equipped out of the box with all of the standard statistical
 tests and models used in data analysis. Linear models can be fit using
 the <code>lm()</code> function and analyzed with <code>summary()</code>,
 <code>confint()</code>, and extractor functions for residuals,
 predictions, etc.</p>
-<p>We can fit simple linear regression models in R with the lm()
-function. It takes a formula as input describing the relationship
-between variables:</p>
-<pre class="r"><code>fit &lt;- lm(y ~ x1 + x2, data=mydata)
+<pre class="r"><code>fit &lt;- lm(y ~ x1 , data=mydata) # can use simple or multiple linear regression (y ~ x1 + x2)
 summary(fit) # view model summary
 confint(fit) # 95% CIs for coefficients </code></pre>
+<p>The general steps and useful functions for linear models include: -
+Fit linear regression models with the lm() function - Specify formula
+like y ~ x1 - summary() shows model coefficients, p-values - fitted()
+and residuals() extract fitted values and residuals - confint() gives
+confidence intervals for coefficients - Should check model diagnostics
+like residual plots</p>
 <p>Model residuals, predictions, diagnostics, and additional details can
-be extracted with extractor functions. We should check residuals for
-normality and homoscedasticity.</p>
-<p><strong>significance</strong></p>
-<p>Statistical tests like linear models produce p-values to test null
-hypotheses. P-values below 0.05 are often considered statistically
-significant:</p>
+be extracted with extractor functions. For example, statistical tests
+like linear models produce p-values to test null hypotheses. P-values
+below 0.05 are often considered statistically significant:</p>
 <pre class="r"><code>coef(summary(fit)) # view p-values for each coefficient</code></pre>
-<p>Get back t-statistic, degrees of freedom, p-value</p>
-<p>However, with many comparisons, false positives become likely by
-chance (multiple comparisons problem). Adjustments like Bonferroni
-correction may be necessary.</p>
-<ul>
-<li>fitted() and residuals() extract fitted values and residuals</li>
-</ul>
-<p><strong>ANOVA and T-tests</strong></p>
-<p>Hypothesis tests like t-tests, ANOVA, correlation tests are carried
-out with t.test(), aov(), and cor.test().</p>
-<p>For group differences, R provides 1 and 2 sample t-tests, as well as
-ANOVA for factor-based group comparisons:</p>
+<p><strong>Hypothesis testing</strong></p>
+<p>T-tests, chi-squared, ANOVA, and correlation tests can be carried out
+for hypothesis testing. T-tests compare the distribution of two groups
+while ANOVA compares the distribution of more than two groups.
+Chi-squared tests allow analyzing relationships between categorical
+variables ANOVA is for factor-based group comparisons, in which post-hoc
+comparison tests, like <code>TukeyHSD</code>, can help determine which
+groups differ.</p>
+<p>For group differences and hypothesis testing, R provides some of the
+following functions:</p>
 <pre class="r"><code>t.test(x, y) # two sample t-test
-
+chisq.test(table(x, y)) 
 aov(y ~ groups, data=mydata) # one-way ANOVA </code></pre>
 <p>These tests make assumptions like normality and equal variance that
-should be checked. If violated, non-parametric tests may be better.</p>
-</div>
-<div id="chi-squared-and-correlation" class="section level4">
-<h4>4.4 Chi-squared and Correlation</h4>
-<p>Chi-squared tests allow analyzing relationships between categorical
-variables. Correlation like Pearson’s r characterize numeric
-associations:</p>
-<pre class="r"><code>chisq.test(table(x, y)) 
-
-cor.test(x, y) # correlation test </code></pre>
-<p>Pearson for linear, Spearman for monotonic relationships</p>
-<p>Scatterplots also help visualize correlations.</p>
-<p>&lt;&gt;&lt;&gt;</p>
-<p><strong>t-tests</strong></p>
-<ul>
-<li>Compare two groups with t.test()</li>
-<li>Specify the two samples with formula like x ~ y</li>
-<li>Get back t-statistic, degrees of freedom, p-value</li>
-<li>Paired (repeated measures) or unpaired (independent samples)</li>
-</ul>
-<pre class="r"><code>t.test(x, y)</code></pre>
-<p><strong>ANOVA</strong></p>
-<ul>
-<li>Compare more than two groups with one-way ANOVA</li>
-<li>aov(y ~ groups, data=mydata)</li>
-<li>Get F-statistic, p-value</li>
-<li>Determine which groups differ using post-hoc tests like Tukey’s</li>
-</ul>
-<pre class="r"><code>aov(y ~ groups, data=mydata)</code></pre>
-<p><strong>Correlation</strong></p>
-<ul>
-<li>Test correlation between two numeric variables with cor.test()</li>
-<li>Get correlation coefficient and p-value</li>
-<li>Visualize with scatterplot and fitted line</li>
-<li>Pearson for linear, Spearman for monotonic relationships</li>
-</ul>
-<pre class="r"><code>cor.test(x, y) </code></pre>
-<p>&lt;&gt;&lt;&gt;</p>
+should be checked. If violated, non-parametric tests may be better. You
+can read more about these tests <a href="https://www.voxco.com/blog/anova-vs-t-test-with-a-comparison-chart/">here</a>
+or elsewhere online.</p>
+<p>Correlation can be calculated using standard methods like Pearson’s r
+(for linear) or Spearman (for monotonic) to characterize association
+between variables:</p>
+<pre class="r"><code>cor.test(x, y) # correlation test </code></pre>
+<p>While this is not a statistics class, we will be using statistical
+tests and models to analyze data regularly. If you need it, read up on
+some of the definitions and concepts on your own time.</p>
+<p><br />
+</p>
 </div>
 <div id="your-task" class="section level4">
 <h4>Your Task</h4>
@@ -703,10 +672,8 @@ other function.</p></li>
 and meteorological data for 30 days from December, 24, 2023 to January,
 22 2024 collected at the snow telemetry station at the Timpanogos
 Divide.</p>
-<p>After reading in the data, convert dates column to a date object and
-change the column names to more useful manageable names using
-<code>colnames()</code>. Precipitation and Snow Water Equivalent units
-are in inches.</p>
+<p>After reading in the data, convert dates column to a date format and
+. Precipitation and Snow Water Equivalent units are in inches.</p>
 <p>For context, snow water equivalent is the amount of water in the
 snowpack or a volume of snow and is calculated by multiplying the snow
 density (<span class="math inline">\(\rho\)</span>) by depth
@@ -714,20 +681,27 @@ density (<span class="math inline">\(\rho\)</span>) by depth
 <p><span class="math display">\[SWE = \rho * d\]</span> a brief
 explanation of other variables are also listed:</p>
 <ul>
-<li>swe - snow water equivalent (see above)</li>
-<li>swe_med - historical median snow water equivalent value for
-1991-2020</li>
-<li>depth - snow depth in inches</li>
-<li>prec_accum -</li>
-<li>prec_accum_med - historical median prec_accum value for
-1991-2020</li>
+<li>date - Date string corresponding to local time</li>
+<li>swe - Snow water equivalent at the start of the day (inches)</li>
+<li>swe_med - Historical median swe at the start of the day for
+1991-2020 (inches)</li>
+<li>depth - Snow depth (inches)</li>
+<li>prec_accum - Total accumulated (cumulative) water for current water
+year (Oct 1st) (inches)</li>
+<li>prec_med - historical median prec_accum for 1991-2020 (inches)</li>
+<li>t_max - Air temperature maximum of the day (<span class="math inline">\(^{o}F\)</span>)</li>
+<li>t_min - Air temperature minimum of the day (<span class="math inline">\(^{o}F\)</span>)</li>
+<li>t_ave - Air temperature average of the day (<span class="math inline">\(^{o}F\)</span>)</li>
 </ul>
 <p>Respond to the following questions:</p>
 <ol start="7" style="list-style-type: decimal">
 <li><p>Use the equation above to estimate the density of the snowpack
-each day, add this as a new column to your DataFrame. List the maximum,
-minimum, average, and standard deviation of the snow density (<em>in
-percent</em>).</p></li>
+each day, add this as a new column to your DataFrame. List the average
+and standard deviation of the following: snow density (<em>in
+percent</em>), snow depth, and average temperature. Also list the snow
+warmest and coldest temperature recorded during the time period.
+Concatenate this information into a single <code>print</code> or
+<code>cat</code> statement.</p></li>
 <li><p>How do density and snow depth vary over time? Create a single
 plot showing both snow depth and density as a function of time. <em>Note
 you can use the <code>lines()</code> or <code>points()</code> functions
@@ -744,21 +718,23 @@ historical values?</p></li>
 to end of time period? How much snow water equivalent was gained or
 lost?</p></li>
 <li><p>Write a script to calculate the daily incremental change in both
-snow depth and swe over the 30 day period. Sum both the gains and losses
+snow depth and SWE over the 30 day period. Sum both the gains and losses
 from each and compare these values to the values in the previous
 question. What might account for the differences?</p></li>
 <li><p>Is there a relationship between air temperature and snow depth?
 Run a linear model, plot the results (<em>showing scatterplot and linear
 model</em>), and report the <span class="math inline">\(R^{2}\)</span>
 and p-value. Run a correlation test as well.</p></li>
-<li><p>Create a new DataFrame that is a subset your data based on the
-date when the storm arrived (<em>i.e. the day new snow started
-accumulating</em>). Only keep data after this date. Run another linear
-model on the subset of data and report similar statistics</p></li>
-<li><p>Assess the relationship between snow density and minimum
-temperature and any other variables you think might relate to one
-another. Describe any patterns you notice in your initial analysis of
-this dataset.</p></li>
+<li><p>Create a new DataFrame that is a subset of this data and only
+include dates after the storms arrived (<em>i.e. keep days after new
+snow started accumulating</em>). Run the same tests as in the previous
+question and compare the statistical strength. How has the relationship
+changed at all?</p></li>
+<li><p>Assess the relationship between snow density and temperature, as
+well as any other variables you think might relate to one another.
+Describe any patterns or relationships you notice in your initial
+analysis of this dataset. Advanced students should try multiple linear
+regression.</p></li>
 </ol>
 <p><br />
 </p>
@@ -766,8 +742,10 @@ this dataset.</p></li>
 </div>
 <div id="submitting" class="section level4">
 <h4>Submitting</h4>
-<p>Upload a R script with responses to each question. Support your
-responses with stand-alone code. Comment out any text.</p>
+<p>Upload either a single document showing code, responses, and plots…
+or a separate R script with a word doc or pdf containing all plots and
+responses. Be sure to support your responses with stand-alone code.
+Comment out any text and annotate each step well.</p>
 <p><em>Please reach out if you have any questions or concerns!</em></p>
 <p><strong>This assignment is due in one week but may be turned for an
 additional week with a late penalty of -5%</strong><br />

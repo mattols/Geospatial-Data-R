@@ -60,21 +60,22 @@ Use the simplified IUGS tertiary QAP diagram below to distinguish between the fi
 setwd(rprojroot::find_rstudio_root_file())
 knitr::include_graphics(file.path(getwd(), "img/mineralogy/QAP-LeMaitre2002.png"))
 ```
+Source: Modified from Le Maitre et al., 2002
 
 *Note: Any samples with greater than 60% Quartz content can be labeled as `NA` or "Unknown".*
 
-Source: Modified from Le Maitre et al., 2002
-
 *Tip: Tertiary diagrams use three variables to plot conditions or identity. Use the example below to observe how the location of a point may be mapped using the Q- Quartz and A- Alkali Feldspar percentages only:*
+
+**Important:** You will not be plotting your data like in the figure below. A key aspect of these diagrams is weighted ratios. For example, once you determine your Q location (vertical) on the graph, you can re-weight your A and P percentage values to determine where the sample fits horizontally.
 
 ```{r example, echo = FALSE, out.width='40%', out.height='40%'}
 setwd(rprojroot::find_rstudio_root_file())
 knitr::include_graphics(file.path(getwd(), "img/mineralogy/QAP-method1.png"))
 ```
 
-1) *(4 points)* Provide your code solution to classify rock sample data based on the simplified QAP diagram above. Remember, your solution does not need to be perfect.
+1) *(4 points)* Provide your code solution to classify rock sample data based on the simplified QAP diagram above. Create a barplot or pie plot showing the number or percentage of each type of volcanic rock in these samples. Remember, your solution does not need to be perfect!
 
-2) Do you think your solution is *efficient* and correct? What are some limitations or areas where you think your code could improve?
+2) Do you think your solution is *efficient* and correct? What are some limitations from the approach, diagram, your code, and the overall process. 
 
 \
 
@@ -102,7 +103,7 @@ Your task is to analyze the precipitation data for this region. Write a script t
 
 4) *(2 points)* Calculate the monthly standard deviation and new monthly averages for the past five years based on your station data. Which months have the most variable precipitation? How does the five-year average differ from the 30-year average? Provide any plots you think might be necessary.
 
-5) *(2 points)* Based on your analysis above, or any other analysis you would like to perform, describe how precipitation in the past five years has changed with respect to the historical climatology of the region. If the observed patterns continue, how do you expect the climate in this area to change in the future? Describe any *trends* or patterns that seem telling.
+5) Based on your analysis above, or any other analysis you would like to perform, describe how precipitation in the past five years has changed with respect to the historical climatology of the region. If the observed patterns continue, how do you expect the climate in this area to change in the future? Describe any *trends* or patterns that seem telling.
 
 \
 
@@ -172,7 +173,7 @@ Answer the following questions:
 
 ### Submit
 
-Upload a R script with responses to each question. Support your responses with stand-alone code. Comment out any text.
+Upload either a single document showing code, responses, and plots... or a separate R script with a word doc or pdf containing all plots and responses. Be sure to support your responses with stand-alone code. Comment out any text and annotate each step well.
 
 
 **This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**\

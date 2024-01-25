@@ -42,3 +42,114 @@ Use the `mtcars` dataset to understand basic relationships between variables.
 - Horsepower differences by number of cylinders. Use a violin plot or boxplot to compare hp by cyl. Do cars with more cylinders tend to have higher horsepower?
 
 - Weight differences by number of cylinders. Use a grouped boxplot to see how weight varies by cyl. Do cars with more cylinders tend to be heavier?
+
+
+
+ Here is the R markdown with the questions inserted above each code chunk:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+data(mtcars)
+```
+
+**The relationship between horsepower and fuel efficiency (mpg)**
+
+```{r}
+# The relationship between horsepower and fuel efficiency (mpg). A scatterplot can show if they are linearly related. Is engine power related to gas mileage?
+
+ggplot(mtcars, aes(x=hp, y=mpg)) +
+  geom_point() +
+  geom_smooth(method='lm')
+```
+
+**The distribution of fuel efficiency (mpg)**
+
+```{r}
+# The distribution of fuel efficiency (mpg). A histogram can show the overall spread and central tendency. How is gas mileage distributed across cars?
+
+ggplot(mtcars, aes(mpg)) +
+  geom_histogram(bins=10)
+```
+
+**Differences in fuel efficiency by number of cylinders**
+
+```{r}
+# Differences in fuel efficiency by number of cylinders. A grouped boxplot can highlight differences in mpg by the variable cyl. Do cars with more cylinders have lower average mpg?
+
+ggplot(mtcars, aes(x=as.factor(cyl), y=mpg)) +
+  geom_boxplot()
+```
+
+**The relationship between weight and fuel efficiency** 
+
+```{r}
+# The relationship between weight and fuel efficiency. A scatterplot can show if heavier cars tend to have lower mpg. Does weight impact gas mileage?
+
+ggplot(mtcars, aes(x=wt, y=mpg)) +
+  geom_point() +
+  geom_smooth(method='lm')
+```
+
+**Differences in fuel efficiency by transmission type**
+
+```{r}  
+# Differences in fuel efficiency by transmission type. Group the mpg by am (transmission) and compare with a boxplot or densities plot. Do automatic or manual transmissions have better mpg?
+
+ggplot(mtcars, aes(x=am, y=mpg)) +
+  geom_boxplot()
+```
+
+**Horsepower differences by number of cylinders**
+
+```{r}
+# Horsepower differences by number of cylinders. Use a violin plot or boxplot to compare hp by cyl. Do cars with more cylinders tend to have higher horsepower?
+
+ggplot(mtcars, aes(x=as.factor(cyl), y=hp)) +
+  geom_violin()
+```
+
+**Weight differences by number of cylinders**
+
+```{r}
+# Weight differences by number of cylinders. Use a grouped boxplot to see how weight varies by cyl. Do cars with more cylinders tend to be heavier?
+
+ggplot(mtcars, aes(x=as.factor(cyl), y=wt)) +
+  geom_boxplot()
+```
+
+**Correlation between mpg and wt**
+
+```{r}
+# Calculate the correlation between mpg and wt. Is this correlation statistically significant at the 0.05 level?
+
+cor.test(mtcars$mpg, mtcars$wt)
+```
+
+**ANOVA test for mpg differences by cylinder**
+
+```{r}  
+# Using the mtcars data, test whether the average mpg is different between cars with 4, 6, and 8 cylinders using ANOVA
+
+cyl_groups <- split(mtcars$mpg, mtcars$cyl)
+aov_result <- aov(mpg ~ cyl, data=mtcars)
+summary(aov_result)
+```
+
+**Simulation of coin flips**
+
+```{r}
+# Write a function that simulates 10 coin flips and returns the number of heads. Run this simulation 1000 times and plot the distribution of heads.
+
+flip_coin <- function() {
+  heads <- sum(sample(c(0,1), 10, replace=TRUE))
+  return(heads)
+}
+
+sims <- replicate(1000, flip_coin())  
+ggplot(data.frame(sims), aes(sims)) +
+  geom_histogram(bins=11)
+```
