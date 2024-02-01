@@ -1,0 +1,35 @@
+---
+title: "Skills"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+### Skills Test 1
+
+Skills tests are periodically given throughout the semester to test your technical skills and mastery of the R programming language. While these assessments also test your ability to problem solve and incorporate concepts we have discussed, they are mainly to be used 
+
+#### 1. Custom Functions in Base R
+
+Although built-in R functions are incredibly convenient, it's also important to understand how to set up your own function. Understanding the inner workings of any program is invaluable and prepares you to create your own custom programs.
+
+This first section requires you to build a new function to calculate the sample variance ($s^2$) of a vector. The R function `var()` does this for you, however, I would like you to use what we have learned to build this function on your own.
+
+$$s^2 = \frac{\sum_{i=1}^{n} (x_i - \overline{x})^2}{n - 1}$$
+*where* $\sum$ *represents the sum of terms, i represents each element in a series,* $\overline{x}$ *represents the mean, and n represents the size of the data.*
+
+In general, the sample variance can be considered the total squared distance of each sample from the mean, divided by the total number of observations (minus 1 to account for it being a sample of the population).
+
+Rules: *...TBA*
+
+Download and load this R vector.
+
+1. *(3 points)* Insert your custom function for sample variance.
+
+\
+
+#### 2. Plotting
+
+
+
+#### 3. 

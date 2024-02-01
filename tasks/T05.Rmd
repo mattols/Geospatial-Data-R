@@ -1,0 +1,32 @@
+---
+title: "Task 5"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+
+
+
+
+
+
+#### 3. Custom Functions
+
+Wouldn't you like to build your own tool that is tailored for your need? Who wouldn't?
+
+Creating functions in R can make your code more compact and efficient. Rather than repeating your code or implementing a for loop, consider creating a function to perform the task!
+
+We worked on the basics behind creating functions this week, here is a reminder:
+
+```{r}
+multiply_by_2 <- function(values){ 
+  # code and operations
+  new_vals <- values * 2
+  return(new_vals) # return values
+}
+```
+
+Read this article to discover more about writing functions in R.
+
+

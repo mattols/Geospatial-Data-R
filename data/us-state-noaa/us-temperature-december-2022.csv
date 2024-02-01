@@ -1,0 +1,53 @@
+December 2022 Contiguous U.S. Statewide Average Temperature
+Units: Degrees Fahrenheit
+Missing: -99
+Period of Record: 129 Years
+ID,Name,Value,Rank,Anomaly (1901-2000 base period),1901-2000 Mean
+1,"Alabama",49.1,93,2.7,46.4
+2,"Arizona",42.8,87,1.3,41.5
+3,"Arkansas",43.2,83,1.7,41.5
+4,"California",43.5,68,0.4,43.1
+5,"Colorado",25.7,58,0.5,25.2
+6,"Connecticut",33.5,105,4.3,29.2
+7,"Delaware",37.8,72,1.6,36.2
+8,"Florida",61.5,85,2.7,58.8
+9,"Georgia",49.1,85,2,47.1
+10,"Idaho",22.8,43,-1.1,23.9
+11,"Illinois",30.3,62,0.9,29.4
+12,"Indiana",31.7,69,1.4,30.3
+13,"Iowa",21.3,48,-1.4,22.7
+14,"Kansas",30.6,42,-0.9,31.5
+15,"Kentucky",37.8,80,1.6,36.2
+16,"Louisiana",54.1,105,3.2,50.9
+17,"Maine",27.6,124,8.9,18.7
+18,"Maryland",36.5,69,1.2,35.3
+19,"Massachusetts",33.1,111,5,28.1
+20,"Michigan",26.9,98,3.6,23.3
+21,"Minnesota",12.5,56,-0.4,12.9
+22,"Mississippi",50.1,100,3.3,46.8
+23,"Missouri",33.1,57,0.1,33
+24,"Montana",14.6,21,-6,20.6
+25,"Nebraska",22.7,28,-2.6,25.3
+26,"Nevada",31.7,68,0.5,31.2
+27,"New Hampshire",28.3,115,6.6,21.7
+28,"New Jersey",35.5,85,2.5,33
+29,"New Mexico",37.2,106,2.9,34.3
+30,"New York",29,106,4.5,24.5
+31,"North Carolina",41.8,62,0.3,41.5
+32,"North Dakota",6.7,19,-6,12.7
+33,"Ohio",32.6,79,2.2,30.4
+34,"Oklahoma",40.1,71,1.2,38.9
+35,"Oregon",30.6,41,-1.2,31.8
+36,"Pennsylvania",30.6,72,1.7,28.9
+37,"Rhode Island",35.5,108,4.5,31
+38,"South Carolina",46.1,74,0.5,45.6
+39,"South Dakota",15.1,25,-4.6,19.7
+40,"Tennessee",40.8,83,1.6,39.2
+41,"Texas",50,111,3.1,46.9
+42,"Utah",28.2,75,1.2,27
+43,"Vermont",27.2,115,7,20.2
+44,"Virginia",37.3,61,0.5,36.8
+45,"Washington",26.3,17,-4.3,30.6
+46,"West Virginia",34.4,71,1.3,33.1
+47,"Wisconsin",19.2,68,1.1,18.1
+48,"Wyoming",19.6,46,-1,20.6

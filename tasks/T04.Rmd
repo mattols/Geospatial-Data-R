@@ -13,7 +13,36 @@ You will also learn how to make functions in R. When you have a specific task, i
 
 \
 
-#### 1. Introducing Packages!
+#### 1. Connect and Share
+
+Let's start what we should have started at the beginning of class, a way to organize scripts so that we 
+
+**R Projects & R Markdown**
+
+R projects and R Markdown are useful tools for creating reproducible data analysis workflows in R. An R project allows you to organize all the files, data, and code associated with a project in one directory. This makes it easy to share the entire project with others and ensures that any code will run properly, since it can find the necessary files using relative paths. Some key benefits of R projects include:
+
+- Centralized location for data, code, results - makes it easy to share and reproduce the analysis
+- Isolate the project environment from other R workspaces/environments
+- RStudio integrates nicely with projects to navigate files and run code
+
+**Create a new project** for this week's task. Read more about [R Projects](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/) online. To begin a project in RStudio, select File > New Project and place this in a new location.
+
+R Markdown allows you to create documents that mix text, R code, and output (tables, graphs, etc.) together in a single file. The code chunks can be run so the output is automatically updated - great for reproducible reports. R Markdown documents can then easily be exported to html, pdf, Word docs, and more. Benefits include:
+
+Integrates narrative, code, and results together in a single document
+Code is executed and output included, so figures, tables, etc. are always up to date
+Flexible output formats like html, pdf, Word for sharing
+Can embed R code right alongside explanations to make code easier to understand.
+
+Read more about using [R Markdown](https://rmarkdown.rstudio.com/lesson-1.html)
+
+**Open a new R Markdown file** to generate for this week's task.
+
+Together, R projects and R Markdown make it easy to organize work, share documents, and ensure reproducibility. The workflow creates self-contained code and reports that can be easily shared and reproduced by others. 
+
+\
+
+#### 2. Introducing Packages!
 
 While there are several benefits in learning the base R functions, some of the added libraries we will use are much better. Having general familiarity with structures and workflows in base R will help you once we get to the geospatial data aspect of this class.
 
@@ -24,40 +53,93 @@ This week we will move our data wrangling and analysis to incorporate a few key 
 - `ggplot`
 - `...`
 
-\
-
 A few key functions that we mentioned in class include: dplyr piping with `%>%` and data transformation with functions like `mutate()` and `filter()`, the ggplot structure, added statistical packages, and tidying data with special functions.
 
-\
-
-#### 2. Introducing Custom Functions!
-
-Wouldn't you like to build your own tool that is tailored for your need? Who wouldn't?
-
-Creating functions in R can make your code more compact and efficient. Rather than repeating your code or implimenting a for loop, consider creating a function to perform the task!
-
-We worked on the basics behind creating functions this week.
-
+This introduces yet another, possibly more convenient workflow for analyzing your data. In some instances, particularly with some data formats, it might work better to return to base R functions.
 
 \
 
 #### Your Task
 
-Your task this week is to read in, clean, and analyze the snotel (or USGS) csv file from Canvas. OR DAir Quality Data
+Your task this week is to read in, clean, combine, and analyze several datasets. Your final deliverable should be an html document output from R Markdown.
 
-Be sure to answer all of the following questions in your analysis:
+#### 1. Visualizations
 
-* Transform the data to include the station name along with the code
-* ...
+Read in the `temp-data.csv` and `prec-data.csv` files. Join the two datasets together using the common state names *(Tip: the* `match()` *or dplyr* `full_join()` *(or similar) functions can be useful)*. Try to use `ggplot` plot functions, but you may use base plot functions as well.
+
+Perform the following:
+
+1. Calculate new columns for the 2022 and 2023 June and December temperature anomalies (4 total) for the US. The anomaly is the difference between the mean and current year value. Print the top 5 states *(and values)* with the highest temperature anomalies in December for each year and Show the distribution *(histogram)* of temperature anomalies for both seasons and years. This may be one or more individual plots.
+
+3. Write a script that categorizes states based on whether both years had both increasing, decreasing, or mixed anomalies for both June and December. Create a pie plot or other graphic showing the categories for each month.
+
+Read in the `us-region.csv` data and combine this with the temp-data.
+
+4. *(2 points)* Create scatterplots of the temperature anomalies as a function of their means for each respective month and color the points based on their region. Do you notice any patterns or relationships?
+
+5. Describe variations in climatology over the US in during 2022-23 using any insights you gained from the above (or other) figures.
+
+#### 2. Cleaning and aggregating data  
+
+Read in the `messy_state_elev.csv` data. First, you will need to clean up this data frame so it is in a more usable format. This data was scraped from this [USGS website](https://www.usgs.gov/educational-resources/highest-and-lowest-elevations) and has been slightly modified to make one step easier.
+
+Complete the following:
+
+- Change column names to something more useful
+- Remove special characters *(*`{ }`*)* from superscript references in the data
+- Convert any numerical data into correct format, including removing any necessary text or characters
+- Create a new column for elevation_range based on the high and low elevations
+- *Advanced students can scrape and work with the original data*
+
+4. *(4 points)* Show steps to clean and or reformat each column in the dataset and use the `summary()` and `head()` to summarize your final cleaned dataset.
+
+5. Plot the 
 
 
-#### 1. Tidy Data
-#### 2. The dplyr Package
-#### 3. Data Wrangling Tips
-#### 4. Statistical Modeling and Tests
-#### Your Task
+#### 3. Filtering and generating new data
 
+Read in the `us-pop.csv` data. This dataset was obtained from the US Census Bureau's [website](https://www.census.gov/data/tables/time-series/dec/popchange-data-text.html) and contains decennial population information over the past five decades for each state or territory in the US.
 
+The us-pop data will need to be cleaned up a bit as well. The `skip =` argument can be useful to skip unnecessary lines when reading in a new csv or text file. 
 
+Create a new dataframe from the us-pop.csv that contains the percent change in population for each state at the decennial census. For example, the percent change in 2020 shows the percent increase in population from 2010-2020 for each state. As a reminder, a percent change can be calculated with:
 
-- USGS water dataset
+$$Percent Change = \frac{end - start}{start} * 100$$
+*Be sure to calculate the percent change for each census*
+
+6. *(2 points)* Provide your code for calculating the percent change in population for each deccenial interval and list the top 10 states *(and values)* with the greatest increase in population from 2010 to 2020.
+
+Join the USGS elevation dataset with the us-pop data. Let's consider whether the elevation or elevation range of a state is related to the change in population.
+
+7. Create a scatterplot of the percent change in population in 2020 as a function of the elevation range of each state. Run a linear (`lm()`) model to add to this plot and report the p-value and $R^2$. Discuss what you find.
+
+Below, I have given you a list of states to exclude or filter from your dataset:
+
+```{r}
+exclude_states <- c("Alaska", "California", "Delaware", "District of Columbia", "Florida", "Hawaii", "New Mexico","North Dakota", "Puerto Rico", "West Virginia", "Wyoming")
+```
+
+Create a subset of your data that excludes the states above. Provide your code to subset the data and answer the following:
+
+8. Repeat the steps above with this subset data and create a scatterplot of the percent change in population in 2020 as a function of the elevation range of each state. Include the linear model and same statistics to support the strength of any relationship.
+
+9. *(2 points)* Run a linear model to assess the strength of the relationship between the change in population for each decennial census (1990-2020)
+
+\
+
+#### Submitting
+
+Upload your R Markdown output as either an html or pdf file to Canvas
+
+\
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**
+
+\
+References:
+
+NOAA National Centers for Environmental information, Climate at a Glance: \
+Statewide Mapping, published January 2024, retrieved on January 30, 2024 \
+from https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/mapping\
+
+\

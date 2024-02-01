@@ -1,0 +1,53 @@
+June 2023 Contiguous U.S. Statewide Average Temperature
+Units: Degrees Fahrenheit
+Missing: -99
+Period of Record: 129 Years
+ID,Name,Value,Rank,Anomaly (1901-2000 base period),1901-2000 Mean
+1,"Alabama",76.7,34,-0.8,77.5
+2,"Arizona",72.4,18,-2,74.4
+3,"Arkansas",77.2,80,0.7,76.5
+4,"California",66.8,26,-1.5,68.3
+5,"Colorado",60.1,32,-1.1,61.2
+6,"Connecticut",65.5,56,0.1,65.4
+7,"Delaware",70,34,-0.7,70.7
+8,"Florida",80.4,92,0.9,79.5
+9,"Georgia",75.7,19,-1.7,77.4
+10,"Idaho",57.2,77,0.5,56.7
+11,"Illinois",71.5,57,0.1,71.4
+12,"Indiana",69.3,35,-1.2,70.5
+13,"Iowa",71.3,102,2.2,69.1
+14,"Kansas",73.4,61,0.1,73.4
+15,"Kentucky",70.2,18,-2.4,72.6
+16,"Louisiana",82.1,121,2.3,79.8
+17,"Maine",59.9,58,0.1,59.8
+18,"Maryland",69.2,23,-1.4,70.6
+19,"Massachusetts",64.6,59,0.2,64.4
+20,"Michigan",64.7,81,1.4,63.3
+21,"Minnesota",68.9,126,5.2,63.7
+22,"Mississippi",79.2,96,0.9,78.3
+23,"Missouri",73.9,82,0.9,73
+24,"Montana",60.4,100,2.1,58.3
+25,"Nebraska",69.8,90,1.5,68.3
+26,"Nevada",62,27,-1.9,63.9
+27,"New Hampshire",61.8,60,0.3,61.5
+28,"New Jersey",67.6,30,-0.9,68.5
+29,"New Mexico",69.4,61,0.2,69.2
+30,"New York",63.2,56,-0.2,63.4
+31,"North Carolina",70.8,10,-2.8,73.6
+32,"North Dakota",69.3,127,6.4,62.9
+33,"Ohio",66.9,24,-2,68.9
+34,"Oklahoma",76.8,57,-0.1,76.9
+35,"Oregon",59.2,103,2,57.2
+36,"Pennsylvania",64.4,25,-1.6,66
+37,"Rhode Island",64.9,58,0.2,64.7
+38,"South Carolina",74.2,9,-2.8,77
+39,"South Dakota",69.8,116,4.1,65.7
+40,"Tennessee",72,23,-1.8,73.8
+41,"Texas",82.3,115,2.7,79.6
+42,"Utah",62.7,39,-1.3,64
+43,"Vermont",61.7,78,0.7,61
+44,"Virginia",68,9,-2.9,70.9
+45,"Washington",60.8,116,3.1,57.7
+46,"West Virginia",64.8,9,-3.3,68.1
+47,"Wisconsin",66.7,109,2.6,64.1
+48,"Wyoming",57.4,61,-0.2,57.6
