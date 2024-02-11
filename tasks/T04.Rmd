@@ -7,15 +7,15 @@ output: html_document
 
 ### Streamlined workflows
 
-Nice work! You've made it through the first couple weeks learning many of the capabilities and tricks in R. One of the best aspects of an open-source programming language is that it is a community built tool and features thousands of useful packages to perform general or more specific analysis. You will learn about a few key packages this week.
+Nice work! You've made it through the first couple weeks learning basic data analysis in R. One of the best aspects of an open-source programming language is that it is a community built tool and features thousands of useful packages to perform general or more specific analysis. Not to mention the countless topics and [help](https://stackoverflow.com/questions/tagged/r) discussion in online forums. 
 
-You will also learn how to make functions in R. When you have a specific task, it can be useful to call a customized function rather than repeat unnecessary lines of code.
+You will learn about a few key packages this week and certainly spend time in online forums to help guide your efforts.
 
 \
 
 #### 1. Connect and Share
 
-Let's start what we should have started at the beginning of class, a way to organize scripts so that we 
+Let's start with a way to organize scripts and your work in a manageable and reproducible way.
 
 **R Projects & R Markdown**
 
@@ -25,20 +25,15 @@ R projects and R Markdown are useful tools for creating reproducible data analys
 - Isolate the project environment from other R workspaces/environments
 - RStudio integrates nicely with projects to navigate files and run code
 
-**Create a new project** for this week's task. Read more about [R Projects](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/) online. To begin a project in RStudio, select File > New Project and place this in a new location.
+**Create a new R Project** for this week's task. Read more about [R Projects](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/) online. To begin a project in RStudio, select File > New Project and place this in a new location.
 
-R Markdown allows you to create documents that mix text, R code, and output (tables, graphs, etc.) together in a single file. The code chunks can be run so the output is automatically updated - great for reproducible reports. R Markdown documents can then easily be exported to html, pdf, Word docs, and more. Benefits include:
-
-Integrates narrative, code, and results together in a single document
-Code is executed and output included, so figures, tables, etc. are always up to date
-Flexible output formats like html, pdf, Word for sharing
-Can embed R code right alongside explanations to make code easier to understand.
+R Markdown allows you to create documents that mix text, R code, and output (tables, graphs, etc.) together in a single file. R Markdown integrates narrative, code, and results together in a single document - great for reproducible reports and communicating your analysis! R Markdown documents can then easily be exported to html, pdf, Word docs, and more. 
 
 Read more about using [R Markdown](https://rmarkdown.rstudio.com/lesson-1.html)
 
 **Open a new R Markdown file** to generate for this week's task.
 
-Together, R projects and R Markdown make it easy to organize work, share documents, and ensure reproducibility. The workflow creates self-contained code and reports that can be easily shared and reproduced by others. 
+Together, R Projects and R Markdown make it easy to organize work, share documents, and ensure reproducibility. The workflow creates self-contained code and reports that can be easily shared and reproduced by others. 
 
 \
 
@@ -48,14 +43,14 @@ While there are several benefits in learning the base R functions, some of the a
 
 This week we will move our data wrangling and analysis to incorporate a few key libraries in R. We will focus on the following packages, most of which are associated with the *tidyverse*:
 
-- `dplyr`
-- `tidy`
 - `ggplot`
-- `...`
+- `dplyr`
+- `tidyr`
+- *and others*
 
-A few key functions that we mentioned in class include: dplyr piping with `%>%` and data transformation with functions like `mutate()` and `filter()`, the ggplot structure, added statistical packages, and tidying data with special functions.
+A few key functions that we mentioned in class include: dplyr piping with `%>%` and data transformation with functions like `full_join()`, `mutate()` and `filter()`; along with the ggplot structure, options to help generate statistics, and other transformation tools.
 
-This introduces yet another, possibly more convenient workflow for analyzing your data. In some instances, particularly with some data formats, it might work better to return to base R functions.
+This introduces yet another, possibly more convenient workflow for analyzing your data. Keep in mind that in some instances, it might be just as easy or easier to use base R functions.
 
 \
 
@@ -63,73 +58,85 @@ This introduces yet another, possibly more convenient workflow for analyzing you
 
 Your task this week is to read in, clean, combine, and analyze several datasets. Your final deliverable should be an html document output from R Markdown.
 
-#### 1. Visualizations
+#### 1. Exploring visualizations
 
-Read in the `temp-data.csv` and `prec-data.csv` files. Join the two datasets together using the common state names *(Tip: the* `match()` *or dplyr* `full_join()` *(or similar) functions can be useful)*. Try to use `ggplot` plot functions, but you may use base plot functions as well.
+Read in the `us-temp-dec-june.csv` table. This data was obtained from [NOAA](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/mapping) and shows statewide temperature for the months of June and December. For each month, the 1901-2000 mean temperature value is given, as well as the recorded average temperature for years 2022 and 2023.
+
+Try to use `ggplot` plot functions for your responses below, however, you may also use base plot functions if you would like.
 
 Perform the following:
 
-1. Calculate new columns for the 2022 and 2023 June and December temperature anomalies (4 total) for the US. The anomaly is the difference between the mean and current year value. Print the top 5 states *(and values)* with the highest temperature anomalies in December for each year and Show the distribution *(histogram)* of temperature anomalies for both seasons and years. This may be one or more individual plots.
+1. Calculate new columns for the 2022 and 2023 June and December temperature anomalies (4 total) for the US. The anomaly is the difference between the mean and current year value. Print the top 5 states *(and values)* with the highest temperature anomalies in December for each year. Also list the state in each region with the highest June anomaly for both years.
 
-3. Write a script that categorizes states based on whether both years had both increasing, decreasing, or mixed anomalies for both June and December. Create a pie plot or other graphic showing the categories for each month.
+2. Plot the distribution *(histogram)* of temperature anomalies for both seasons and years. *This may be one or more individual plots.*
 
-Read in the `us-region.csv` data and combine this with the temp-data.
+3. Write a script that categorizes states based on whether both years had both increasing, decreasing, or mixed anomalies for both June and December. Create a pie plot, bar chart, or other graphic showing the categories for each month.
 
-4. *(2 points)* Create scatterplots of the temperature anomalies as a function of their means for each respective month and color the points based on their region. Do you notice any patterns or relationships?
+4. Create scatterplots of the temperature anomalies as a function of their means for each respective month/year, and color the points based on their region. Do you notice any patterns or relationships? If so, describe them.
 
-5. Describe variations in climatology over the US in during 2022-23 using any insights you gained from the above (or other) figures.
+5. Describe variations in climatology or relationships in over the US in during 2022-23 using any insights you gained from the above (or other) figures.
 
-#### 2. Cleaning and aggregating data  
+#### 2. Cleaning data  
 
 Read in the `messy_state_elev.csv` data. First, you will need to clean up this data frame so it is in a more usable format. This data was scraped from this [USGS website](https://www.usgs.gov/educational-resources/highest-and-lowest-elevations) and has been slightly modified to make one step easier.
 
-Complete the following:
+Complete, at minimum, the following:
 
 - Change column names to something more useful
 - Remove special characters *(*`{ }`*)* from superscript references in the data
 - Convert any numerical data into correct format, including removing any necessary text or characters
-- Create a new column for elevation_range based on the high and low elevations
+- Replace all instances of "Sea level" with the value of 0
+- Create a new column for elevation_range based on the difference in the high and low elevations
 - *Advanced students can scrape and work with the original data*
 
-4. *(4 points)* Show steps to clean and or reformat each column in the dataset and use the `summary()` and `head()` to summarize your final cleaned dataset.
+For your task:
 
-5. Plot the 
+6. *(4 points)* Show steps to clean and or reformat each column in the dataset and use the `summary()` and `head()` to summarize your final cleaned dataset.
 
+\
 
-#### 3. Filtering and generating new data
+#### 3. Basic data analysis
 
 Read in the `us-pop.csv` data. This dataset was obtained from the US Census Bureau's [website](https://www.census.gov/data/tables/time-series/dec/popchange-data-text.html) and contains decennial population information over the past five decades for each state or territory in the US.
 
-The us-pop data will need to be cleaned up a bit as well. The `skip =` argument can be useful to skip unnecessary lines when reading in a new csv or text file. 
+The us-pop data will need to be cleaned up a bit as well. The `skip =` argument can be useful when reading in a csv file to skip unnecessary lines at the top of the document. 
+
+Try to use the `dplyr` and other `tidyverse` packages to help with cleaning and rearranging this data. However, you may still stick to base R if you prefer.
 
 Create a new dataframe from the us-pop.csv that contains the percent change in population for each state at the decennial census. For example, the percent change in 2020 shows the percent increase in population from 2010-2020 for each state. As a reminder, a percent change can be calculated with:
 
 $$Percent Change = \frac{end - start}{start} * 100$$
 *Be sure to calculate the percent change for each census*
 
-6. *(2 points)* Provide your code for calculating the percent change in population for each deccenial interval and list the top 10 states *(and values)* with the greatest increase in population from 2010 to 2020.
+7. Provide your code for calculating the percent change in population for each deccenial interval and list the top 10 states *(and values)* with the greatest increase in population from 2010 to 2020.
 
-Join the USGS elevation dataset with the us-pop data. Let's consider whether the elevation or elevation range of a state is related to the change in population.
+Join the USGS elevation dataset with the us-pop data. To join dataframes together, you will need to find a common variable in each dataset *(Tip: the* `match()` *or dplyr* `full_join()` *(or similar) functions can be useful)*.
 
-7. Create a scatterplot of the percent change in population in 2020 as a function of the elevation range of each state. Run a linear (`lm()`) model to add to this plot and report the p-value and $R^2$. Discuss what you find.
+Let's consider whether the elevation or elevation range of a state is related to the change in population.
+
+8. Create a scatterplot of the percent change in population in 2020 as a function of the elevation range of each state. Run a linear (`lm()`) model to add to this plot and report the p-value and $R^2$. Discuss what you find.
+
+Next, you will modify the dataset and repeat your steps.
 
 Below, I have given you a list of states to exclude or filter from your dataset:
 
-```{r}
+```r
 exclude_states <- c("Alaska", "California", "Delaware", "District of Columbia", "Florida", "Hawaii", "New Mexico","North Dakota", "Puerto Rico", "West Virginia", "Wyoming")
 ```
 
 Create a subset of your data that excludes the states above. Provide your code to subset the data and answer the following:
 
-8. Repeat the steps above with this subset data and create a scatterplot of the percent change in population in 2020 as a function of the elevation range of each state. Include the linear model and same statistics to support the strength of any relationship.
+9. Repeat the steps above with this subset data and create a scatterplot of the percent change in population in 2020 as a function of the elevation range of each state. Include the linear model and same statistics to support the strength of any relationship.
 
-9. *(2 points)* Run a linear model to assess the strength of the relationship between the change in population for each decennial census (1990-2020)
+10. Run a linear model to assess the strength of the relationship between the change in population for all decennial censuses (1980-2020). Does the relationship change over time? Create one or more plots to support your findings. Hypothesize as to why such a relationship might exist.
+
+11. *(2 points)* Combine the temperature dataset from part 1 with your population and elevation dataset. Are there any regional relationships between population change and elevation? How about regional relationships between temperature and elevation? Provide one or more plots to support any of your statements. *(no need to show everything, just provide a few insights)*  
 
 \
 
 #### Submitting
 
-Upload your R Markdown output as either an html or pdf file to Canvas
+Upload your R Markdown output as either an html *(preferred)* or pdf file to Canvas
 
 \
 
@@ -140,6 +147,8 @@ References:
 
 NOAA National Centers for Environmental information, Climate at a Glance: \
 Statewide Mapping, published January 2024, retrieved on January 30, 2024 \
-from https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/mapping\
+from https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/mapping
+
+U.S. Census Bureau, Decennial Population Changes by State. U.S. Department of Commerce. Retrieved January 30, 2024, from https://www.census.gov/data/tables/time-series/dec/popchange-data-text.html
 
 \

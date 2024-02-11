@@ -5,28 +5,87 @@ date: "Spring 2024"
 output: html_document
 ---
 
+### Nothing *too* New
 
+You'll be happy to know that I am only introducing one new concept this week. Besides this, we will spend time learning more about the `tidyverse` packages like `dplyr`, `ggplot`, and others.
 
+The new concept we will discuss is about building custom functions to facilitate your workflows. When you have a specific task, it can be useful to call a customized function rather than repeat unnecessary lines of code.
 
+\
 
+#### 1. Custom Functions
 
-
-#### 3. Custom Functions
-
-Wouldn't you like to build your own tool that is tailored for your need? Who wouldn't?
+Wouldn't you like to build your own tool that is tailored exactly for your need? Who wouldn't?!
 
 Creating functions in R can make your code more compact and efficient. Rather than repeating your code or implementing a for loop, consider creating a function to perform the task!
 
 We worked on the basics behind creating functions this week, here is a reminder:
 
 ```{r}
-multiply_by_2 <- function(values){ 
-  # code and operations
+multiply_by_2 <- function(values){ # arguments are specified
+  # code and operations go in here
   new_vals <- values * 2
   return(new_vals) # return values
 }
+# test
+multiply_by_2(8)
 ```
 
-Read this article to discover more about writing functions in R.
+Creating functions can make your work flow much easier. 
+
+```{r}
+# function to calculate the increase or decrease of a value in percent
+percent_change <- function(after, before){ 
+  # calculate percent change
+  p_change <- ( (after - before) / before ) * 100
+  return(p_change)
+}
+# test
+x <- percent_change(after = 45, before = 33)
+cat("The percent change between", 33, "and", 45, "is:", round(x, 2), "%" )
+```
+
+Read this [book chapter](https://r4ds.hadley.nz/functions.html) to discover more about writing functions in R. Consider how you might include functions in your workflow.
+
+\
+
+#### 2. Review New Functions in tidyverse
+
+Become more familiar with several of the key packages in tidyverse, particularly `ggplot` and `dplyr`. 
+
+The tidyverse uses a different workflow to interact with data. It can make some steps more efficient and introduces several "shortcut" methods that would otherwise require a long workaround using base R.
+
+Review chapter in the R for Data Science book about [workflows](https://r4ds.hadley.nz/workflow-style) and piping with `%>%` and transforming. Some concepts we have not introduced yet, but are very helpful, include pivoting your data. Read about how to pivot your data in the [data tidying](https://r4ds.hadley.nz/data-tidy) section of your book.
+
+I will let you find more help and information online.
 
 
+\
+
+#### Your Mini-Task
+
+You have two tasks this week:
+
+The **first part** is to create a custom function to perform any task. Ideally this helps with the next part of your task. Be sure to annotate and describe what your function does.
+
+The **second part** of your task this week is based on the dataset that you brought to class. Use some of the new packages we are exploring (`dplyr` and `ggplot`).
+
+You may need to clean, summarize, and or perform other analysis on this dataset. If there's nothing very interesting within this dataset alone, you should look for another dataset that can be joined with your data to provide interesting insight!
+
+Be sure to cite your data sources and **provide a link** to the data. 
+
+Include the code and all necessary steps in cleaning, summarizing, and analyzing the data.
+
+**5 points total**
+
+\
+
+#### Submitting
+
+Upload your R Markdown output as an html file to Canvas
+
+\
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**
+
+\
