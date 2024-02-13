@@ -1,0 +1,48 @@
+---
+title: "Task 6"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+### Spatial Data
+
+
+
+\
+
+#### 1. ...
+
+
+
+\
+
+#### 2. ...
+
+
+
+\
+
+#### Your Task
+
+Your task this week is to 
+
+#### 1. Exploring 
+
+
+
+\
+
+#### Submitting
+
+Upload your R Markdown output as an html file to Canvas
+
+\
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**
+
+\
+References:
+
+
+\
