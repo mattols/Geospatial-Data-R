@@ -5,30 +5,215 @@ date: "Spring 2024"
 output: html_document
 ---
 
-### Joining and combining datasets
+```{r echo=FALSE, message=FALSE}
+library(dplyr);library(ggplot2)
+```
 
+### Pivoting, merging, and visualizing data
+
+This week you will continue to explore manipulating data with `dplyr` and creating more complex visualizations with `ggplot`, both part of the tidyverse.
+
+\
+
+#### 1. Pivot and sort
+
+Noah demonstrated how pivoting works in R. Many dataframes must be pivoted before you can visualize the information into `ggplot`. Review Noah's handout in the Canvas module.
+
+Two base functions we've briefly discussed are `order` and `sort`. These are helpful methods to rearrange or sort data. Order returns the location of variables in their sequential order, and works for character or numeric data:
+
+```r
+# reorder the values alphabetically
+capletters <- c("B","Z","F","D","A","G","C")
+order(capletters) # 5 1 7 4 3 6 2
+# rearrange data with indexing
+capletters[order(capletters)] # "A" "B" "C" "D" "F" "G" "Z"
+```
+
+Sort is a similar function to automatically reorder information. Note, these functions also work with numeric data.
+
+```r
+# sort data
+sort(capletters) # "A" "B" "C" "D" "F" "G" "Z"
+# numeric example
+num <- sample(12)
+num # 2 8 10 11 5 7 12 6 1 9 3 4 
+sort(num) # 1 2 3 4 5 6 7 8 9 10 11 12
+```
+`dplyr` has its own method of arranging data, though this is designed for working within one column in a dataframe:
+
+```r
+as_tibble(capletters) %>% arrange(value) # value <chr> "A" "B" "C" "D" "F" "G" "Z"
+```
 
 
 \
 
-#### 1. ...
+#### 2. Join and match
 
+Andrew demonstrated great implementations of merging dataframes with `full_join()` and `cbind()`, these are both excellent methods for joining datesets. Review Andrew's handout in the Canvas module. 
 
+The match function returns the location of the match of x, which can be numeric or character:
 
-\
+```r
+match(5, 1:9) # 5
+match(5, c(1,2,3,6,7,8,9,5)) # 8
+match("B", c("A","B","C")) # 2
+```
 
-#### 2. ...
+You can also use the `%in%` (wrapper for match) to return a logical expression to check if a value exists at all in the vector:
 
+```r
+capletters <-  c("B","Z","F","D","A","G","C")
+"A" %in% capletters # TRUE
+"J" %in% capletters # FALSE
+5 %in% 1:9 # TRUE
+```
 
+Let's use a more useful example, focusing on two small datasets for 10 US states.
+
+The first is a subset of the state_flags dataframe Andrew used:
+
+```{r, echo=FALSE}
+stateflags <- data.frame(
+  state = c("Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia"),
+  flag = c("Red, White", "Blue, Gold", "Blue, Gold", "Red, White", "Blue, Gold", "Red, White", "Blue, White", "Blue, Yellow", "Red, White", "Red, White")
+  )
+stateflags
+```
+
+Now, let's add another dataset with information we wanted to join:
+
+```{r, echo=FALSE}
+stateinfo <- data.frame(
+  state = c("Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia"),
+  areakm2 = c(135767,1723337,295234,137732,423967,269601,14357,6446,170312,153910),
+  pop2020 = c(5024279,733391,7151502,3011524,39538223,5773714,3605944,989948,21538187,10711908)
+  )
+stateinfo <- stateinfo[sample(nrow(stateinfo)),]
+stateinfo
+```
+
+First, let's try to use `cbind` to combine these datasets. This function simply sticks these dataframes together.
+
+```{r}
+# cbind
+cbind(stateflags, stateinfo) %>% head()
+```
+
+As you can see, this is a very poor join between these dataframes. Instead we can use match with like-variables between datasets to make sure that the join is correct
+
+```{r}
+# cbind with match
+match_id <- match(stateflags$state, stateinfo$state)
+cbind(stateflags, stateinfo[match_id,]) %>%
+  head()
+
+```
+
+Although it is useful to check, we would want to omit the second column instance of state names.
+
+Alternatively, we could use dplyr funtions like `full_join` to do the work:
+
+```{r}
+full_join(stateflags, stateinfo, by="state") %>%
+  head()
+```
+
+Note that there are several creative ways to match and join dataframes. For example, let's use the `order` function from earlier on each dataset with `cbind`. Many ways to skin a cat!
+
+```{r}
+stateinfo_order <- stateinfo[order(stateinfo$state),]
+cbind(stateflags, stateinfo_order) %>% head()
+```
+
+Data analysis often requires combining several datasets prior to analyzing. For more information seek examples in our online texts or other websites.
 
 \
 
 #### Your Task
 
-Your task this week is to 
+Your task this week will include pivoting, combining, and visualizing data. 
 
-#### 1. Exploring 
+Read in the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" dataset. This file contains meteorological and snow data from snow telemetry (snotel) weather stations in the mountains of Utah. Data from three winter seasons in 2020-21, 2021-22, and 2022-23 were added to this dataset. Several different variables are included for each station.
 
+Note that the water year or winter season begins on Oct 1st and goes until Sep 31st of the following year.
+
+\
+
+#### 1. Advanced visualization with ggplot
+
+No transformation (pivoting) is needed to complete this section.
+
+Recreate the following plot using `ggplot`:
+
+```{r echo=FALSE}
+snowide <- "../tmp/tmp_data/UTSNTL_ALL_2020_2022_Daily_Wide.csv"
+dfw <- read.csv(snowide)
+# plot swe and temperature of one site
+scal = 3
+dfw %>% mutate(Date=as.Date(Date,format="%m/%d/%y")) %>%
+  mutate(t_color = if_else(Agua.Canyon..907..Air.Temperature.Average..degF. > 32, "No", "Yes")) %>% 
+  ggplot(aes(x=Date)) +
+  geom_bar(aes(y = Agua.Canyon..907..Snow.Water.Equivalent..in..Start.of.Day.Values),
+           col='lightblue', stat='identity') +
+  geom_line(aes(y = Agua.Canyon..907..Air.Temperature.Average..degF. / scal, color=t_color, group=1 ), size=0.5) +
+  scale_y_continuous(name = "SWE (inches)",
+    sec.axis = sec_axis( trans=~.*scal, name="Temperature (degF)")) +
+  scale_color_manual(values=c("firebrick","deepskyblue3"),name="Freezing") +
+  theme_bw() +
+  theme(
+    axis.title.y = element_text(color = "lightblue4"),
+    axis.text.y = element_text(color = "lightblue4"),
+    axis.title.y.right = element_text(color = "firebrick"),
+    axis.text.y.right = element_text(color = "firebrick")
+  ) +
+  labs(title="Agua Canyon Snotel 2020-2023")
+
+```
+
+1. (5 points) Provide a script to recreate the plot above. This shows the SWE for all three seasons alongside average air temperature for the first listed snotel station (Agua Canyon).
+
+***Tips:***
+
+* multiple geom_line or other plotting variables can be called within the same plot
+* to include y axes on both the right and left for each variable, add: `scale_y_continuous(name = "first axis title", sec.axis = sec_axis( trans=~.*scale_factor, name="second axis title"))` *(the scale factor should be applied to the variable and axis to scale the value to align with the variables on the left axis )*
+* within the `theme()` function, you can include arguments like `axis.title.y.right = element_text(color = "firebrick")`
+
+\
+
+#### 2. Pivoting and arranging
+
+You will need to pivot the data to answer and complete the following. A useful tip is that you can call on columns by using either the `starts_with()` or `contains()` functions. This can be used within the `select` or `pivot_longer` functions.   
+
+2. How many stations are there total? How many variables are included for each. Provide code for your response
+
+2. (5 points) Show the top 5 snotel sites with the deepest snow depth for each winter season. Include the max snow depth value (inches) and the Date of max snow depth for each season.
+
+***Tips:***
+
+* select only the snow depth variables and pivot the data to a long format
+* create a new variable to determine the season, use the following code to create a new seasonal variable in the dataframe: `cut(Date, breaks =  c(as.Date(c("2020-10-01", "2021-10-01", "2022-10-01")), Inf), labels = paste0("season_", c(1, 2, 3)))`
+* `which.max` might be useful to help with extracting the date with the deepest snow
+* group, summarize, and arrange the data to show the top 5 for each season.
+* the `slice_max` function can be useful to combine a few steps at the end but is not necessary 
+
+\
+
+# add here!
+
+Join another table...
+
+3. (4) Create a plot showing the mean SWE and temperature the three regions of utah. Use facet_wrap to plot all seasons side-by-side
+
+
+# pivot_long - intro - filter variables and do one, for advanced do all
+# determine number of stations
+# seasonality
+# generate graph for two 
+# relationships between temp and swe
+# peak swe
+
+# 
 
 
 \
