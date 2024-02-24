@@ -185,9 +185,9 @@ dfw %>% mutate(Date=as.Date(Date,format="%m/%d/%y")) %>%
 
 You will need to pivot the data to answer and complete the following. A useful tip is that you can call on columns by using either the `starts_with()` or `contains()` functions. This can be used within the `select` or `pivot_longer` functions.   
 
-2. How many stations are there total? How many variables are included for each. Provide code for your response
+2. How many stations are there in total? How many variables are included for each? Provide code for your response.
 
-2. (5 points) Show the top 5 snotel sites with the deepest snow depth for each winter season. Include the max snow depth value (inches) and the Date of max snow depth for each season.
+3. (5 points) Show the top 5 snotel sites with the deepest snow depth for each winter season. Include the max snow depth value (inches) and the Date of max snow depth for each season. Try to generate a single final table table showing this with one continuous piped dplyr statement.
 
 ***Tips:***
 
@@ -199,11 +199,12 @@ You will need to pivot the data to answer and complete the following. A useful t
 
 \
 
-# add here!
+Perform a join with the data above and  the "UTSNTL_ELEV.csv" file. Show code for your join and complete the following:
 
-Join another table...
+4. (4) Create a plot that shows the median SWE for stations along four different elevation zones in Utah. Create zones based on the quantile distribution of the elevation range (i.e. group1 contains stations with elevations in 0-25% quantile or lower fourth, group2 from 25-50%, etc.). Use facet_wrap to show the SWE plots of different elevation zones side-by side and show the average SWE for each season (different colors) for each zone.
 
-3. (4) Create a plot showing the mean SWE and temperature the three regions of utah. Use facet_wrap to plot all seasons side-by-side
+
+5. What is the mean and median day of peak SWE for each elevation zone during these three seasons?
 
 
 # pivot_long - intro - filter variables and do one, for advanced do all

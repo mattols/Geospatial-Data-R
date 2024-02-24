@@ -6,7 +6,10 @@
 # library(snotelr)
 # only a GUI - need newer version of R - v2.4
 library(sf)
-library(mapview)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+# library(mapview)
 
 # csv
 snowpath <- "tmp/tmp_data/UTSNTL_ALL_2020_2022_Daily_Long.csv"
@@ -14,6 +17,10 @@ snowpath <- "tmp/tmp_data/UTSNTL_ALL_2020_2022_Daily_Long.csv"
 dfs <- read.csv(snowpath)
 head(dfs)
 dim(dfs)
+
+#### watersheds
+ws <- read_sf("~/Downloads/Utah_HUC_Boundaries/HUC.shp")
+plot(ws[,1])
 
 # make geospatial
 dfs_meta <- dfs %>%
@@ -26,13 +33,26 @@ plot(snopts[,2])
 # transform to same crs
 sno <- st_transform(snopts, crs = st_crs(ws) )
 sno
-plot(ws[,2], col=NA)
-axis(1);axis(2)
-plot(sno[,2],add=T)
+# plot(ws[,2], col=NA)
+# axis(1);axis(2)
+# plot(sno[,2],add=T)
+
+# plot extent
+# plot(st_geometry(bb_sol), axes = TRUE, graticule = TRUE, pch = '.')
+# plot the multipolygon
+plot(st_geometry(ws), axes = TRUE, graticule = TRUE, add = TRUE)
+# plot the points
+plot(sno['Elevation..ft.'], axes = TRUE, graticule = TRUE, pch = 16, key.pos = NULL, 
+     add = TRUE)
 
 # extract 
 snoe <- st_intersection(sno, ws)
 snoe
+snosv=snoe %>% select(Station.Name,Elevation..ft.) %>% 
+  st_drop_geometry() 
+names(snosv) <- c("names","elevation_ft")
+row.names(snosv) <- NULL
+write.csv(snosv, "tmp/tmp_data/UTSNTL_ELEV.csv",row.names = FALSE)
 #
 snoe %>% arrange(Station.Name)
 #
@@ -41,13 +61,13 @@ sno_match <- snoe %>% group_by(HUC) %>%
 ws2 = ws
 ws2$mean_elev <- NA
 match(ws2$HUC, sno_match$HUC)
-# ws2$mean_elev[match(ws2$HUC,sno_match$HUC)] <- sno_match$mean_elev[match(ws2$HUC,sno_match$HUC)]
+ws2$mean_elev <- sno_match$mean_elev[match(ws2$HUC,sno_match$HUC)]
 # ws2$mean_elev[match(sno_match$HUC,ws2$HUC)] <- sno_match$mean_elev[match(ws2$HUC,sno_match$HUC)]
 # ws2$mean_elev[match(sno_match$HUC,ws2$HUC)] <- sno_match$mean_elev[match(sno_match$HUC,ws2$HUC)]
-ws2$mean_elev[match(sno_match$HUC,ws2$HUC)] <- sno_match$mean_elev[match(sno_match$HUC, ws2$HUC)]
+# ws2$mean_elev[match(sno_match$HUC,ws2$HUC)] <- sno_match$mean_elev[match(sno_match$HUC, ws2$HUC)]
 ws2$mean_elev
 plot(ws2["mean_elev"])
-plot(st_geometry(snoe),add=T,pch=3,col='red',cex=3)
+plot(st_geometry(snoe),add=T,pch=20,col='black',cex=2)
 #
 #
 #
@@ -221,11 +241,10 @@ dfw3 <- dfw2 %>%
 head(dfw3)
 length(unique(dfw3$station))
 
-#### watersheds
-library(sf)
-ws <- read_sf("~/Downloads/Utah_HUC_Boundaries/HUC.shp")
 
-plot(ws[,1])
+# last question
+quantile(snosv$elevation_ft)
+
 
 
 # other datasets

@@ -426,27 +426,27 @@ vector:</p>
 <p>Now, let’s add another dataset with information we wanted to
 join:</p>
 <pre><code>##          state areakm2  pop2020
-## 1      Alabama  135767  5024279
-## 3      Arizona  295234  7151502
+## 10     Georgia  153910 10711908
 ## 7  Connecticut   14357  3605944
 ## 8     Delaware    6446   989948
-## 2       Alaska 1723337   733391
-## 10     Georgia  153910 10711908
 ## 5   California  423967 39538223
+## 3      Arizona  295234  7151502
+## 9      Florida  170312 21538187
 ## 4     Arkansas  137732  3011524
-## 6     Colorado  269601  5773714
-## 9      Florida  170312 21538187</code></pre>
+## 1      Alabama  135767  5024279
+## 2       Alaska 1723337   733391
+## 6     Colorado  269601  5773714</code></pre>
 <p>First, let’s try to use <code>cbind</code> to combine these datasets.
 This function simply sticks these dataframes together.</p>
 <pre class="r"><code># cbind
 cbind(stateflags, stateinfo) %&gt;% head()</code></pre>
 <pre><code>##         state       flag       state areakm2  pop2020
-## 1     Alabama Red, White     Alabama  135767  5024279
-## 3      Alaska Blue, Gold     Arizona  295234  7151502
-## 7     Arizona Blue, Gold Connecticut   14357  3605944
-## 8    Arkansas Red, White    Delaware    6446   989948
-## 2  California Blue, Gold      Alaska 1723337   733391
-## 10   Colorado Red, White     Georgia  153910 10711908</code></pre>
+## 10    Alabama Red, White     Georgia  153910 10711908
+## 7      Alaska Blue, Gold Connecticut   14357  3605944
+## 8     Arizona Blue, Gold    Delaware    6446   989948
+## 5    Arkansas Red, White  California  423967 39538223
+## 3  California Blue, Gold     Arizona  295234  7151502
+## 9    Colorado Red, White     Florida  170312 21538187</code></pre>
 <p>As you can see, this is a very poor join between these dataframes.
 Instead we can use match with like-variables between datasets to make
 sure that the join is correct</p>
@@ -529,6 +529,8 @@ scale the value to align with the variables on the left axis )</em></li>
 like
 <code>axis.title.y.right = element_text(color = &quot;firebrick&quot;)</code></li>
 </ul>
+<p><br />
+</p>
 </div>
 <div id="pivoting-and-arranging" class="section level4">
 <h4>2. Pivoting and arranging</h4>
@@ -538,11 +540,13 @@ A useful tip is that you can call on columns by using either the
 can be used within the <code>select</code> or <code>pivot_longer</code>
 functions.</p>
 <ol start="2" style="list-style-type: decimal">
-<li><p>How many stations are there total? How many variables are
-included for each. Provide code for your response</p></li>
+<li><p>How many stations are there in total? How many variables are
+included for each? Provide code for your response.</p></li>
 <li><p>(5 points) Show the top 5 snotel sites with the deepest snow
 depth for each winter season. Include the max snow depth value (inches)
-and the Date of max snow depth for each season.</p></li>
+and the Date of max snow depth for each season. Try to generate a single
+final table table showing this with one continuous piped dplyr
+statement.</p></li>
 </ol>
 <p><strong><em>Tips:</em></strong></p>
 <ul>
@@ -558,17 +562,24 @@ season.</li>
 <li>the <code>slice_max</code> function can be useful to combine a few
 steps at the end but is not necessary</li>
 </ul>
-</div>
-</div>
-<div id="add-here" class="section level1">
-<h1>add here!</h1>
-<p>Join another table…</p>
-<ol start="3" style="list-style-type: decimal">
+<p><br />
+</p>
+<p>Perform a join with the data above and the “UTSNTL_ELEV.csv” file.
+Show code for your join and complete the following:</p>
+<ol start="4" style="list-style-type: decimal">
 <li><ol start="4" style="list-style-type: decimal">
-<li>Create a plot showing the mean SWE and temperature the three regions
-of utah. Use facet_wrap to plot all seasons side-by-side</li>
+<li>Create a plot that shows the median SWE for stations along four
+different elevation zones in Utah. Create zones based on the quantile
+distribution of the elevation range (i.e. group1 contains stations with
+elevations in 0-25% quantile or lower fourth, group2 from 25-50%, etc.).
+Use facet_wrap to show the SWE plots of different elevation zones
+side-by side and show the average SWE for each season (different colors)
+for each zone.</li>
 </ol></li>
+<li>What is the mean and median day of peak SWE for each elevation zone
+during these three seasons?</li>
 </ol>
+</div>
 </div>
 <div id="pivot_long---intro---filter-variables-and-do-one-for-advanced-do-all" class="section level1">
 <h1>pivot_long - intro - filter variables and do one, for advanced do
