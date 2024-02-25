@@ -2,7 +2,9 @@
 title: "Task 6"
 author: "GEOG-490R"
 date: "Spring 2024"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r echo=FALSE, message=FALSE}
@@ -20,8 +22,7 @@ This week you will continue to explore manipulating data with `dplyr` and creati
 Noah demonstrated how pivoting works in R. Many dataframes must be pivoted before you can visualize the information into `ggplot`. Review Noah's handout in the Canvas module.
 
 Two base functions we've briefly discussed are `order` and `sort`. These are helpful methods to rearrange or sort data. Order returns the location of variables in their sequential order, and works for character or numeric data:
-
-```r
+```{r, class.source = 'fold-show', eval=FALSE}
 # reorder the values alphabetically
 capletters <- c("B","Z","F","D","A","G","C")
 order(capletters) # 5 1 7 4 3 6 2
@@ -29,9 +30,9 @@ order(capletters) # 5 1 7 4 3 6 2
 capletters[order(capletters)] # "A" "B" "C" "D" "F" "G" "Z"
 ```
 
-Sort is a similar function to automatically reorder information. Note, these functions also work with numeric data.
 
-```r
+Sort is a similar function to automatically reorder information. Note, these functions also work with numeric data.
+```{r, class.source = 'fold-show', eval=FALSE}
 # sort data
 sort(capletters) # "A" "B" "C" "D" "F" "G" "Z"
 # numeric example
@@ -39,9 +40,10 @@ num <- sample(12)
 num # 2 8 10 11 5 7 12 6 1 9 3 4 
 sort(num) # 1 2 3 4 5 6 7 8 9 10 11 12
 ```
-`dplyr` has its own method of arranging data, though this is designed for working within one column in a dataframe:
 
-```r
+
+`dplyr` has its own method of arranging data, though this is designed for working within one column in a dataframe:
+```{r, class.source = 'fold-show', eval=FALSE}
 as_tibble(capletters) %>% arrange(value) # value <chr> "A" "B" "C" "D" "F" "G" "Z"
 ```
 
@@ -53,27 +55,26 @@ as_tibble(capletters) %>% arrange(value) # value <chr> "A" "B" "C" "D" "F" "G" "
 Andrew demonstrated great implementations of merging dataframes with `full_join()` and `cbind()`, these are both excellent methods for joining datesets. Review Andrew's handout in the Canvas module. 
 
 The match function returns the location of the match of x, which can be numeric or character:
-
-```r
+```{r, class.source = 'fold-show', eval=FALSE}
 match(5, 1:9) # 5
 match(5, c(1,2,3,6,7,8,9,5)) # 8
 match("B", c("A","B","C")) # 2
 ```
 
 You can also use the `%in%` (wrapper for match) to return a logical expression to check if a value exists at all in the vector:
-
-```r
+```{r, class.source = 'fold-show', eval=FALSE}
 capletters <-  c("B","Z","F","D","A","G","C")
 "A" %in% capletters # TRUE
 "J" %in% capletters # FALSE
 5 %in% 1:9 # TRUE
 ```
 
+
 Let's use a more useful example, focusing on two small datasets for 10 US states.
 
 The first is a subset of the state_flags dataframe Andrew used:
 
-```{r, echo=FALSE}
+```{r}
 stateflags <- data.frame(
   state = c("Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia"),
   flag = c("Red, White", "Blue, Gold", "Blue, Gold", "Red, White", "Blue, Gold", "Red, White", "Blue, White", "Blue, Yellow", "Red, White", "Red, White")
@@ -83,7 +84,7 @@ stateflags
 
 Now, let's add another dataset with information we wanted to join:
 
-```{r, echo=FALSE}
+```{r}
 stateinfo <- data.frame(
   state = c("Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia"),
   areakm2 = c(135767,1723337,295234,137732,423967,269601,14357,6446,170312,153910),
@@ -100,14 +101,13 @@ First, let's try to use `cbind` to combine these datasets. This function simply 
 cbind(stateflags, stateinfo) %>% head()
 ```
 
-As you can see, this is a very poor join between these dataframes. Instead we can use match with like-variables between datasets to make sure that the join is correct
+**That is incorrect!** As you can see, this is a very poor join between these dataframes. Instead we can use match with like-variables between datasets to make sure that the join is correct
 
 ```{r}
 # cbind with match
 match_id <- match(stateflags$state, stateinfo$state)
 cbind(stateflags, stateinfo[match_id,]) %>%
   head()
-
 ```
 
 Although it is useful to check, we would want to omit the second column instance of state names.
@@ -142,7 +142,7 @@ Note that the water year or winter season begins on Oct 1st and goes until Sep 3
 
 #### 1. Advanced visualization with ggplot
 
-No transformation (pivoting) is needed to complete this section.
+**No transformation (pivoting)** is required to complete this section.
 
 Recreate the following plot using `ggplot`:
 
@@ -173,29 +173,108 @@ dfw %>% mutate(Date=as.Date(Date,format="%m/%d/%y")) %>%
 
 1. (5 points) Provide a script to recreate the plot above. This shows the SWE for all three seasons alongside average air temperature for the first listed snotel station (Agua Canyon).
 
-***Tips:***
+***Tips: try on your own, then click "Code" to reveal a few hints:***
 
-* multiple geom_line or other plotting variables can be called within the same plot
-* to include y axes on both the right and left for each variable, add: `scale_y_continuous(name = "first axis title", sec.axis = sec_axis( trans=~.*scale_factor, name="second axis title"))` *(the scale factor should be applied to the variable and axis to scale the value to align with the variables on the left axis )*
-* within the `theme()` function, you can include arguments like `axis.title.y.right = element_text(color = "firebrick")`
+```{r, eval=FALSE}
+# Note: multiple geom_line() or other plotting variables can be called within the same plot for multiple variables
+# You will need to create a new variable that states whether the temperature value is below the freezing point
+
+# To include y axes on both the right and left for each variable, use: 
+scale_y_continuous(name = "first axis title", sec.axis = sec_axis( trans=~.*scale_factor, name="second axis title")) 
+# note: the scale_factor variable is used to allow you to plot to variables of different ranges side-by-side
+#   the scale_factor should be applied to both the variable (i.e. ggplot(aes(x=..., y=variable/scale_factor)) ) and axis (code above) to scale the values to align with the other variable
+#   you will need to play around and adjust the scale factor to fit both variables
+
+# within the `theme()` function, you can include arguments like:" 
+axis.title.y.right = element_text(color = "firebrick") # make firght axis title red
+```
 
 \
 
 #### 2. Pivoting and arranging
 
-You will need to pivot the data to answer and complete the following. A useful tip is that you can call on columns by using either the `starts_with()` or `contains()` functions. This can be used within the `select` or `pivot_longer` functions.   
+**You must pivot** the data to answer and complete the following.   
 
 2. How many stations are there in total? How many variables are included for each? Provide code for your response.
 
 3. (5 points) Show the top 5 snotel sites with the deepest snow depth for each winter season. Include the max snow depth value (inches) and the Date of max snow depth for each season. Try to generate a single final table table showing this with one continuous piped dplyr statement.
 
-***Tips:***
+***Tips: try on your own, then click "Code" to reveal hints if needed***
 
-* select only the snow depth variables and pivot the data to a long format
-* create a new variable to determine the season, use the following code to create a new seasonal variable in the dataframe: `cut(Date, breaks =  c(as.Date(c("2020-10-01", "2021-10-01", "2022-10-01")), Inf), labels = paste0("season_", c(1, 2, 3)))`
-* `which.max` might be useful to help with extracting the date with the deepest snow
-* group, summarize, and arrange the data to show the top 5 for each season.
-* the `slice_max` function can be useful to combine a few steps at the end but is not necessary 
+***Variable names and regex tips:***
+
+```{r, eval=FALSE}
+# Note: you can accomplish the tasks above without the use of regex! However, parsing character strings a great task for regex.
+
+## Regex help - from one perspective:
+#   regex can be useful to extract more manageable variable names, for example, try the following on a subset of the column names of the initial dataset:
+names(data_frame_snotel)[2:11] # shows first 10 column names after Date
+#   it's difficult to work with . characters, so change them to "_" or something else:
+gsub(pattern = "\\.", replacement = "_", x = names(data_frame_snotel)[2:11]) # show only first 10
+#   can replace names with: names(data_frame_snotel) <- ..code above..
+#   you can also extract part of a string rather than replace with the "\\1" replacement option:
+gsub(pattern = "^(.*)__[0-9]+.*$", replacement = "\\1", x = data_frame_snotel) # site names in wide (original) format
+#   note: the pattern above groups (.*) what you want to keep (i.e. the part before the ..numbers)
+#   you can also extract more than one variable: 
+gsub("^(.*)__[0-9]+__(.*)__.*$", replacement = "\\2", x = data_frame_snotel) # keep second (\\2) grouped argument which is the variable
+
+## Combine this with pivot_longer()
+#   the pivot_ functions have an option to match multiple variables within a column name
+#   you can use these arguments within the pivot_longer function:
+#   names_to = ... (list name(s) to extract to new column(s))
+#   names_pattern = ... (use regex pattern)
+#   to read more about this, fo to the ?pivot_wider help doc and look at the example for multiple names_from option
+#   NOTE: you do not need to follow this solution, there are other ways as well
+
+
+#  note: the last lines above assume all "." are now "_" for this dataset
+```
+
+***Pivoting tips:***
+
+```{r, eval=FALSE}
+## Selecting columns:
+#   pivot all data by excluding only the Date column
+#   a useful tip is that you can call on columns by using either the starts_with() or contains() functions in the argument
+#   note: this can be used within the pivot_longer(), select(), or other functions
+
+## Selecting/filtering a specific variable
+#   remember that select() is used to filter column names and filter() is used to filter by rows based on a boolean expression
+#   you may use either before, during or after pivoting to select one variable
+#   remember that the contains() function can be useful to extract specific strings:
+data_frame_snotel %>% select(contains("Air.Temperature.Maximum")) %>%
+  head()
+
+## Pivoting multiple variables
+#   you could break down these steps and combine subdatasets
+#   but even better, you could extract all variables in the column names of this dataset
+#   see the example in the previous tip box about pivoting multiple variables
+#   or use ?pivot_longer
+
+
+```
+
+***Winter seasons and snow depth max tips:***
+
+```{r, eval=FALSE}
+# after pivoting...
+
+## Determine seasons
+#   be sure to convert characters to date format
+#   then you can use the following code to create a new seasonal variable in the dataframe: 
+cut(Date, breaks =  c(as.Date(c("2020-10-01", "2021-10-01", "2022-10-01")), Inf), labels = paste0("season_", c(1, 2, 3)))
+#   ^this code basically creates a new vector that is the same length as your Date variable and groups the dates into seasons (1, 2, or 3) based on the Oct 1st breaks given
+
+## Summarize the data
+#   you need to use group_by() to establish how to summarize() your data
+#   arrange() or filter() could also be used, but I did not
+#   which.max() along with indexing can be useful to extract the date with the deepest snow
+#   show the top 5 stations with the deepest snow depth for each season
+#   to do so, you will need to use group_by() again (after summarize()) and then subset the data to only show the top 5 
+#   subsetting can be achieved with filter(), arrange(), or the slice_max() function to combine a several steps
+```
+
+
 
 \
 

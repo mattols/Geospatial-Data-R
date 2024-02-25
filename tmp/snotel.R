@@ -227,9 +227,10 @@ dfw2 %>%
   filter( grepl("Snow_Water", variable) ) %>%
   ggplot(aes(x = Date, y = values, color=station)) +
   geom_line() +
-  facet_wrap(.~season)
+  theme(legend.position="none") +
+  facet_wrap(.~season, scales = "free_x")
 
-# investigate
+# investigate number of stations and variables
 dfw3 <- dfw2 %>% 
   pivot_longer(
     cols = !c(Date,season),
@@ -237,9 +238,38 @@ dfw3 <- dfw2 %>%
     names_pattern = "^(.*)__[0-9]+__(.*)__.*$",
     values_to = "values"
   ) 
-
+dim(dfw3)
 head(dfw3)
 length(unique(dfw3$station))
+
+
+# median, max SWE for each station
+df_med = dfw3 %>%
+  filter(variable == "Snow_Water_Equivalent__in") %>%
+  filter(values > 0) %>%
+  group_by(station, season) %>%
+  summarise(swe_med = median(values), swe_max = max(values),
+            swe_mean = mean(values)) 
+# join
+df_elev <- dfs_meta %>% select(Station.Name, Elevation..ft.) %>%
+  rename(station = Station.Name) %>% rename(elev = Elevation..ft.) %>% 
+  mutate(station = gsub("\\s", "_", station)) %>% 
+  mutate(station = gsub("\\.|#|-", "_", station))
+df_elev[c(10,71,91),]
+sntl = full_join(df_med, df_elev, by = "station")
+# sum(is.na(sntl$elev))
+# sntl[which(is.na(sntl$elev)),]
+sntl
+# plot
+sntl %>% 
+  ggplot(aes(x = elev, y = swe_mean)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(.~season)
+
+# swe med predicts max swe?
+# seasonality of elevation predicting swe
+
 
 
 # last question
