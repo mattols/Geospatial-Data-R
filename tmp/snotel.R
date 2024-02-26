@@ -166,6 +166,7 @@ dfw %>%  mutate(Date=as.Date(Date,format="%m/%d/%y")) %>%
   group_by(season) %>%
   slice_max(order_by = snow_max, n = 5)
   # arrange(desc(snow_max))
+# %>% ggplot(aes(x=site, fill=season)) + geom_histogram(stat="count")
 
 # by season ???
 period = seq(min(dfw2$Date), max(dfw2$Date), by = "1 year")
@@ -262,18 +263,79 @@ sntl = full_join(df_med, df_elev, by = "station")
 sntl
 # plot
 sntl %>% 
-  ggplot(aes(x = elev, y = swe_mean)) +
+  ggplot(aes(x = elev, y = swe_max)) +
   geom_point() +
   theme_bw() +
   facet_wrap(.~season)
 
 # swe med predicts max swe?
-# seasonality of elevation predicting swe
+# seasonality of elevation predicting swe 
 
 
 
-# last question
-quantile(snosv$elevation_ft)
+
+
+# elevation groups
+quantile(sntl$elev)
+dfswe = dfw3 %>%
+  filter(variable == "Snow_Water_Equivalent__in") %>%
+  filter(values > 0) %>%
+  mutate(month = format(Date, "%m")) %>%
+  group_by(month, station, season) %>%
+  summarise(swe_med = median(values), swe_max = max(values),
+            swe_mean = mean(values)) 
+#
+dfj = full_join(dfswe, df_elev, by = "station")
+head(dfj)
+# SWE by ...month?
+dfj %>%
+  mutate(e_zone = cut(elev, breaks=quantile(dfj$elev), 
+         labels = paste0("zone_",seq_along(quantile(dfj$elev))[1:4])) ) %>% 
+  na.omit() %>% 
+  mutate(month = as.numeric(month)) %>% filter(month < 5) %>% 
+  mutate(month = as.factor(month)) %>% 
+  ggplot(aes(x=swe_max, fill=month)) +
+  geom_histogram(col='gray') + theme_bw() +
+  facet_wrap(.~e_zone, scales = "free")
+# only April or May
+dfj %>% # filter(month=="03"|month=="04") %>% 
+  mutate(month = as.numeric(month)) %>% filter(month < 5) %>% 
+  mutate(month = as.factor(month)) %>% 
+  filter(season=="season_2") %>%
+  ggplot(aes(x=elev, y=swe_max)) +
+  geom_point() + theme_bw() +
+  facet_wrap(.~month, scales = "free")
+
+dfj %>% filter(month=="03") %>% 
+  filter(season!="season_3") %>% 
+  cor(elev, swe_med)
+
+dfj %>% 
+  mutate(month = as.numeric(month)) %>% filter(month < 5) %>% 
+  mutate(month = as.factor(month)) %>% 
+  ggplot(aes(x=swe_max, fill=season)) +
+  geom_histogram(col='gray') + theme_bw() +
+  facet_wrap(.~month, scales = "free")
+
+
+#
+dfj %>%
+  mutate(e_zone = cut(elev, breaks=quantile(dfj$elev), 
+                      labels = paste0("zone_",seq_along(quantile(dfj$elev))[1:4])) ) %>% 
+  na.omit() %>% 
+  group_by(e_zone, station) %>%
+  summarise(elev = mean(elev), swe_med = median(swe_med), 
+            swe_max = max(swe_max),
+            swe_mean = mean(swe_mean)) %>% 
+  ggplot(aes(x=elev, y=swe_max)) +
+  geom_point() +
+  facet_wrap(.~e_zone)
+
+# old question
+# median SWE for stations along four different elevation zones in Utah. 
+# Create zones based on the quantile distribution of the elevation range (i.e. group1 contains stations with elevations in 0-25% quantile or lower fourth, group2 from 25-50%, etc.). Use facet_wrap to show the SWE plots of different elevation zones side-by side and show the average SWE for each season (different colors) for each zone.
+
+# 5. What is the mean and median day of peak SWE for each elevation zone during these three seasons?
 
 
 

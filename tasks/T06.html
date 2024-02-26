@@ -526,27 +526,27 @@ join:</p>
 stateinfo &lt;- stateinfo[sample(nrow(stateinfo)),]
 stateinfo</code></pre>
 <pre><code>##          state areakm2  pop2020
-## 1      Alabama  135767  5024279
-## 10     Georgia  153910 10711908
-## 2       Alaska 1723337   733391
-## 6     Colorado  269601  5773714
-## 3      Arizona  295234  7151502
 ## 7  Connecticut   14357  3605944
+## 3      Arizona  295234  7151502
 ## 5   California  423967 39538223
+## 2       Alaska 1723337   733391
+## 10     Georgia  153910 10711908
 ## 8     Delaware    6446   989948
+## 4     Arkansas  137732  3011524
 ## 9      Florida  170312 21538187
-## 4     Arkansas  137732  3011524</code></pre>
+## 6     Colorado  269601  5773714
+## 1      Alabama  135767  5024279</code></pre>
 <p>First, let’s try to use <code>cbind</code> to combine these datasets.
 This function simply sticks these dataframes together.</p>
 <pre class="r"><code># cbind
 cbind(stateflags, stateinfo) %&gt;% head()</code></pre>
 <pre><code>##         state       flag       state areakm2  pop2020
-## 1     Alabama Red, White     Alabama  135767  5024279
-## 10     Alaska Blue, Gold     Georgia  153910 10711908
-## 2     Arizona Blue, Gold      Alaska 1723337   733391
-## 6    Arkansas Red, White    Colorado  269601  5773714
-## 3  California Blue, Gold     Arizona  295234  7151502
-## 7    Colorado Red, White Connecticut   14357  3605944</code></pre>
+## 7     Alabama Red, White Connecticut   14357  3605944
+## 3      Alaska Blue, Gold     Arizona  295234  7151502
+## 5     Arizona Blue, Gold  California  423967 39538223
+## 2    Arkansas Red, White      Alaska 1723337   733391
+## 10 California Blue, Gold     Georgia  153910 10711908
+## 8    Colorado Red, White    Delaware    6446   989948</code></pre>
 <p><strong>That is incorrect!</strong> As you can see, this is a very
 poor join between these dataframes. Instead we can use match with
 like-variables between datasets to make sure that the join is
@@ -619,27 +619,26 @@ this section.</p>
 the SWE for all three seasons alongside average air temperature for the
 first listed snotel station (Agua Canyon).</li>
 </ol>
-<p><strong><em>Tips: try on your own, then use these the following if
-you want hints:</em></strong></p>
+<div class="line-block">  <strong>Tips:</strong> <em>try on your own,
+then click “Code” to reveal a few hints:</em></div>
 <pre class="r"><code># Note: multiple geom_line() or other plotting variables can be called within the same plot for multiple variables
 # You will need to create a new variable that states whether the temperature value is below the freezing point
+
 # To include y axes on both the right and left for each variable, use: 
 scale_y_continuous(name = &quot;first axis title&quot;, sec.axis = sec_axis( trans=~.*scale_factor, name=&quot;second axis title&quot;)) 
 # note: the scale_factor variable is used to allow you to plot to variables of different ranges side-by-side
-#   the scale_factor should be applied to both the variable (i.e. aes(y=variable/scale_factor)) and axis (code above) to scale the values to align with the other variable
-#   you will need to play anound and adjust the scale factor to fit both variables
+#   the scale_factor should be applied to both the variable (i.e. ggplot(aes(x=..., y=variable/scale_factor)) ) and axis (code above) to scale the values to align with the other variable
+#   you will need to play around and adjust the scale factor to fit both variables
+
 # within the `theme()` function, you can include arguments like:&quot; 
-axis.title.y.right = element_text(color = &quot;firebrick&quot;)</code></pre>
+axis.title.y.right = element_text(color = &quot;firebrick&quot;) # make firght axis title red</code></pre>
 <p><br />
 </p>
 </div>
 <div id="pivoting-and-arranging" class="section level4">
 <h4>2. Pivoting and arranging</h4>
-<p>You will need to pivot the data to answer and complete the following.
-A useful tip is that you can call on columns by using either the
-<code>starts_with()</code> or <code>contains()</code> functions. This
-can be used within the <code>select</code> or <code>pivot_longer</code>
-functions.</p>
+<p><strong>You must pivot</strong> the data to answer and complete the
+following.</p>
 <ol start="2" style="list-style-type: decimal">
 <li><p>How many stations are there in total? How many variables are
 included for each? Provide code for your response.</p></li>
@@ -648,63 +647,101 @@ depth for each winter season. Include the max snow depth value (inches)
 and the Date of max snow depth for each season. Try to generate a single
 final table table showing this with one continuous piped dplyr
 statement.</p></li>
+<li><p>Use the results above to generate a histogram showing the counts
+of snotel sites in the top 5 for for snow depth over the three seasons.
+Which sites continually receive the deepest snow depth?</p></li>
 </ol>
-<p><strong><em>Tips:</em></strong></p>
-<ul>
-<li>select only the snow depth variables and pivot the data to a long
-format</li>
-<li>create a new variable to determine the season, use the following
-code to create a new seasonal variable in the dataframe:
-<code>cut(Date, breaks =  c(as.Date(c(&quot;2020-10-01&quot;, &quot;2021-10-01&quot;, &quot;2022-10-01&quot;)), Inf), labels = paste0(&quot;season_&quot;, c(1, 2, 3)))</code></li>
-<li><code>which.max</code> might be useful to help with extracting the
-date with the deepest snow</li>
-<li>group, summarize, and arrange the data to show the top 5 for each
-season.</li>
-<li>the <code>slice_max</code> function can be useful to combine a few
-steps at the end but is not necessary</li>
-</ul>
+<div class="line-block">  <strong>Tips:</strong> <em>try on your own,
+then click “Code” to reveal hints if needed</em></div>
+<div class="line-block">    <em>Variable names and regex
+tips:</em></div>
+<pre class="r"><code># Note: you can accomplish the tasks above without the use of regex! However, parsing character strings a great task for regex.
+
+## Regex help - from one perspective:
+#   regex can be useful to extract more manageable variable names, for example, try the following on a subset of the column names of the initial dataset:
+names(data_frame_snotel)[2:11] # shows first 10 column names after Date
+#   it&#39;s difficult to work with . characters, so change them to &quot;_&quot; or something else:
+gsub(pattern = &quot;\\.&quot;, replacement = &quot;_&quot;, x = names(data_frame_snotel)[2:11]) # show only first 10
+#   can replace names with: names(data_frame_snotel) &lt;- ..code above..
+#   you can also extract part of a string rather than replace with the &quot;\\1&quot; replacement option:
+gsub(pattern = &quot;^(.*)__[0-9]+.*$&quot;, replacement = &quot;\\1&quot;, x = data_frame_snotel) # site names in wide (original) format
+#   note: the pattern above groups (.*) what you want to keep (i.e. the part before the ..numbers)
+#   you can also extract more than one variable: 
+gsub(&quot;^(.*)__[0-9]+__(.*)__.*$&quot;, replacement = &quot;\\2&quot;, x = data_frame_snotel) # keep second (\\2) grouped argument which is the variable
+
+## Combine this with pivot_longer()
+#   the pivot_ functions have an option to match multiple variables within a column name
+#   you can use these arguments within the pivot_longer function:
+#   names_to = ... (list name(s) to extract to new column(s))
+#   names_pattern = ... (use regex pattern)
+#   to read more about this, fo to the ?pivot_wider help doc and look at the example for multiple names_from option
+#   NOTE: you do not need to follow this solution, there are other ways as well
+
+
+#  note: the last lines above assume all &quot;.&quot; are now &quot;_&quot; for this dataset</code></pre>
+<div class="line-block">    <em>Pivoting tips:</em></div>
+<pre class="r"><code>## Selecting columns:
+#   pivot all data by excluding only the Date column
+#   a useful tip is that you can call on columns by using either the starts_with() or contains() functions in the argument
+#   note: this can be used within the pivot_longer(), select(), or other functions
+
+## Selecting/filtering a specific variable
+#   remember that select() is used to filter column names and filter() is used to filter by rows based on a boolean expression
+#   you may use either before, during or after pivoting to select one variable
+#   remember that the contains() function can be useful to extract specific strings:
+data_frame_snotel %&gt;% select(contains(&quot;Air.Temperature.Maximum&quot;)) %&gt;%
+  head()
+
+## Pivoting multiple variables
+#   you could break down these steps and combine subdatasets
+#   but even better, you could extract all variables in the column names of this dataset
+#   see the example in the previous tip box about pivoting multiple variables
+#   or see description in:
+?pivot_longer</code></pre>
+<div class="line-block">    <em>Seasons and snow depth tips:</em></div>
+<pre class="r"><code># after pivoting...
+
+## Determine seasons
+#   be sure to convert characters to date format
+#   then you can use the following code to create a new seasonal variable in the dataframe: 
+cut(Date, breaks =  c(as.Date(c(&quot;2020-10-01&quot;, &quot;2021-10-01&quot;, &quot;2022-10-01&quot;)), Inf), labels = paste0(&quot;season_&quot;, c(1, 2, 3)))
+#   ^this code basically creates a new vector that is the same length as your Date variable and groups the dates into seasons (1, 2, or 3) based on the Oct 1st breaks given
+
+## Summarize the data
+#   you need to use group_by() to establish how to summarize() your data
+#   arrange() or filter() could also be used, but I did not
+#   which.max() along with indexing can be useful to extract the date with the deepest snow
+#   show the top 5 stations with the deepest snow depth for each season
+#   to do so, you will need to use group_by() again (after summarize()) and then subset the data to only show the top 5 
+#   subsetting can be achieved with filter(), arrange(), or the slice_max() function to combine several steps</code></pre>
 <p><br />
 </p>
+</div>
+<div id="joining-data" class="section level4">
+<h4>3. Joining data</h4>
+<p>Snow water equivalent (SWE) is an important metric used to assess the
+amount of water in the snowpack. In particular, the month of April can
+be critical for water managers to assess conditions for the coming
+year.</p>
 <p>Perform a join with the data above and the “UTSNTL_ELEV.csv” file.
 Show code for your join and complete the following:</p>
-<ol start="4" style="list-style-type: decimal">
-<li><ol start="4" style="list-style-type: decimal">
-<li>Create a plot that shows the median SWE for stations along four
-different elevation zones in Utah. Create zones based on the quantile
-distribution of the elevation range (i.e. group1 contains stations with
-elevations in 0-25% quantile or lower fourth, group2 from 25-50%, etc.).
-Use facet_wrap to show the SWE plots of different elevation zones
-side-by side and show the average SWE for each season (different colors)
-for each zone.</li>
-</ol></li>
-<li>What is the mean and median day of peak SWE for each elevation zone
-during these three seasons?</li>
+<ol start="5" style="list-style-type: decimal">
+<li><p>(2 points) Join the two dataframes and prove that the match was
+fully successful for all sites (all sites should exist and have a valid
+elevation value). Create a scatter plot that shows the max SWE (snow
+water equivalent) during the month of April as a function of
+elevation.</p></li>
+<li><p>It is well known that precipitation amount can be enhanced at
+higher elevations due to orographic lift (air masses flowing over
+mountains). Utah’s mountains benefit and often have an enhancement of
+2-5 times the amount of precipitation. Assess the strength of the
+relationship above statistically and hypothesize as to why the
+relationship is not high? <em>i.e. what other variables might influence
+the amount of snow at different sites</em></p></li>
 </ol>
-</div>
-</div>
-<div id="pivot_long---intro---filter-variables-and-do-one-for-advanced-do-all" class="section level1">
-<h1>pivot_long - intro - filter variables and do one, for advanced do
-all</h1>
-</div>
-<div id="determine-number-of-stations" class="section level1">
-<h1>determine number of stations</h1>
-</div>
-<div id="seasonality" class="section level1">
-<h1>seasonality</h1>
-</div>
-<div id="generate-graph-for-two" class="section level1">
-<h1>generate graph for two</h1>
-</div>
-<div id="relationships-between-temp-and-swe" class="section level1">
-<h1>relationships between temp and swe</h1>
-</div>
-<div id="peak-swe" class="section level1">
-<h1>peak swe</h1>
-</div>
-<div id="section" class="section level1">
-<h1></h1>
 <p><br />
 </p>
+</div>
 <div id="submitting" class="section level4">
 <h4>Submitting</h4>
 <p>Upload your R Markdown output as an html file to Canvas</p>
@@ -712,8 +749,6 @@ all</h1>
 </p>
 <p><strong>This assignment is due in one week but may be turned for an
 additional week with a late penalty of -5%</strong></p>
-<p><br />
-References:</p>
 <p><br />
 </p>
 </div>

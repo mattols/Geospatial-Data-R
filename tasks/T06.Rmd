@@ -173,7 +173,7 @@ dfw %>% mutate(Date=as.Date(Date,format="%m/%d/%y")) %>%
 
 1. (5 points) Provide a script to recreate the plot above. This shows the SWE for all three seasons alongside average air temperature for the first listed snotel station (Agua Canyon).
 
-***Tips: try on your own, then click "Code" to reveal a few hints:***
+|   **Tips:** *try on your own, then click "Code" to reveal a few hints:*
 
 ```{r, eval=FALSE}
 # Note: multiple geom_line() or other plotting variables can be called within the same plot for multiple variables
@@ -199,9 +199,11 @@ axis.title.y.right = element_text(color = "firebrick") # make firght axis title 
 
 3. (5 points) Show the top 5 snotel sites with the deepest snow depth for each winter season. Include the max snow depth value (inches) and the Date of max snow depth for each season. Try to generate a single final table table showing this with one continuous piped dplyr statement.
 
-***Tips: try on your own, then click "Code" to reveal hints if needed***
+4. Use the results above to generate a histogram showing the counts of snotel sites in the top 5 for for snow depth over the three seasons. Which sites continually receive the deepest snow depth?
 
-***Variable names and regex tips:***
+|   **Tips:** *try on your own, then click "Code" to reveal hints if needed*
+
+|     *Variable names and regex tips:*
 
 ```{r, eval=FALSE}
 # Note: you can accomplish the tasks above without the use of regex! However, parsing character strings a great task for regex.
@@ -230,7 +232,7 @@ gsub("^(.*)__[0-9]+__(.*)__.*$", replacement = "\\2", x = data_frame_snotel) # k
 #  note: the last lines above assume all "." are now "_" for this dataset
 ```
 
-***Pivoting tips:***
+|     *Pivoting tips:*
 
 ```{r, eval=FALSE}
 ## Selecting columns:
@@ -249,12 +251,13 @@ data_frame_snotel %>% select(contains("Air.Temperature.Maximum")) %>%
 #   you could break down these steps and combine subdatasets
 #   but even better, you could extract all variables in the column names of this dataset
 #   see the example in the previous tip box about pivoting multiple variables
-#   or use ?pivot_longer
+#   or see description in:
+?pivot_longer
 
 
 ```
 
-***Winter seasons and snow depth max tips:***
+|     *Seasons and snow depth tips:*
 
 ```{r, eval=FALSE}
 # after pivoting...
@@ -271,29 +274,21 @@ cut(Date, breaks =  c(as.Date(c("2020-10-01", "2021-10-01", "2022-10-01")), Inf)
 #   which.max() along with indexing can be useful to extract the date with the deepest snow
 #   show the top 5 stations with the deepest snow depth for each season
 #   to do so, you will need to use group_by() again (after summarize()) and then subset the data to only show the top 5 
-#   subsetting can be achieved with filter(), arrange(), or the slice_max() function to combine a several steps
+#   subsetting can be achieved with filter(), arrange(), or the slice_max() function to combine several steps
 ```
-
 
 
 \
 
+#### 3. Joining data 
+
+Snow water equivalent (SWE) is an important metric used to assess the amount of water in the snowpack. In particular, the month of April can be critical for water managers to assess conditions for the coming year. 
+
 Perform a join with the data above and  the "UTSNTL_ELEV.csv" file. Show code for your join and complete the following:
 
-4. (4) Create a plot that shows the median SWE for stations along four different elevation zones in Utah. Create zones based on the quantile distribution of the elevation range (i.e. group1 contains stations with elevations in 0-25% quantile or lower fourth, group2 from 25-50%, etc.). Use facet_wrap to show the SWE plots of different elevation zones side-by side and show the average SWE for each season (different colors) for each zone.
+5. (2 points) Join the two dataframes and prove that the match was fully successful for all sites (all sites should exist and have a valid elevation value). Create a scatter plot that shows the max SWE (snow water equivalent) during the month of April as a function of elevation.
 
-
-5. What is the mean and median day of peak SWE for each elevation zone during these three seasons?
-
-
-# pivot_long - intro - filter variables and do one, for advanced do all
-# determine number of stations
-# seasonality
-# generate graph for two 
-# relationships between temp and swe
-# peak swe
-
-# 
+6. It is well known that precipitation amount can be enhanced at higher elevations due to orographic lift (air masses flowing over mountains). Utah's mountains benefit and often have an enhancement of 2-5 times the amount of precipitation. Assess the strength of the relationship above statistically and hypothesize as to why the relationship is not high? *i.e. what other variables might influence the amount of snow at different sites*
 
 
 \
@@ -305,9 +300,5 @@ Upload your R Markdown output as an html file to Canvas
 \
 
 **This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**
-
-\
-References:
-
 
 \
