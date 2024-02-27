@@ -1,0 +1,68 @@
+---
+title: "Task 7"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r echo=FALSE, message=FALSE}
+library(dplyr);library(ggplot2)
+```
+
+### Geospatial Data
+
+Welcome to the world of geospatial data! This is the focus of this course. Spatial data could be thought any information with a spatial (x, y) component, though it typically refers to data with location. Geospatial data is unique in that the spatial information 
+
+Over the next two weeks, be sure to read through the [spatial data with terra section](https://rspatial.org/spatial/2-spatialdata.html) in the book. These sections will get you familiar with the basics of spatial data, vector data structures, raster data structures, coordinate reference systems, and 
+
+This week, you will specifically focus on 
+
+\
+#### 1. Basics
+
+
+
+\
+#### 2. Vector Data
+
+
+
+\
+#### 3. Raster Data
+
+
+
+mention saving?
+
+
+\
+
+#### Your Task
+
+Your task this week will explore a few basics related to spatial data
+
+\
+
+#### 1. Spatial Data
+
+Read in 
+
+
+\
+
+#### 2. Combining Vector Data
+
+
+\
+
+#### Submitting
+
+Upload your R Markdown output as an html file to Canvas
+
+\
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**
+
+\

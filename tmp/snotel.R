@@ -349,5 +349,14 @@ dfj %>%
 
 
 
+huc_path <- "~/Downloads/Utah_HUC_Boundaries/HUC.shp"
+huc <- vect(huc_path)
+head(huc)
+huc$huc8 <- as.factor(huc$HUC)
+plot(huc, "HUC")
+plot(huc, "huc8")
 
+
+
+#
 
