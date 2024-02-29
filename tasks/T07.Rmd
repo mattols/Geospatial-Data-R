@@ -13,47 +13,168 @@ library(dplyr);library(ggplot2)
 
 ### Geospatial Data
 
-Welcome to the world of geospatial data! This is the focus of this course. Spatial data could be thought any information with a spatial (x, y) component, though it typically refers to data with location. Geospatial data is unique in that the spatial information 
+Welcome to the world of geospatial data! This is the focus of this course. Spatial data could be thought of any information with a spatial (x, y) component, though it typically refers to data with location information. Geospatial data is unique in that the spatial information pertains to location information on the Earth. 
 
-Over the next two weeks, be sure to read through the [spatial data with terra section](https://rspatial.org/spatial/2-spatialdata.html) in the book. These sections will get you familiar with the basics of spatial data, vector data structures, raster data structures, coordinate reference systems, and 
+While a simple Cartesian coordinate systems is used to display data on a x/y plane, a geographic coordinate system (GCS) uses other coordinates (e.g., long/lat, easting/northing) to represent data on a geographic system. Several reference systems exist using different estimations (datums) of the real world. Furthermore, data can be projected to to transform 3D GCS information into a 2D plane, which is essential for maps. Keep in mind that projections introduce distortions of area, size, and shape into spatial visualization and analysis. Chosen projections should be aware of location, scale, and situation for any analysis.
 
-This week, you will specifically focus on 
+Over the next two weeks, be sure to read through the [spatial data with terra section](https://rspatial.org/spatial/2-spatialdata.html) in the book. These sections will familiarize you with vector/raster model structures, GCS/Projections, and the basic spatial data workflows and tools.
 
-\
-#### 1. Basics
-
-
+This week, you will specifically focus on **vector data models.**
 
 \
-#### 2. Vector Data
 
+#### 1. Basics of spatial data
 
+Geospatial data represents real-world features. Discrete objects are typically represented as points, lines, or polygons. Recall our demonstration from class, where we simulated precipitation data for weather stations along a series of coordinates labeled as longitude and latitude. 
+
+```{r, echo=FALSE}
+# Simple representation of spatial point data
+name <- LETTERS[1:10]
+longitude <- c(-116.7, -120.4, -116.7, -113.5, -115.5,
+               -120.8, -119.5, -113.7, -113.7, -110.7)
+latitude <- c(45.3, 42.6, 38.9, 42.1, 35.7, 38.9,
+              36.2, 39, 41.6, 36.9)
+stations <- cbind(longitude, latitude)
+set.seed(0)
+precip <- round((runif(length(latitude))*10)^3) # Simulated rainfall data
+# Plot
+psize <- 1 + precip/500
+plot(stations, cex=psize, pch=20, col='red', main='Precipitation')
+text(stations, name, pos=4)
+# add a legend
+breaks <- c(100, 250, 500, 1000)
+legend.psize <- 1+breaks/500
+legend("topright", legend=breaks, pch=20, pt.cex=legend.psize, col='red', bg='gray')
+```
+
+Point data is the most basic form of a vector data model. Line and polygon data models can also be incredibly useful. In the most basic sense, these data formats rely on either knowing the correct drawing order of points (line) or start and end with the same point (polygon), closing the feature.
+
+While the plot above could very well represent true geospatial data, there is no defined CRS or projection. The data above is really just a Cartesian coordinate system, where we have labeled x/y as longitude/latitude.There are additional rules and conventions to follow in geospatial data formats, which you will learn more about over time. Geospatial data must contain several types of information, ideally all within a single callable object in R. Fortunately, there are several useful packages dedicated to working with geospatial data formats.
 
 \
-#### 3. Raster Data
 
+#### 2. Vector Data Models
 
+As mentioned before, vector data typically represents discrete objects as a series of points, lines, or polygons. These objects contain various attributes about the surface. For example, imagine a stream polyline dataset. Each stream tributary could contain information about the stream gradient, monthly discharge, average width, average depth, gaining/losing discharge characteristics, water quality information, as well as several other attributes. 
 
-mention saving?
+We will want a data model that can store the geometry of the data, detail the spatial reference information, and contain variaous attributes about the features all in one data structure. This is when we need a package that specializes in spatial data.
 
+You can create a vector object with the `vect()` function in the `terra` package.
+
+```{r, message = FALSE, class.source = 'fold-show'}
+library(terra)
+longitude <- c(-116.7, -120.4, -116.7, -113.5, -115.5, -120.8, -119.5, -113.7, -113.7, -110.7)
+latitude <- c(45.3, 42.6, 38.9, 42.1, 35.7, 38.9, 36.2, 39, 41.6, 36.9)
+lonlat <- cbind(longitude, latitude)
+pts <- vect(lonlat) # create vector data from long/lat points
+class(pts)
+pts # data structure
+```
+
+This data does not have any spatial reference information or attribute information. At the moment it is just a structure containing coordinates. Let's define the CRS for this data. Fortunately, we know that GPS measurements are typically recorded in the standard WGS 1984 datum.
+
+```{r, class.source = 'fold-show'}
+crdref <- "+proj=longlat +datum=WGS84" # CRS used for GPS data
+pts <- vect(lonlat, crs=crdref)
+cat(crs(pts))
+```
+You can also use EPSG codes, which are spatial reference identifiers. EPSG stands for the European Petroleum Survey Group, but they are widely used in geospatial data analysis. Rather than the PROJ4 (library) script above, you could use: `"EPSG:4326"`, which is the code for the WGS 1984 datum.
+
+Now we can generate random precipitation data just like before. The `runif()` creates a random sample of values within a normal distribution between defined min/max values. We can then add this data to a dataframe and input the point attribute information into the spatial vector object: 
+
+```{r, class.source = 'fold-show'}
+# Generate random precipitation values between 0-100, same quantity as points
+precipvalue <- runif(nrow(lonlat), min=0, max=100)
+df <- data.frame(ID=1:nrow(lonlat), precip=precipvalue)
+# combine spatvect with df
+ptv <- vect(lonlat, atts=df, crs=crdref)
+ptv
+```
+
+We can also generate simple line and polygon features in a similar method:
+
+```{r}
+## Lines and Polygons
+lon <- c(-116.8, -114.2, -112.9, -111.9, -114.2, -115.4, -117.7)
+lat <- c(41.3, 42.9, 42.4, 39.8, 37.6, 38.3, 37.6)
+lonlat <- cbind(id=1, part=1, lon, lat)
+lonlat
+# create lines/polgon objects
+pols <- vect(lonlat, type="polygons", crs=crdref)
+# plot
+plot(pols, las=1)
+plot(pols, border='black', col='deepskyblue3', lwd=3, add=TRUE)
+points(pts, col='firebrick', pch=20, cex=3)
+```
+
+Note that the polygon is a single-part polygon feature. A polygon or line feature may relate to a single feature in the real world. As such, you may want a vector model that contains a multi-part lines/polygon feature, which is very common. At this point, we probably don't want to continue to create these objects from scratch. You can, but you will mostly be working with existing spatial data. At most, you will find your self converting point data from a csv table of long/lat points. This is the workflow for incorporating basic field measurements into GIS.
+
+\
+
+#### 3. Existing data
+
+At this point in your GIS journey, you should be familiar with various different vector model data formats. I imagine you are mostly familiar with shapefiles (.shp), which is the ESRI standard vector format. Several other vector data models also exist! Most of these formats can be read by the `terra` package.
+
+terra has a few built-in datasets, let's look at the the Luxembourg dataset:
+
+```{r, class.source = 'fold-show'}
+f <- system.file("ex/lux.shp", package="terra")
+lux <- vect(f)
+lux
+```
+
+You can plot attributes from this spatial data by calling the variables fo interest:
+
+```{r}
+plot(lux, "NAME_2")
+plot(lux, "POP", col=blues9)
+```
+
+You can also extract or add attribute information:
+
+```r
+lux$NAME_2 # extract variable values
+lux[, "NAME_2"] # extract variable with geometry
+lux$lets <- sample(letters, nrow(lux)) # add new or edit variable
+lux$lets <- NULL # remove variable
+```
+
+In may ways, you can treat geospatial vector data models like a dataframe, both contain attributes that can be analyzed, plotted, joined, or subset. We will learn about specific vector analysis and overlay operations in the coming weeks.
 
 \
 
 #### Your Task
 
-Your task this week will explore a few basics related to spatial data
+Your task this week will explore a few basics related to spatial data. **Only use the** `terra` **package** for your task this week. There are other geospatial libraries that we will use eventually.
 
 \
 
 #### 1. Spatial Data
 
-Read in 
+Read in the "UTSNTL_META.csv" file. This table lists basic meta data for each snotel site throughout the state, specifically, the coordinate location, site name and elevation. 
+
+1. (2 points) Only using the `terra` package and `vect()` function, transform this dataframe into a spatial vector data object and create a basic plot showing the snotel stations colored based on different elevation zones. 
+
+2. (4 points) Next, you will need to revisit your code for task 6. Summarize the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" table to only show the max snow depth, and date of max snow depth for each station during the 2021-22 winter season. Then, join these two attributes (max snow depth and date of max depth) to your SpatialVector object. Create a basic plot showing max snow depth varying by point size for the various stations, then add a second point for each station.....
+
+
+3. 
+
 
 
 \
 
-#### 2. Combining Vector Data
+#### 2. Combining SpatialVector Data
 
+Read in the "...HUC.shp" file and convert this to a SpatialVector with `terra`. This multipart polygon feature shows the various HUC X watersheds throughout the state of Utah.
+
+4. Create a basic plot that shows the HUC 12 watersheds colored by their unique names. Add the station data points to the same plot. Provide a legend that shows all information displayed.
+
+5. (2 points) Use the over/intersect??? function to calculate the average elevation of each watershed based on 
+
+??? coult also calculate counts and normalize by area of each watershed...
+
+6. (2 points) Repeat this process and calculate the 
 
 \
 

@@ -358,5 +358,12 @@ plot(huc, "huc8")
 
 
 
+sntl <- read.csv("tmp/tmp_data/UTSNTL_META.csv")
+sv <- vect(sntl, geom = c("Longitude","Latitude"), crs="+proj=longlat +datum=WGS84") #4326
+plot(sv, "Elevation..ft.")
+
+
+
+
 #
 
