@@ -8,6 +8,7 @@
 library(sf)
 library(dplyr)
 library(ggplot2)
+library(tidyr)
 library(RColorBrewer)
 # library(mapview)
 
@@ -347,23 +348,87 @@ dfj %>%
 # 
 #
 
+# t07 q2
+# pivot 
+snowide <- "tmp/tmp_data/UTSNTL_ALL_2020_2022_Daily_Wide.csv"
+dfw <- read.csv(snowide)
+names(dfw) <- gsub("\\.","_", names(dfw))
+dfmax <- dfw %>% mutate(Date=as.Date(Date,format="%m/%d/%y")) %>%
+  pivot_longer(
+    cols = !Date,
+    names_to = c("station", "variable"),
+    names_pattern = "^(.*)__[0-9]+__(.*)__.*$",
+    values_to = "values"
+  ) %>% filter(variable == "Snow_Depth__in") %>% 
+  filter(variable>0) %>%
+  mutate(season = cut(Date, breaks =  c(as.Date(c("2020-10-01", "2021-10-01", "2022-10-01")), Inf), 
+                      labels = paste0("season_", c(1, 2, 3)))) %>%
+  group_by(station, season) %>%
+  summarise(snow_ave = mean(values, na.rm=T), snow_max = max(values, na.rm=T),
+            max_day = Date[which.max(values)]) %>%
+  filter(season=="season_2") %>% mutate(max_day = as.numeric(format(max_day, "%j")))
 
-
-huc_path <- "~/Downloads/Utah_HUC_Boundaries/HUC.shp"
-huc <- vect(huc_path)
-head(huc)
-huc$huc8 <- as.factor(huc$HUC)
-plot(huc, "HUC")
-plot(huc, "huc8")
-
-
-
+# t07 Q1 - create
 sntl <- read.csv("tmp/tmp_data/UTSNTL_META.csv")
 sv <- vect(sntl, geom = c("Longitude","Latitude"), crs="+proj=longlat +datum=WGS84") #4326
 plot(sv, "Elevation..ft.")
 
+# t07 Q2
+sntl2 <- sntl %>% 
+  rename(station = Station.Name) %>% rename(elev = Elevation..ft.) %>% 
+  mutate(station = gsub("\\s", "_", station)) %>% 
+  mutate(station = gsub("\\.|#|-", "_", station))
+snow_join = full_join(sntl2, dfmax, by="station")
+head(snow_join)
 
+# Final t07 Q2
+sj <- vect(snow_join, geom = c("Longitude","Latitude"), crs="+proj=longlat +datum=WGS84") #4326
+plot(sj, "elev")
+head(sj)
+plot(sj, "snow_max")
+plot(sj[sj$max_day<135,], "max_day")
+
+# 
+library(maps)
+map("state", "Utah")
+plot(sj, "snow_max", add=T)
+#
+brk=seq(0,60, by=10)
+brk.leg=paste0(brk+1,"-",c(brk[-1],"max"))
+plot(sj, "snow_max", type="interval", breaks=c(brk,100), 
+     plg=list(legend=brk.leg, title="Depth (in)"), col=blues9) 
 
 
 #
+
+## CROPPING HUC 8 DATA
+ut <- "/Users/jessicaforsdick/Downloads/Utah_State_Boundary-shp/Utah.shp"
+vut <- vect(ut)
+vut <- project(vut, hu2)
+
+# 
+hu <- crop(hu2, vut)
+hu <- mask(hu2, vut)
+hu <- intersect(hu2,vut)
+plot(hu)
+plot(vut,add=T)
+
+# sf
+h <- st_intersection(st_as_sf(hu2), st_as_sf(vut))
+h = h[h$OBJECTID.1==2, 1:3]
+h[,"HUC"] = as.factor(h$HUC)
+plot(h[,"HUC"])
+
+# write
+vh <- vect(h)
+plot(vh,"HUC")
+
+vh2 <- project(vh, "EPSG:26912")
+plot(vh2, "HUC")
+
+writeVector(vh, "/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp", overwrite=T)
+
+vv <- vect("/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp")
+
+
 

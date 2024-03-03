@@ -127,7 +127,6 @@ You can plot attributes from this spatial data by calling the variables fo inter
 
 ```{r}
 plot(lux, "NAME_2")
-plot(lux, "POP", col=blues9)
 ```
 
 You can also extract or add attribute information:
@@ -141,6 +140,34 @@ lux$lets <- NULL # remove variable
 
 In may ways, you can treat geospatial vector data models like a dataframe, both contain attributes that can be analyzed, plotted, joined, or subset. We will learn about specific vector analysis and overlay operations in the coming weeks.
 
+Here are a few final map visualization tips using the `terra::plot()` function:
+
+```{r, warnings=F, message=F}
+library(maps)
+par(mfrow=c(1,2)) # change plot frame
+# map 1
+map("world", c("Belgium", "Germany", "Luxembourg"), ylim=c(48,53), xlim=c(3,12), mar=c(1,1,3,1), col='grey30', bg="grey", lwd=3)
+title("Study Region Location")
+box()
+plot(ext(lux), border="firebrick", lwd=1.5, add=T)
+map.text("world", c("Belgium", "Germany$"), add=T)
+# map 2
+plot(lux, "POP", col=blues9, main = "Population by Canton", mar=c(2,1,2,5), plg=list(cex=0.5))
+map("world", c("Belgium", "Germany", "Luxembourg"), col='grey40', lty=3, lwd=2, add=T)
+map.text("world", "Luxembourg", add=T, col="firebrick", cex=1.2)
+text(x=6.35, y=50.1, "Germany", cex=0.8, col='grey30')
+```
+
+To interpret this:
+
+* the `par()` function allows you to set graphical parameters, the mfrow argument sets the number of c(row, column) plots
+* the `mar` argument within the plot functions access the `par(mar=...)` parameter
+* `box()` draws the rectangular plot box, `axis`, `text`, and `title` components can also be added
+* the `maps` library can be used to quickly visualize country and state borders alongside other spatial data (including text)
+* use `?plot` (from terra) to learn more about the different parameters; common arguments include line width (`lwd=`), line type (`lty=`), size (`cex=`), `plg` to access plot axis parameters, and `add=T` to continue adding data to the current plot
+
+Don't feel the need to spend too much time trying to make a beautiful map. You'll learn more as you go and discover other workflows and packages for plotting. 
+
 \
 
 #### Your Task
@@ -149,16 +176,15 @@ Your task this week will explore a few basics related to spatial data. **Only us
 
 \
 
-#### 1. Spatial Data
+#### 1. Basic Spatial Data
 
 Read in the "UTSNTL_META.csv" file. This table lists basic meta data for each snotel site throughout the state, specifically, the coordinate location, site name and elevation. 
 
-1. (2 points) Only using the `terra` package and `vect()` function, transform this dataframe into a spatial vector data object and create a basic plot showing the snotel stations colored based on different elevation zones. 
+1. Only using the `terra` package and `vect()` function, transform this dataframe into a spatial vector data object and create a basic plot showing the snotel stations colored based on different elevation zones. 
 
-2. (4 points) Next, you will need to revisit your code for task 6. Summarize the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" table to only show the max snow depth, and date of max snow depth for each station during the 2021-22 winter season. Then, join these two attributes (max snow depth and date of max depth) to your SpatialVector object. Create a basic plot showing max snow depth varying by point size for the various stations, then add a second point for each station.....
+2. (2 points) Next, you will need to revisit your code for task 6. Summarize the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" table to only show the max snow depth and station name for each station during the 2021-22 winter season. Create a join between your summarized max snow data and the table containing longitude, latitude, and elevation. Be sure that the join is completely successful! Make this into a SpatialVector object. Create a basic plot showing max snow depth varying by point size for the various stations, then add a second point for each station.....
 
-
-3. 
+3. (2 points) 
 
 
 
