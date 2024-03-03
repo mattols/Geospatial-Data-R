@@ -388,16 +388,21 @@ head(sj)
 plot(sj, "snow_max")
 plot(sj[sj$max_day<135,], "max_day")
 
-# 
+#  t07 / q2 snow max
 library(maps)
 map("state", "Utah")
-plot(sj, "snow_max", add=T)
-#
+plot(sj, "snow_max")
+# plot snow depth interval
 brk=seq(0,60, by=10)
 brk.leg=paste0(brk+1,"-",c(brk[-1],"max"))
-plot(sj, "snow_max", type="interval", breaks=c(brk,100), 
+plot(sj, "snow_max", type="continuous", breaks=c(brk,100), 
      plg=list(legend=brk.leg, title="Depth (in)"), col=blues9) 
-
+# by size
+# t07 Q3
+head(sj)
+sj$pmax <- 1+sj$snow_max/25
+plot(sj, "elev", cex=sj$pmax , type="interval", plg=list(pt.cex=1, pt.col="grey30"))
+legend()
 
 #
 

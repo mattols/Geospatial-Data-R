@@ -147,26 +147,27 @@ library(maps)
 par(mfrow=c(1,2)) # change plot frame
 # map 1
 map("world", c("Belgium", "Germany", "Luxembourg"), ylim=c(48,53), xlim=c(3,12), mar=c(1,1,3,1), col='grey30', bg="grey", lwd=3)
-title("Study Region Location")
-box()
+title("Study Region Location"); box()
 plot(ext(lux), border="firebrick", lwd=1.5, add=T)
 map.text("world", c("Belgium", "Germany$"), add=T)
 # map 2
-plot(lux, "POP", col=blues9, main = "Population by Canton", mar=c(2,1,2,5), plg=list(cex=0.5))
+plot(lux, "POP", col=blues9, main = "Cantons of Luxembourg", mar=c(2,1,2,2), type="interval", legend="topright", plg=list(title="Population", cex=0.5, bty="o"))
 map("world", c("Belgium", "Germany", "Luxembourg"), col='grey40', lty=3, lwd=2, add=T)
-map.text("world", "Luxembourg", add=T, col="firebrick", cex=1.2)
-text(x=6.35, y=50.1, "Germany", cex=0.8, col='grey30')
+map.text("world", "Luxembourg", add=T, col="grey30", cex=0.8)
+text(x=6.4, y=49.95, "Germany", cex=0.8, col='grey30')
 ```
 
 To interpret this:
 
 * the `par()` function allows you to set graphical parameters, the mfrow argument sets the number of c(row, column) plots
-* the `mar` argument within the plot functions access the `par(mar=...)` parameter
-* `box()` draws the rectangular plot box, `axis`, `text`, and `title` components can also be added
-* the `maps` library can be used to quickly visualize country and state borders alongside other spatial data (including text)
-* use `?plot` (from terra) to learn more about the different parameters; common arguments include line width (`lwd=`), line type (`lty=`), size (`cex=`), `plg` to access plot axis parameters, and `add=T` to continue adding data to the current plot
+* the `mar` argument within the plot functions accesses the `par(mar=...)` parameter, which sets the plot margins
+* `box()` draws the black rectangular plot box, `axis`, `text`, and `title` components can also be added, including text from spatial objects and from graphical parameters (see last two lines)
+* the `maps` library can be used to quickly visualize country and state borders alongside other spatial data (including text). Note that the map scale at which these are generated is insufficient for precision (see right plot above)
+* use `?plot` (from terra) to learn more about the different parameters; common arguments include line width (`lwd=`), line type (`lty=`), size (`cex=`), `plg` to access plot legend parameters, and `add=T` to continue adding data to the current plot
+* within map plots you can include a `type=` argument to specify whether to plot your values as "continuous", "classes", or "interval" - the default will be chosen based on your data type (i.e. numeric vs. factor)
+* note that legend arguments can be given within the plot function as well as in a new `legend()` function on the next line.
 
-Don't feel the need to spend too much time trying to make a beautiful map. You'll learn more as you go and discover other workflows and packages for plotting. 
+Don't feel the need to spend too much time trying to make a beautiful maps yet! You'll learn more as you go and discover other workflows and packages for plotting. 
 
 \
 
@@ -182,11 +183,22 @@ Read in the "UTSNTL_META.csv" file. This table lists basic meta data for each sn
 
 1. Only using the `terra` package and `vect()` function, transform this dataframe into a spatial vector data object and create a basic plot showing the snotel stations colored based on different elevation zones. 
 
-2. (2 points) Next, you will need to revisit your code for task 6. Summarize the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" table to only show the max snow depth and station name for each station during the 2021-22 winter season. Create a join between your summarized max snow data and the table containing longitude, latitude, and elevation. Be sure that the join is completely successful! Make this into a SpatialVector object. Create a basic plot showing max snow depth varying by point size for the various stations, then add a second point for each station.....
+2. (3 points) Next, you will need to revisit your code for task 6. Summarize the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" table to only show the max snow depth and station name for each station during the 2021-22 winter season. Create a join between your summarized max snow data and the table containing longitude, latitude, and elevation. Be sure that the join is completely successful! (i.e. check that there are no NA values in the joined fields) Make this into a SpatialVector object. Create a basic spatial plot (with terra `plot`) showing max snow depth as a continuous variable. Add the outline of the state of Utah using the maps package.
 
-3. (2 points) 
+**Tip:** *try on your own first!*
+```{r}
+# the maps package can use the argument
+map(database="state", ...)
+# rather than "world", to find u.s. state data
+?map # to learn more
+```
 
+3. (2 points) Create a plot that shows snotel stations with colors indicating the interval of elevation, and size of point varying by snow depth. Use only terra plot, and add legends for both color and size
 
+**Tip:** *try on your own first!*
+```{r}
+
+```
 
 \
 
