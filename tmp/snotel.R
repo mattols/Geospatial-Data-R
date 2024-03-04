@@ -350,6 +350,7 @@ dfj %>%
 
 # t07 q2
 # pivot 
+library(dplyr);library(ggplot2);library(tidyr)
 snowide <- "tmp/tmp_data/UTSNTL_ALL_2020_2022_Daily_Wide.csv"
 dfw <- read.csv(snowide)
 names(dfw) <- gsub("\\.","_", names(dfw))
@@ -387,6 +388,7 @@ plot(sj, "elev")
 head(sj)
 plot(sj, "snow_max")
 plot(sj[sj$max_day<135,], "max_day")
+# writeVector(sj, "/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/svdat/snotel_join/snotel_join.shp")
 
 #  t07 / q2 snow max
 library(maps)
@@ -395,45 +397,206 @@ plot(sj, "snow_max")
 # plot snow depth interval
 brk=seq(0,60, by=10)
 brk.leg=paste0(brk+1,"-",c(brk[-1],"max"))
-plot(sj, "snow_max", type="continuous", breaks=c(brk,100), 
+plot(sj, "snow_max", type="interval", breaks=c(brk,100), legend="topright",
      plg=list(legend=brk.leg, title="Depth (in)"), col=blues9) 
-# by size
-# t07 Q3
+plot(sj, "snow_max", type="continuous")
+# classification methods
+par(mfrow=c(1,3), oma=c(5,0,4,0))
+# equal interval
+plot(sj, "snow_max", type="interval", breaks=7, legend="topright", 
+     rev(colorspace::sequential_hcl(7)), plg=list(title="Equal interval", cex=1), mar=c(4,1.5,4,0.5))
+map("state", "Utah", add=T, col='grey35')
+# quantile
+plot(sj, "snow_max", type="interval", breaks=quantile(sj$snow_max), legend="topright",
+     plg=list(title="Quantiles", cex=1), col=rev(colorspace::sequential_hcl(4)) , mar=c(4,1.5,4,0.5))
+map("state", "Utah", add=T, col='grey35')
+# standard deviation
+st.dist = (sd(sj$snow_max) *-3:3) + mean(sj$snow_max)
+plot(sj, "snow_max", type="interval", breaks=st.dist, legend="topright",
+     plg=list(title="Standard dev.", cex=1), col=rev(colorspace::diverge_hcl(6)), mar=c(4,1.5,4,0.5))
+map("state", "Utah", add=T, col='grey35')
+par(mfrow=c(1,1), oma=c(0,0,0,0))
+# by size??
+# t07 - other packages better
 head(sj)
 sj$pmax <- 1+sj$snow_max/25
-plot(sj, "elev", cex=sj$pmax , type="interval", plg=list(pt.cex=1, pt.col="grey30"))
-legend()
+plot(sj, "snow_max", cex=sj$pmax , type="interval", plg=list(pt.cex=1), col=blues9[3:9], bg="grey")
+# or with elev
+plot(sj, "snow_max", cex=sj$pmax , type="interval", plg=list(pt.cex=1, pch=20), col=blues9[3:9], bg="grey")
 
+
+
+# cex only
+sj$pmax <- 1+sj$snow_max/25
+plot(sj,cex=sj$pmax )
+breaks <- c(10, 25, 45, 55, 70)
+legend.psize <- 1+breaks/25
+brk=seq(0,60, by=10)
+brk.leg=paste0(brk+1,"-",c(brk[-1],"max"))
+legend("topright", legend=breaks, pch=20, pt.cex=legend.psize, col='red', bg='gray')
+
+
+# 
+# # # # # # # #
+## simplify HUC 8 DATA
+# https://r.geocompx.org/geometry-operations
+library(sf)
+huc <- read_sf("~/Downloads/Utah_HUC_Boundaries/HUC.shp")
+# simplifyGeom() # for terra (topology is not preserved)
+length(unlist(st_geometry(huc)))
+huc2 <- st_simplify(huc, dTolerance = 5)
+length(unlist(st_geometry(huc2)))
+plot(huc2[,2])
+huc3 <- rmapshaper::ms_simplify(huc)
+length(unlist(st_geometry(huc3)))
+plot(huc3[,2])
+# utah clip
+ut <- "/Users/jessicaforsdick/Downloads/Utah_State_Boundary-shp/Utah.shp"
+vut <- vect(ut)
+vut <- project(vut, crs(vect(huc3)))
+# sf
+h <- st_intersection(huc3, st_as_sf(vut) )
+h = h[h$OBJECTID.1==2, 1:3]
+h[,"HUC"] = as.factor(h$HUC)
+plot(h[,"HUC"])
+# write
+huc_ut_proj <- project(vect(h), "EPSG:26912")
+plot(huc_ut_proj, "HUC")
+writeVector(huc_ut_proj, "/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp", overwrite=T)
+
+# disaggregate
+h=huc_ut_proj
+h$HUC4 <- substr(h$HUC, 1, 4)
+d <- aggregate(h, "HUC4")
+plot(h, col="light blue", lty=2, border="blue", lwd=2)
+lines(d, lwd=5)
+lines(d, col="white", lwd=1)
+text(d, "HUC4", cex=.8, halo=TRUE)
+
+# writeVector(vh, "/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp", overwrite=T)
 #
 
+# # # # # # # #
 ## CROPPING HUC 8 DATA
 ut <- "/Users/jessicaforsdick/Downloads/Utah_State_Boundary-shp/Utah.shp"
 vut <- vect(ut)
 vut <- project(vut, hu2)
-
 # 
 hu <- crop(hu2, vut)
 hu <- mask(hu2, vut)
 hu <- intersect(hu2,vut)
 plot(hu)
 plot(vut,add=T)
-
 # sf
 h <- st_intersection(st_as_sf(hu2), st_as_sf(vut))
 h = h[h$OBJECTID.1==2, 1:3]
 h[,"HUC"] = as.factor(h$HUC)
 plot(h[,"HUC"])
-
 # write
 vh <- vect(h)
 plot(vh,"HUC")
-
 vh2 <- project(vh, "EPSG:26912")
 plot(vh2, "HUC")
 
-writeVector(vh, "/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp", overwrite=T)
-
+# writeVector(vh, "/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp", overwrite=T)
+library(terra)
 vv <- vect("/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp")
+head(vv)
+# t07 Q4
+plot(vv, "NAME", legend=F)
+text(vv, "NAME", cex=0.5)
+# t07 q5
+vv2 = vv
+vv2$HUC4 <- substr(vv2$HUC, 1, 4)
+vv2$HUC6 <- substr(vv2$HUC, 1, 6)
+plot(vv2, "HUC6")
+d <- aggregate(vv2, "HUC4")
+plot(vv2, col="light blue", lty=2, border="red", lwd=2)
+lines(d, lwd=5)
+lines(d, col="white", lwd=1)
+text(p, "HUC", cex=.8, halo=TRUE)
+# both
+# spatial join watershed and snotel data
+library(terra);library(dplyr);library(ggplot2)
+ws <- vect("/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/data/water/UT_HUC8/UT_HUC8.shp")
+sj <- vect("/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/svdat/snotel_join/snotel_join.shp")
+head(sj)
+sj2 = project(sj, ws)
+# extract 
+# terra::extract(sj2, ws, fun=max)
+wse <- terra::extract(ws, sj2)
+head(wse)
+class(wse)
+dim(wse)
+sm1 <- cbind(wse, as.data.frame(sj2)) %>% group_by(HUC) %>% 
+  summarise(mean_elev = mean(elev), maxd = max(snow_max), meand = mean(snow_max), n = n())
+head(sm1)
+
+##############
+# long way! ##
+# snoe <- st_intersection(st_as_sf(sj2), st_as_sf(ws))
+snoe <- terra::intersect(sj2, ws)
+snoe
+#
+sno_match <- as.data.frame(snoe) %>% group_by(HUC) %>%
+  summarise(mean_elev = mean(elev), maxd = max(snow_max), meand = mean(snow_max), n = n())
+head(sno_match)
+head(ws)
+ws2 = ws
+# ws2$mean_elev <- NA
+# match(ws2$HUC, sno_match$HUC)
+ws2$mean_elev <- sno_match$mean_elev[match(ws2$HUC,sno_match$HUC)]
+ws2$maxd <- sno_match$maxd[match(ws2$HUC,sno_match$HUC)]
+ws2$meand <- sno_match$meand[match(ws2$HUC,sno_match$HUC)]
+ws2$n <- sno_match$n[match(ws2$HUC,sno_match$HUC)]
+# ws2$mean_elev[match(sno_match$HUC,ws2$HUC)] <- sno_match$mean_elev[match(ws2$HUC,sno_match$HUC)]
+# ws2$mean_elev[match(sno_match$HUC,ws2$HUC)] <- sno_match$mean_elev[match(sno_match$HUC,ws2$HUC)]
+# ws2$mean_elev[match(sno_match$HUC,ws2$HUC)] <- sno_match$mean_elev[match(sno_match$HUC, ws2$HUC)]
+#plots
+plot(ws2,"mean_elev")
+plot(sj2,add=T,pch=20,col='black',cex=0.8)
+#
+plot(ws2, "maxd", col=blues9, breaks=9)
+text(ws2, "n")
+
+st.dist2 = (sd(ws2$maxd, na.rm=T) *-3:3) + mean(ws2$maxd, na.rm=T)
+plot(ws2, "maxd", col=rev(colorspace::diverge_hcl(6)), breaks=st.dist2)
+text(ws2, "n")
+
+
+plot(ws2, "meand")
+
+plot(ws2, "mean_elev")
+text(ws2, "maxd")
+#
+
+as.data.frame(snoe) %>% filter(snow_max>0) %>% 
+  ggplot(aes(x=elev, y=snow_max, col=max_day)) + geom_point() +
+  facet_wrap(.~HUC)
+fit1 <- as.data.frame(snoe) %>% filter(snow_max>0) %>% lm(snow_max~elev + HUC, data=.)
+summary(fit1)
+library(dplyr);library(ggplot2)
 
 
 
+
+### significance
+# library(ggpmisc)
+# as.data.frame(snoe) %>% filter(snow_max>0) %>%
+#   ggplot(aes(x=elev, y=snow_max, col=max_day)) + 
+#   stat_poly_line() +
+#   stat_poly_eq() +
+#   geom_point() +
+#   facet_wrap(.~HUC)
+
+# https://stackoverflow.com/questions/7549694/add-regression-line-equation-and-r2-on-graph
+# lm_eqn <- function(df){
+#   m <- lm(y ~ x, df);
+#   eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
+#                    list(a = format(unname(coef(m)[1]), digits = 2),
+#                         b = format(unname(coef(m)[2]), digits = 2),
+#                         r2 = format(summary(m)$r.squared, digits = 3)))
+#   as.character(as.expression(eq));
+# }
+# 
+# p1 <- p + geom_text(x = 25, y = 300, label = lm_eqn(df), parse = TRUE)

@@ -131,7 +131,7 @@ plot(lux, "NAME_2")
 
 You can also extract or add attribute information:
 
-```r
+```{r, class.source = 'fold-show', eval=F}
 lux$NAME_2 # extract variable values
 lux[, "NAME_2"] # extract variable with geometry
 lux$lets <- sample(letters, nrow(lux)) # add new or edit variable
@@ -183,36 +183,75 @@ Read in the "UTSNTL_META.csv" file. This table lists basic meta data for each sn
 
 1. Only using the `terra` package and `vect()` function, transform this dataframe into a spatial vector data object and create a basic plot showing the snotel stations colored based on different elevation zones. 
 
-2. (3 points) Next, you will need to revisit your code for task 6. Summarize the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" table to only show the max snow depth and station name for each station during the 2021-22 winter season. Create a join between your summarized max snow data and the table containing longitude, latitude, and elevation. Be sure that the join is completely successful! (i.e. check that there are no NA values in the joined fields) Make this into a SpatialVector object. Create a basic spatial plot (with terra `plot`) showing max snow depth as a continuous variable. Add the outline of the state of Utah using the maps package.
+2. (2 points) Next, you will need to revisit your code for task 6. Summarize the "UTSNTL_ALL_2020_2022_Daily_Wide.csv" table to only show the max snow depth and station name for each station during the 2021-22 winter season. Create a join between your summarized max snow data and the table containing longitude, latitude, and elevation. Be sure that the join is completely successful! (i.e. check that there are no NA values in the joined fields) Make this into a SpatialVector object. Create a basic spatial plot (with terra `plot`) showing max snow depth as a *continuous* variable. Add the outline of the state of Utah using the maps package.
 
 **Tip:** *try on your own first!*
 ```{r}
 # the maps package can use the argument
-map(database="state", ...)
+# map(database="state", ...)
 # rather than "world", to find u.s. state data
-?map # to learn more
+# ?map to learn more
 ```
 
-3. (2 points) Create a plot that shows snotel stations with colors indicating the interval of elevation, and size of point varying by snow depth. Use only terra plot, and add legends for both color and size
+You've learned in your GIS classes that data classification can enhance, or mislead, map interpretation. If you need a reminder of different data classification methods for choropleth maps, read [this gisgeography article](https://gisgeography.com/choropleth-maps-data-classification/).
+You will be comparing a few data classification methods in the next question.
 
-**Tip:** *try on your own first!*
+*Note, a great resource to review color options is the [R color cheatsheet](https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf).*
+
+3. (3 points) Using the terra plot functions, create three plots side-by-side showing the max snow depth at snotel sites in Utah during the 2021-22 season. For methods, use equal interval with 7 classes, quantile, and standard deviation (review link above if needed). Make the classification method the title of the legend in each and use sequential color schemes (one color) for equal interval and quantile, and a diverging color scheme (two colors) for the standard deviation classification method (see link above for more). Note the standard deviation scheme should all include 1-3 standard deviations from the mean ($\mu \pm 3\sigma$). Add the outline of the state with the maps package for each map. Provide 2-3 sentences describing the differences, benefits, and meaning of the classification methods used.
+
+**Tips:** *try on your own first!*
 ```{r}
+# use the par() mafrow argument to generate the proper number of plots, may need to adjust the mar function as well.
+# all of these classifications will be type="interval"
 
+# there are several stats functions in base R for generating the breaks from quantile and standard deviation distributions
+# intervals are defined by the breaks= argument in the plat (which can list a number or the actual breaks in the data classification)
+# one option to generate a sequential color schemes is:
+# colorspace::sequential_hcl(5)
+# read the Rcolorcheatsheet link above for more
 ```
 
 \
 
 #### 2. Combining SpatialVector Data
 
-Read in the "...HUC.shp" file and convert this to a SpatialVector with `terra`. This multipart polygon feature shows the various HUC X watersheds throughout the state of Utah.
+Read in the "UT_HUC8.shp" file as a SpatialVector object with `terra`. This multipart polygon feature shows the various hydrologic units (watersheds) throughout the state of Utah.
 
-4. Create a basic plot that shows the HUC 12 watersheds colored by their unique names. Add the station data points to the same plot. Provide a legend that shows all information displayed.
+4. Create a basic map plot in terra that shows the individual watersheds colored by their unique names. Rather than adding a legend, use the `text()` function with the spatial data to add the names of each watershed to the map.
 
-5. (2 points) Use the over/intersect??? function to calculate the average elevation of each watershed based on 
+The hydrologic unit code (HUC) listed in this dataset represents a level of watershed in the USGS watershed boundary dataset. There are anywhere from 2 to 12 hydrologic units that exist, which relate to large-scale (2) and small (12) watersheds throughout the US. The HUC code listed in this dataset is HUC8, as it contains 8 digits. Visit the USGS site to learn more about the [watershed boundary dataset](https://www.usgs.gov/national-hydrography/watershed-boundary-dataset). While you cannot extrapolate any smaller than the HUC-8 level, the code contains information about larger watersheds. For example, the first two digits in the HUC code correspond to the HUC2 watershed. You will dissolve the HUC8 data into a HUC4 vector model.
 
-??? coult also calculate counts and normalize by area of each watershed...
+5. (2 points) Create a new variable for the HUC4 code, based on the HUC8 codes. Dissolve the spatial vector into HUC4 units. Then create a map plot showing all HUC8 watersheds (dashed line), with HUC4 watershed overlayed (solid line). Add text for each HUC4 unit. Add color and other arguments to enhance the map plot.
 
-6. (2 points) Repeat this process and calculate the 
+**Tips:** *try on your own first!*
+
+```{r}
+# the substr() function can be helpful for splitting apart strings
+# Use the aggregate() function in terra to dissolve vector data based on an attribute
+```
+
+Spatial data starts to become very powerful when we can join information together spatially. Consider, we have attribute information from our snotel stations, and we have watershed information. Let's add the two together
+
+6. (3 points) Use either the `intersect` or `extract` function in terra to obtain the HUC code for each snotel station. The result should be either a dataframe vector model of the same length as snotel sites. Investigate the affect of elevation on max snow by HUC8 code (you can filter any values that are 0). Recall, that you did this in T06, but now can assess this relationship by individual watersheds. Discuss what you find and how these results differ from the relationship of max snow depth ~ elevation.
+
+**Tips:** *try on your own first!*
+
+```{r}
+# you can gain a general sense of correlation with a scatterplot of your variables, in this case you would want to facet the data by HUC code
+# To statistically assess the relationship run the lm() function. 
+```
+
+7. (3 points) Summarize the table values you made in the previous question to calculate the max snow depth, mean elevation, and number of stations for each HUC8. Join this to your UT HUC vector layer and create a final map plot showing two maps side-by-side: 1) showing HUC8 colored by max snow depth with the number of stations labeled as text, 2) showing HUC8 colored by mean elevation with max snow depth added as text. Consider good choices of classification method, color, and other attributes to enhance these maps.
+
+**Tips:** *try on your own first!*
+
+```{r}
+# summarize with dplyr, where you will group by the HUC units and use the summarise function
+# n() is a nifty function to calculate the total number or count of variables
+# the easiest way to join the data might be by adding a new variable to UT HUC vector object using the $ operator, match() with HUC code, and indexing, however, there are many other ways
+# review the workflow for plotting and adding text and plot parameters above.
+```
 
 \
 
