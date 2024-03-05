@@ -762,17 +762,52 @@ classification methods used.</li>
 <p><br />
 </p>
 </div>
-<div id="combining-spatialvector-data" class="section level4">
-<h4>2. Combining SpatialVector Data</h4>
+<div id="manipulating-vector-data" class="section level4">
+<h4>2. Manipulating Vector Data</h4>
 <p>Read in the “UT_HUC8.shp” file as a SpatialVector object with
 <code>terra</code>. This multipart polygon feature shows the various
 hydrologic units (watersheds) throughout the state of Utah.</p>
 <ol start="4" style="list-style-type: decimal">
-<li>Create a basic map plot in terra that shows the individual
+<li><p>Create a basic map plot in terra that shows the individual
 watersheds colored by their unique names. Rather than adding a legend,
 use the <code>text()</code> function with the spatial data to add the
-names of each watershed to the map.</li>
+names of each watershed to the map.</p></li>
+<li><p>Create an extent object (rectangular box) using the
+<code>ext()</code> function in terra for Utah Valley using the
+following: Latitude range: 39.915063 to 40.471646; Longitude range:
+-111.952211 to -111.536395. Plot the geometry of the UT HUC layer and
+add the rectangular bounding box to the map in red, showing this as an
+area of interest. Add a legend in the top right of the map indicating
+what the area represents.</p></li>
 </ol>
+<p><strong>Tips:</strong> <em>try on your own first!</em></p>
+<pre class="r"><code># look at see how to input the values above into an ext() object
+# there are two ways to approach this:
+# 1. Note that ext() objects do not have a CRS. You can re-project (project() function) your data into a lat/long CRS to add the extent object to the map.
+# 2. Alternatively, and probably better practice, you can convert the extent object to a polygon with the as.polygons() function, add the CRS for the basic GPS long/lat datum, then project the polygon to the CRS of the HUC data.</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Use the same workflow you used in the previous question along with
+the <code>crop()</code> function to clip the UT HUC watersheds data to
+only show the part of the state above 39 degrees Latitude.</li>
+</ol>
+<p>Run the following code to use online vector data for Antelope
+Island:</p>
+<pre class="r fold-show"><code>island &lt;- vect(&quot;https://raw.githubusercontent.com/mattols/geospat_data/main/AntelopeIsland.geojson&quot;)
+island</code></pre>
+<p>A geojson file is similar to a shapefile, just another vector model
+format. We can read in this file as vector data from an online
+source.</p>
+<ol start="7" style="list-style-type: decimal">
+<li>Create a subset of the UT_HUC vector that only shows the Great Salt
+Lake watershed and plot the results. Then use the island vector above to
+subtract the island out of the GSL watershed, plot this in a color that
+might be used for water on a map. Add a text label to this plot
+indicating the location of Antelope Island.</li>
+</ol>
+<p><strong>Tips:</strong> <em>try on your own first!</em></p>
+<pre class="r"><code># Use indexing and boolean logic to subset the GSL HUC
+# you may need to re-project the island vector to match that of the HUC data
+# the erase() function can be used to subtract area from a polygon</code></pre>
 <p>The hydrologic unit code (HUC) listed in this dataset represents a
 level of watershed in the USGS watershed boundary dataset. There are
 anywhere from 2 to 12 hydrologic units that exist, which relate to
@@ -783,21 +818,28 @@ boundary dataset</a>. While you cannot extrapolate any smaller than the
 HUC-8 level, the code contains information about larger watersheds. For
 example, the first two digits in the HUC code correspond to the HUC2
 watershed. You will dissolve the HUC8 data into a HUC4 vector model.</p>
-<ol start="5" style="list-style-type: decimal">
-<li>(2 points) Create a new variable for the HUC4 code, based on the
-HUC8 codes. Dissolve the spatial vector into HUC4 units. Then create a
-map plot showing all HUC8 watersheds (dashed line), with HUC4 watershed
-overlayed (solid line). Add text for each HUC4 unit. Add color and other
-arguments to enhance the map plot.</li>
+<ol start="8" style="list-style-type: decimal">
+<li>(3 points) Create a new variables for the HUC4 and HUC2 codes, based
+on the HUC8 code. Dissolve the spatial vector into HUC4 units, then
+again in HUC2 units. Finally, create a map plot showing all HUC8
+watersheds (line with color fill), along with HUC4 and HUC2 watersheds
+overlayed (lines no color). Add text for each HUC4 unit. Use color,
+linewidth, linetype, and other arguments to distinguish between the
+different watershed units in the map plot.</li>
 </ol>
 <p><strong>Tips:</strong> <em>try on your own first!</em></p>
 <pre class="r"><code># the substr() function can be helpful for splitting apart strings
 # Use the aggregate() function in terra to dissolve vector data based on an attribute</code></pre>
+<p><br />
+</p>
+</div>
+<div id="spatial-joining" class="section level4">
+<h4>3. Spatial Joining</h4>
 <p>Spatial data starts to become very powerful when we can join
 information together spatially. Consider, we have attribute information
 from our snotel stations, and we have watershed information. Let’s add
 the two together</p>
-<ol start="6" style="list-style-type: decimal">
+<ol start="9" style="list-style-type: decimal">
 <li>(3 points) Use either the <code>intersect</code> or
 <code>extract</code> function in terra to obtain the HUC code for each
 snotel station. The result should be either a dataframe vector model of
@@ -810,8 +852,8 @@ differ from the relationship of max snow depth ~ elevation.</li>
 <p><strong>Tips:</strong> <em>try on your own first!</em></p>
 <pre class="r"><code># you can gain a general sense of correlation with a scatterplot of your variables, in this case you would want to facet the data by HUC code
 # To statistically assess the relationship run the lm() function. </code></pre>
-<ol start="7" style="list-style-type: decimal">
-<li>(3 points) Summarize the table values you made in the previous
+<ol start="10" style="list-style-type: decimal">
+<li>(4 points) Summarize the table values you made in the previous
 question to calculate the max snow depth, mean elevation, and number of
 stations for each HUC8. Join this to your UT HUC vector layer and create
 a final map plot showing two maps side-by-side: 1) showing HUC8 colored

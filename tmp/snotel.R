@@ -577,7 +577,46 @@ fit1 <- as.data.frame(snoe) %>% filter(snow_max>0) %>% lm(snow_max~elev + HUC, d
 summary(fit1)
 library(dplyr);library(ggplot2)
 
+# salt lake
+ws[ws$NAME=="Great Salt Lake"] %>% plot()
+# ant = vect("https://github.com/mattols/geospat_data/blob/main/AntelopeIsland.geojson")
+# ant = vect("~/Downloads/AntelopeIsland.geojson")
+a <- vect("https://raw.githubusercontent.com/mattols/geospat_data/main/AntelopeIsland.geojson")
+ant = project(ant, ws)
+e = erase(ws[ws$NAME=="Great Salt Lake"], ant)
+plot(e)
+plot(e, col='light blue')
 
+# hydro units
+h = ws
+h$HUC4 <- substr(h$HUC, 1, 4)
+h$HUC2 <- substr(h$HUC, 1, 2)
+d4 <- aggregate(h, "HUC4")
+d2 <- aggregate(h, "HUC2")
+plot(h, col="light blue", lty=2, border="blue", lwd=2)
+lines(d4, lwd=5)
+lines(d4, col="white", lwd=1)
+lines(d2, col="firebrick", lwd=1)
+text(d4, "HUC4", cex=.8, halo=TRUE)
+text(d2, "HUC2", cex=.9, halo=TRUE, hc="firebrick")
+
+# crop cover
+plot(project(h, "EPSG:4326"))
+ex <- ext(c(-114.5, -108, 36, 39))
+# crs(ex) <- "EPSG:4326" # doesnt work
+plot(cover(project(h, "EPSG:4326"), ex))
+
+
+utcnty <- ext(c(-111.952211, -111.536395, 39.915063, 40.471646))
+plot(utcnty,add=T)
+utp <- as.polygons(utcnty)
+plot(utp,add=T,col='red')
+
+plot(h)
+crs(utp) <- "EPSG:4326"
+lines(project(utp, crs(h)), col='red')
+
+# 40.4716984, 39.913418, ..., ...)
 
 
 ### significance
