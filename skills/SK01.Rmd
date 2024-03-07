@@ -7,29 +7,59 @@ output: html_document
 
 ### Skills Test 1
 
-Skills tests are periodically given throughout the semester to test your technical skills and mastery of the R programming language. While these assessments also test your ability to problem solve and incorporate concepts we have discussed, they are mainly to be used 
+A handful of skills tests are periodically given throughout the semester to test your technical skills and mastery of the R programming language. While these assessments mainly assess your proficiency in using the software, they also test your ability to analytically problem solve and incorporate concepts we have discussed.
 
-#### 1. Custom Functions in Base R
+**Tip:** If you get stuck, move on to the next question as you must complete this during class time.
 
-Although built-in R functions are incredibly convenient, it's also important to understand how to set up your own function. Understanding the inner workings of any program is invaluable and prepares you to create your own custom programs.
+*This is a* ***closed note, closed neighbor***, *open Rstudio doc skills test*
 
-This first section requires you to build a new function to calculate the sample variance ($s^2$) of a vector. The R function `var()` does this for you, however, I would like you to use what we have learned to build this function on your own.
+\
+
+#### 1. Basic Data Analysis
+
+Part one consists of basic data analysis workflows in R. You may use base R or tidyverse functions to answer the following questions.
+
+Read in the following dataframe:
+
+```{r, eval=FALSE}
+data <- read.csv("https://raw.githubusercontent.com/mattols/geospat_data/main/earth-jobs.csv")
+```
+
+Questions:
+
+1. List the age and gender of the highest and lowest paid employees.
+
+2. Order the dataset by salary in descending order.
+
+3. *(2 points)* List the employees with a salary greater than $80,000 whose hire date is before 2020-01-01.
+
+4. *(2 points)* Calculate the median salary difference between the environmental scientists and geologists in this dataset.
+
+5. *(3 points)* Create a new column that contains the difference in number of days between today's date and each employee's hire date. Use this column to create another column for the time difference in years.
+
+6. *(3 points)* Compare the salaries of employees by gender, area, education, and job type. You may assess this by creating a summary table or different plots. Provide a statement of which groups have greater salaries based on your assessment.
+
+7. *(3 points)* Assess whether any variables in the dataset are useful at predicting salary.
+
+\
+
+#### 2. Functions
+
+In part 2, you will build a custom function to calculate the sample variance ($s^2$) of a vector. The R function `var()` does this for you, however, I would like you to use what we have learned to build this function on your own.
 
 $$s^2 = \frac{\sum_{i=1}^{n} (x_i - \overline{x})^2}{n - 1}$$
 *where* $\sum$ *represents the sum of terms, i represents each element in a series,* $\overline{x}$ *represents the mean, and n represents the size of the data.*
 
 In general, the sample variance can be considered the total squared distance of each sample from the mean, divided by the total number of observations (minus 1 to account for it being a sample of the population).
 
-Rules: *...TBA*
+**Rules:** *You obviously cannot use the var() function but may use some of the other built-in stats functions in R, however, try to minimize the use of other functions if possible. Advanced students should avoid using any built-in functions beyond standard arithmetic like -, ^, /, etc.*
 
-Download and load this R vector.
-
-1. *(3 points)* Insert your custom function for sample variance.
+8. *(5 points)* Insert your custom function for sample variance here. Use the `sample()` function to create a random vector of 100 samples between 0-100, and use your function. 
 
 \
 
-#### 2. Plotting
+#### Submitting
 
+Upload your R Markdown output as an html file to Canvas
 
-
-#### 3. 
+\
