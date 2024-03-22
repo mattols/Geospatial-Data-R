@@ -348,6 +348,17 @@ dfj %>%
 # 
 #
 
+# Noah
+sntl %>% filter(grepl("#", Station.Name) )
+
+sntl %>% 
+  mutate(Station.Name = gsub("\\s", "_", Station.Name)) %>% 
+  mutate(Station.Name = gsub("#", "_", Station.Name)) %>% 
+  filter(grepl("Creek", Station.Name) )
+
+# mutate(Station.Name = gsub("\\.|#|-", "_", Station.Name)) %>% 
+
+
 # t07 q2
 # pivot 
 library(dplyr);library(ggplot2);library(tidyr)

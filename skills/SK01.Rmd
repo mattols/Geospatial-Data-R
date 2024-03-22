@@ -33,7 +33,7 @@ Questions:
 
 3. *(2 points)* List the employees with a salary greater than $80,000 whose hire date is before 2020-01-01.
 
-4. *(2 points)* Calculate the median salary difference between the environmental scientists and geologists in this dataset.
+4. *(2 points)* Calculate the difference in median salary between the environmental scientists and geologists in this dataset.
 
 5. *(3 points)* Create a new column that contains the difference in number of days between today's date and each employee's hire date. Use this column to create another column for the time difference in years.
 

@@ -9,8 +9,8 @@ page=read_html(url1)
 e_table0 = html_node(page, "table") %>% 
   html_table(fill=TRUE)
 #cleaning names
-e_table <- e_table0 %>% 
-  clean_names()
+# e_table <- e_table0 %>% 
+#   clean_names()
 
 # # # # # #
 # avoid superscript - https://stackoverflow.com/questions/34833584/extract-html-table-with-superscripts-using-r
@@ -29,7 +29,7 @@ e_table0 = fixed_html %>% read_html() %>%
 #
 #cleaning names
 e_table <- e_table0[[1]] %>% 
-  clean_names()
+  janitor::clean_names()
 e_table
 # check
 e_table %>% select(state_or_possession, elevation_feet, elevation_feet_2)
@@ -50,6 +50,7 @@ et2$elevation_feet_2 <- as.numeric(gsub(",", "", et2$elevation_feet_2))
 # difference
 et2$elevation_feet - et2$elevation_feet_2 
 
+et2
 
 ### BRING in Temp and Precip
 tmp = list.files("data/us-state-noaa", full.names = T)[3:6]
@@ -129,3 +130,73 @@ lm(dfa2$perc.chng2020~dfa2$elev_diff) %>% summary()
 # Statewide Mapping, published January 2024, retrieved on January 30, 2024 
 # from https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/mapping
 
+# # # # DATA FOR ASSIGNMENT
+
+# US temp
+us_temp <- read.csv("data/us-state-noaa/us-temp-dec-june.csv")
+head(us_temp)
+ustm <- us_temp %>%
+  mutate(
+    JuneAnom22 =june_2022 - june_means,
+    JuneAnom23 = june_2023 - june_means,
+    DecAnom22 = december_2022 - december_means,
+    DecAnom23 = december_2023 - december_means
+  )
+ustm %>%
+  arrange(desc(DecAnom22)) %>% 
+  select(!contains("_")) %>% 
+  head(5)
+ustm %>%
+  arrange(desc(DecAnom23)) %>% 
+  select(!contains("_")) %>% 
+  head(5)
+ustm %>% select(!contains("_")) %>% 
+  group_by(region) %>% 
+  summarize(june_anom22_state = name[which.max(JuneAnom22)],
+            june_anom22_val = max(JuneAnom22, na.rm=T),
+            june_anom23_state = name[which.max(JuneAnom23)],
+            june_anom23_val = max(JuneAnom23, na.rm=T))
+
+# ELEV
+state_elev <- read.csv("data/state-elev/messy_state_elev.csv")
+head(state_elev)
+
+# messy elev
+df_el = et2 %>% rename(Names = state_or_possession) %>% 
+  select(Names, elevation_feet, elevation_feet_2) %>% 
+  mutate(elev_range = elevation_feet - elevation_feet_2)
+
+
+pop <- read.csv("data/us-state-pop/us-pop.csv", skip=4)
+new_cols <- lapply(pop, gsub, pattern = ",", replacement = "")
+# pop[,2:6] = new_cols[[2:6]] %>% as.data.frame()
+pop[,2:6] = lapply(2:6, function(x) pop[,x] = as.numeric(new_cols[[x]])) %>% 
+  as.data.frame()
+colnames(pop) <- c("Names", "pop20", "pop10", "pop00", "pop90", "pop80")
+head(pop, 2)
+#
+dfx = full_join(df_el, pop, by="Names")
+head(dfx)
+dfx2 <- dfx %>%  
+  mutate(
+    ChangePercent20 = 100*(`pop20` - `pop10`)/`pop10`,
+    ChangePercent10 = 100*(`pop10` - `pop00`)/`pop00`,
+    ChangePercent00 = 100*(`pop00` - `pop90`)/`pop90`,
+    ChangePercent90 = 100*(`pop90` - `pop80`)/`pop80`
+  ) %>% 
+  arrange(desc(ChangePercent20))
+head(dfx2)
+dfx2 %>% select(!c(Names, elevation_feet, elevation_feet_2)) %>% 
+  lm(elev_range ~ ., . ) %>%  summary()
+
+#
+dflong = dfx2 %>% select(!c(elevation_feet, elevation_feet_2)) %>% 
+  select(!contains("pop")) %>% 
+  pivot_longer(cols=!c(Names, elev_range) )
+head(dflong)
+dflong %>% ggplot(aes(x = elev_range, y = value, colour = Names)) +
+  geom_point() + facet_wrap(.~name) + theme(legend.position="none")
+#
+plot(dfa$perc.chng2020~dfa$elev_diff)
+lm(dfa$perc.chng2020~dfa$elev_diff) %>% summary()
+#
