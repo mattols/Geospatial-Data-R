@@ -22,54 +22,111 @@ head(hyper)
 
 # # # # # # #
 # Functions
-spec_convolve <- function(df_hyp, df_rsr, lower_lim, upper_lim){
-  # make subset?
-  
-  sum(df_hyp*df_rsr)
-  
-}
 # reformat
-landsat_convolve <- function(df_hyper, df_rsr, df_oli){
+LS.spec.convolve <- function(df_hyper, df_rsr, df_oli){
   # 
   # landsat ls_sub is 1nm spectral resoultion
   # hyspec lookup table is 10nm (or other)
+  # converts to new dataframe
   #
-  
-  # for i in bands
-  bnd = 1 # Blue
-  df_oli = df_8
-  df_hyper = hyper
-  df_rsr = ls8
-  # VARS
-  
-  ## TEST
-  # subset hyperspectral
-  hy_sub = df_hyper %>% filter(
-    lambda >= df_oli[bnd,"Lower_edge_nm"] &
-      lambda <= df_oli[bnd,"Upper_edge_nm"]
-  ) 
-  # head(hy_sub, 1500) # by 10nm ... 455, 465, etc.
+  # ## TEST
+  # # for i in bands
+  # bnd = 1 # Blue
+  # df_oli = df_8
+  # df_hyper = hyper
+  # df_rsr = ls8
+  # ## VARS
   #
-  # filter for only exiting hyspec
-  hy_unique = unique(hy_sub$lambda)
-  # subset landsat data
-  ls_sub = df_rsr %>% filter(
-    Wavelength >= df_oli[bnd,"Lower_edge_nm"] &
-      Wavelength <= df_oli[bnd,"Upper_edge_nm"]
-  ) %>% filter(Wavelength %in% hy_unique)
-  head(ls_sub, 10) # by 1nm (filter)
-  #
-  # for hy_sub
-  # group by grain size 
-  # across lambda
-  hy_sub %>% group_by(grain_size) %>% 
-    summarise(L_y = )
-  
-  
+  # LOOP
+  for(bnd in 1:nrow(df_oli)){
+    # band name
+    nm = paste0(df_oli$Band[bnd],"_",df_oli$BN[bnd])
+    print(paste("Starting",nm))
+    #
+    # subset hyperspectral
+    hy_sub = df_hyper %>% filter(
+      lambda >= df_oli[bnd,"Lower_edge_nm"] &
+        lambda <= df_oli[bnd,"Upper_edge_nm"]
+    ) 
+    # head(hy_sub, 1500) # by 10nm ... 455, 465, etc.
+    #
+    # filter for only exiting hyspec
+    hy_unique = unique(hy_sub$lambda)
+    # subset landsat data
+    ls_sub = df_rsr %>% filter(
+      Wavelength >= df_oli[bnd,"Lower_edge_nm"] &
+        Wavelength <= df_oli[bnd,"Upper_edge_nm"]
+    ) %>% filter(Wavelength %in% hy_unique)
+    head(ls_sub, 10) # by 1nm (filter)
+    #
+    # perform convolution
+    dfj <- left_join(x=hy_sub, y=ls_sub,by=join_by("lambda"=="Wavelength")) %>% 
+      group_by(grain_size) %>% 
+      summarize(Ly = sum(reflectance*rsr)/sum(rsr))
+    colnames(dfj)[2] <- nm
+    # save
+    if(bnd==1){dff = dfj}else{
+      # does not check that gain sizes match
+      # left_join(dff, dfj, by="grain_size")
+      dff = cbind(dff, dfj[,2])
+      # assign(nm, dfj[,2])
+      # dff = cbind(dff, nm = get(nm))
+      print("...")
+    }
+  }
+  return(dff)
 }
+##################
+#
+# RUN & SAVE
+df_oli_grain_size = LS.spec.convolve(df_hyper = hyper, df_rsr = ls8, df_oli = df_8)
+# head(df_oli_grain_size)
+# write.csv(df_oli_grain_size, "data/spectral_convolution/modeled_gz_oli.csv", row.names = F)
+#
+df_oli2_grain_size = LS.spec.convolve(df_hyper = hyper, df_rsr = ls9, df_oli = df_9)
+# head(df_oli2_grain_size)
+# write.csv(df_oli2_grain_size, "data/spectral_convolution/modeled_gz_oli2.csv", row.names = F)
+#
+# PLOT - resampled
+# plot // test
+df_oli_grain_size %>% pivot_longer(cols = !grain_size) %>% 
+  filter(grain_size %in% seq(100,1500,100)) %>% 
+  mutate(grain_size=as.character(grain_size)) %>% 
+  mutate(name = as.numeric(gsub("^.*_","", name))) %>% 
+  ggplot(aes(x=name, y=value, group=grain_size)) + 
+  geom_line(aes(colour=grain_size), show.legend=F)
+# WORKS
+dfpx1 = df_oli_grain_size %>% pivot_longer(cols = !grain_size) %>% 
+  filter(grain_size %in% seq(100,1500,100)) %>% 
+  mutate(name = (gsub("^.*_","", name)))
+dfpx1$wavelength = (df_8$Center_wavelength_nm)[as.factor(dfpx1$name)]
+dfpx1 %>%  
+  mutate(grain_size=as.factor(grain_size)) %>%
+  ggplot(aes(x=wavelength, y=value, group=grain_size)) + 
+  geom_line(aes(colour=grain_size))
+
+#############
+# NDGSI
+# NIR (5) - SWIR1 (6) / NIR (5) + SWIR1 (6)
+ndgsi1 = df_oli_grain_size %>% group_by(grain_size) %>% 
+  summarize(ndgsi = (NIR_5 - SWIR1_6) / (NIR_5 + SWIR1_6))
+
+# write.csv(ndgsi1, "data/spectral_convolution/ndgsi1.csv", row.names = F)
+#
 
 
-#### !!!!!
+# CHANGE TABLE TO SHOW MIN/MAX VALUES
+# MIN | MAX | Val
+# 30  | 31  | 0.....
+
+
+
+
+#############
+
+
+
+#### !!!!!????
 # NEED more narrow modeled wavelength
 plot(rsr~Wavelength, ls8[ls8$Wavelength >= df_oli[bnd,"Lower_edge_nm"] &
                            ls8$Wavelength <= df_oli[bnd,"Upper_edge_nm"],],
@@ -113,7 +170,7 @@ dfl2 %>% filter(grain_size==100 | grain_size==500 | grain_size==1000) %>%
   geom_line(aes(group=1))
 # WORKS
 dfl2 %>% filter(grain_size %in% seq(100,1500,100)) %>% 
-  mutate(grain_size=as.character(grain_size)) %>% 
+  mutate(grain_size=as.factor(grain_size)) %>% 
   ggplot(aes(x=lambda, y=reflectance, group=grain_size)) + 
   geom_line(aes(colour=grain_size))
 ### does not  produce three distinct?
