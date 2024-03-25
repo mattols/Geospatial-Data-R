@@ -108,11 +108,13 @@ dfpx1 %>%
 #############
 # NDGSI
 # NIR (5) - SWIR1 (6) / NIR (5) + SWIR1 (6)
-ndgsi1 = df_oli_grain_size %>% group_by(grain_size) %>% 
+ndgsi_oli = df_oli_grain_size %>% group_by(grain_size) %>% 
   summarize(ndgsi = (NIR_5 - SWIR1_6) / (NIR_5 + SWIR1_6))
-
-# write.csv(ndgsi1, "data/spectral_convolution/ndgsi1.csv", row.names = F)
+# write.csv(ndgsi_oli, "data/spectral_convolution/ndgsi_oli.csv", row.names = F)
 #
+ndgsi_oli2 = df_oli2_grain_size %>% group_by(grain_size) %>% 
+  summarize(ndgsi = (NIR_5 - SWIR1_6) / (NIR_5 + SWIR1_6))
+# write.csv(ndgsi_oli2, "data/spectral_convolution/ndgsi_oli2.csv", row.names = F)
 
 
 # CHANGE TABLE TO SHOW MIN/MAX VALUES
