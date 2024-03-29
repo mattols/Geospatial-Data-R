@@ -400,11 +400,12 @@ head(sj)
 plot(sj, "snow_max")
 plot(sj[sj$max_day<135,], "max_day")
 # writeVector(sj, "/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/svdat/snotel_join/snotel_join.shp")
+sj <- vect("/Users/jessicaforsdick/Mattsuff/src/Geospatial-Data-R/svdat/snotel_join/snotel_join.shp")
 
 #  t07 / q2 snow max
 library(maps)
 map("state", "Utah")
-plot(sj, "snow_max")
+plot(sj, "snow_max", add=T)
 # plot snow depth interval
 brk=seq(0,60, by=10)
 brk.leg=paste0(brk+1,"-",c(brk[-1],"max"))
@@ -431,21 +432,26 @@ par(mfrow=c(1,1), oma=c(0,0,0,0))
 # t07 - other packages better
 head(sj)
 sj$pmax <- 1+sj$snow_max/25
-plot(sj, "snow_max", cex=sj$pmax , type="interval", plg=list(pt.cex=1), col=blues9[3:9], bg="grey")
+plot(sj, "snow_max", cex=sj$pmax , type="interval", 
+     plg=list(title="depth",pt.cex=1:5), col=blues9[3:9], bg="grey")
 # or with elev
 plot(sj, "snow_max", cex=sj$pmax , type="interval", plg=list(pt.cex=1, pch=20), col=blues9[3:9], bg="grey")
 
 
 
+
+
 # cex only
 sj$pmax <- 1+sj$snow_max/25
-plot(sj,cex=sj$pmax )
-breaks <- c(10, 25, 45, 55, 70)
+plot(sj,"snow_max",cex=sj$pmax, col=blues9[3:9], breaks=5)
+# breaks <- c(10, 25, 45, 55, 70)
+breaks = seq(min(sj$snow_max), max(sj$snow_max), length.out=5)
 legend.psize <- 1+breaks/25
+legend("topright", legend=breaks, pch=20, col=blues9[3:9],
+       pt.cex=legend.psize, bg='gray')
+
 brk=seq(0,60, by=10)
 brk.leg=paste0(brk+1,"-",c(brk[-1],"max"))
-legend("topright", legend=breaks, pch=20, pt.cex=legend.psize, col='red', bg='gray')
-
 
 # 
 # # # # # # # #
@@ -628,6 +634,33 @@ crs(utp) <- "EPSG:4326"
 lines(project(utp, crs(h)), col='red')
 
 # 40.4716984, 39.913418, ..., ...)
+
+# ISSUES WITH MAP
+library(terra)
+library(maps)
+sntl <- read.csv(".../UTSNTL_META.csv") # specify path
+snow_shp <- vect(sntl, geom = c("Longitude","Latitude"), crs="+proj=longlat +datum=WGS84")
+# this works!
+plot(snow_shp, "Elevation..ft.")
+map("state", "Utah", add=T)
+# this does not work!
+snow_utm = project(snow_shp, "EPSG:26912") #EPSG code for NAD84 UTM 12N projection
+plot(snow_utm, "Elevation..ft.")
+map("state", "Utah", add=T)
+# This does not work because the map() packages uses long/lat by default, 
+#   you can install another package to specify the projection but the maps package is not amazing
+#   I'm just using maps as an example for this assignment
+
+# one solution
+# we can convert the geometry of the maps object to a terra vect object
+# then reproject it to match the projection we are using
+UT_map = map("state", "Utah", plot = F) # save geometry
+UT_shp = vect(cbind(UT_map$x, UT_map$y), type = "lines",
+              crs= "+proj=longlat +datum=WGS84") # convert to vect
+UT_utm = project(UT_shp, "EPSG:26912")
+# now plot again
+plot(snow_utm, "Elevation..ft.")
+plot(UT_utm,add=T)
 
 
 ### significance

@@ -2,98 +2,196 @@
 title: "Task 8"
 author: "GEOG-490R"
 date: "Spring 2024"
+output: 
   html_document:
     code_folding: hide
 ---
 
-```{r echo=FALSE, message=FALSE}
-library(dplyr);library(ggplot2)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr);library(ggplot2);library(terra)
 ```
 
 ### Spatial Relationships
 
-Before the break you were introduced to basic spatial data formats. This week we will introduce raster data specifically and explore a few spatial relationships
-
-Intro 
-
-Ideas 
-
-Week 10 - Spatial Analysis I
-- Spatial queries & the extract function
-- Mapping - arguments
-- basic raster?
-- Spatial Analysis - Scale and distance
-- maybe autocor and interp
-  
-  + t08
-  + cs02?
-  + brainstorming project
-
-Week 11???? - maybe remove as not everyone has taken stats - incorporate autocorrelation and interpolation in previous week.
-Next week:
-- Spatial autocorrelation
-- Interpolation
-- Spatial distribution models of regression?
-
-Week 11 - Spatial Analysis II
-- Raster terrain analysis
-- Raster data specifics
-  + t09/cs02 - avalanche analysis? or world
-  + Project 
-
-Week 12 - Remote Sensing
-- Remote Sensing 1
-- Remote sensing basics
-  + sk02 - spatial data Tues
-  + t10
-
-Week 13-15
-- More remote sensing examples (students)
-  + Project work
-  + cs03
-  + sk03 (last week)
-  + Final Project - Geospatial data science application - Creating a tutorial that explores a uniqe aspect of GDS
-
-
+Over the last few weeks you have been introduced to the two main spatial data formats and have performed your first spatial analysis in R. This assignment will continue exploring spatial analysis and focus more on raster data formats
 
 \
 
-#### 1. Raster data basics
+#### 1. Raster Data Basics
 
-Geospatial
+Be sure to review chapters in [the book](https://rspatial.org/spatial/8-rastermanip.html#) that discuss raster data formats and manipulation.
 
-\
-
-#### 2. Queries, scale, and distance
-
-Geospatial
+In particular, review the Raster Algebra and High-level functions sections.
 
 \
 
-#### 3. More on mapping
+#### 2. Terrain Analysis
 
-Geospatial
+Terrain analysis is an important type of raster analysis. Elevation proves to be incredibly useful in the many different environmental and geospatial analyses.
+
+Terrain starts with understanding elevation. Digital elevation models (DEMs) are a form of digital raster data that represents elevation. This can be freely downloaded from multiple sites, including [USGS Earth Explorer](https://earthexplorer.usgs.gov/) site. Global datasets have been made available through remote sensing missions like the Shuttle Radar Topography Mission (SRTM). Elevation is typically displayed in a terrain color scale, though each pixel in the raster represents the ground elevation (typically in meters above sea level).
+
+The `terra` packages comes with a DEM of Luxembourg, and we can use this in conjunction with vector data: 
+
+```{r, fig.height=3, align="center"}
+filename <- system.file("ex/elev.tif", package="terra")
+r <- rast(filename) # read in raster file
+# plot(r, main="SpatRaster DEM of Luxembourg")
+f <- system.file("ex/lux.shp", package="terra")
+p <- vect(f) # read in vector file
+plot(r, main= "DEM of Luxembourg with Diekirch outlined",plg=list(title="Elevation", cex=0.7, bty="o")) # plot
+p_sub <- p[p$NAME_2=="Diekirch",] # only keep Diekirck
+plot(p_sub, border='firebrick', lty=2, lwd=2, add=T)
+text(p, "NAME_2", cex=0.7)
+```
+
+We can also extract or subset spatial datasets based on one another. Your book goes into more detail about some of the high-level functions. Two you will likely use frequently are `crop` and `mask`, which will subset your raster based on a region (polygon):
+
+```{r, fig.height=3, align="center"}
+r_crop <- crop(x = r, y = p_sub) # crop r to the extent of p_sub
+r_mask <- mask(x = r_crop, mask = p_sub, touches = FALSE) # mask values outside of polygon
+par(mfrow=c(1,2))
+h = hist(r_mask, breaks=12, plot=FALSE) # create histogram data
+hcols = c(terrain.colors(length(h$counts)))[as.factor(h$counts)] # determine colors
+plot(h, col=hcols, main="Elevational distribution", xlab="Elevation (m)")
+plot(r_mask, axes=FALSE, plg=list(title="Elevation", cex=0.7, bty="o"), mar=c(0,0,0,0)) # plot subset of r
+plot(p_sub, border='firebrick', lty=2, lwd=2, add=T)
+text(p_sub, "NAME_2", cex=1.2)
+```
+
+Furthermore, you can calculate statistics based on the entire image (global) and individual areas (zonal):
+
+```{r, fig.height=4}
+# global stats
+cat("The average elevation of Luxembourg is", global(r, na.rm=T)$mean, "meters above sea level")
+# zonal stats
+poly_rast <- rasterize(x = p, y = r, field="NAME_2") # rasterize polygon based on unique variables
+z <- zonal(r, poly_rast, fun="mean", na.rm=T) # raster to calculate zonal statistics
+p$MEAN_E <-  round(z[match(p$NAME_2,z$NAME_2),2], 2)
+# plot
+plot(r, plg=list(title="Elevation", cex=0.7, bty="o", pos=4), mar=c(0,0,0,0)) # plot
+legend("topright", "Mean elevation by canton, Luxembourg", bty="n") # add a description
+plot(p, border='grey20', lty=3, lwd=1, add=T) # plot cantons
+text(p, "MEAN_E", halo=TRUE, adj=0.7) # add mean elevation by canton
+```
+
+Elevation can be used to calculate other useful terrain parameters, such as slope, aspect, and a hillshade:
+
+```{r, fig.height=4}
+# calculate parameters
+alt <- disagg(r, 10, method="bilinear")
+slope <- terrain(alt, v="slope", unit="degrees")
+aspect <- terrain(alt, v="aspect", unit="degrees")
+hill <- shade(slope*pi/180, aspect*pi/180, angle = 40, direction = 270)  # hillshade in radians (pi/180)
+# plot all with hillshade underneath for visual aid
+par(mfrow=c(1,3))
+plot_mar = c(2,2,3,4)
+plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE)
+axis(side = 1, cex = 1.5); axis(side = 2, cex = 1.5)
+plot(slope, col=rev(colorspace::heat_hcl(10, alpha=0.6)), add=T, axes=FALSE, plg=list(title="Slope", cex=0.7, bty="o"))
+plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE); axis(side = 1, cex = 1.5)
+plot(aspect, col=c(colorspace::diverge_hcl(12, alpha=0.45),rev(colorspace::diverge_hcl(12, alpha=0.35))), add=T, axes=FALSE, plg=list(title="Aspect", cex=0.7, bty="o"))
+plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE); axis(side = 1, cex = 1.5)
+plot(alt, col=terrain.colors(25, alpha=0.35), add=TRUE, axes=FALSE, plg=list(title="Elevation", cex=0.7, bty="o"))
+```
 
 \
 
+*Read the ?plot function doc to interpret the map plot arguments.*
 
+**Slope** describes the steepness of a hillside, typically represented in degrees. For slope, 0º represents a flat surface and 90º would be a vertical cliff face.
+
+**Aspect** is a measurement of the cardinal direction in which the hill is facing and is shown as a cardinal direction (NE) or frequently calculated in degrees *azimuth*. Degrees azimuth includes 0-360º. North is both 0º and 360º, while South is 180º, and East being 90º. The latter is how we will use aspect in our terrain analysis.
+
+**Hillshade** is a visual aid that uses slope, aspect, and a hypothetical location of the sun to create an illumination map. Shadows and rendering gives depth to our vision and helps us more easily interpret terrain. I have plotted a hillshade underneath each layer and added the terrain parameter semi-transparent with `alpha =`. Note the hillshade function expects slope and aspect in radians rather than degrees, so the code above converts with `pi/180`. Finally, I also artificially coarsened the raster with the `disagg()` function.
+
+\
+
+#### 3. Avalanche Hazard
+
+In part of your lab, you will be analyzing avalanche forecast information with terrain data.
+
+Let's go over conditions that can lead to an avalanche. Avalanche hazard is basically a function of slope, aspect, and elevation:
+
+- Avalanches only occur on slopes between 30-45 degrees. This does not change over time, however, these slopes can be less hazardous once the snowpack stabilizes.
+- Snowpack stability changes over time depending on several meteorological factors, such as new snow accumulation, temperature, windpeed, etc. These variables cause greater avalanche hazard across varying aspects and elevations. 
+- Dangerous aspects and elevations vary seasonally and even from day to day, depending on meteorological conditions. This is why the avalanche forecast must be updated daily, because snow stability can change rapidly.
+
+Navigate to Utah Avalanche Center (UAC) webpage to read about the current avalanche conditions.
+
+for March 13, 2022. Read the UAC avalanche forecast for this todday and pay special attention to the rose diagram. This is the colorful, multilayered image showing the danger (e.g. low/considerable) at different elevations, slopes, and aspects. Navigate to the [UAC site](https://utahavalanchecenter.org/forecast/tutorial) to learn about reading the avalanche forecast and interpreting the rose diagram.
+
+You are going to use this information to create an avalanche hazard map with terrain parameters you will calculate.
+
+\
 
 #### Your Task
 
-Your task this week
+Your task this week is to use both csv, vector, and raster datasets to better understand avalanches in the state and spatially assess avalanche hazard in the Salt Lake region.
 
 \
 
-#### 1. Relationships
+#### 1. Avalanche Reports
 
-Read in...
+Read in the "avalanche_2000_2024" csv file. You are going to investigate the frequency and distributions of avalanches in Utah. This data was downloaded directly from the UAC site.
 
-1. ...
+1. *(4 points)* Create four separate bar plots or histograms showing: 1) All avalanches (count) by date for the 2020-2021 season (recall that a season starts and ends on Oct 1st), 2) total number of avalanches by year, 3) total number of avalanches by month, and 4) total number of avalanches in each region.
+
+**Tips:** *try on your own first!*
+```{r}
+# I only used the following functions:
+#  - mutate(), as.Date(), group_by(), format(), filter(), summarise()
+#  - ggplot(), geom_bar(), geom_hist(), theme()
+```
+
+2. Based on your analysis in the previous question, what can you say about the frequency and distribution of avalanches in Utah
+
+2.1 **(required for advanced students** - *optional for other students)* Analyze incidents where individuals were caught, carried, buried, or killed. Assume that any instance where an individual was buried or killed that they were also caught and carried. Similarly, assume that anyone killed was likely buried (this is not necessarily true as some fatalities are due to collision). What is the probability of being caught and buried (both fully and partially) in an avalanche in Utah? What is the probability of being buried and killed? Use this information to write a well-formed statistical statement about avalanche risk.
+
+\
+
+
+#### 2. Bringing in more data!
+
+*Filter* the avalanche data to only include the 2020-2021 season in the "Salt Lake" Region. Clean up the Vertical and Width values to be numeric. Then use the Coordinates attribute in to convert this layer into a `vect()` object.
+
+3. *(2 points)* Create two map plots showing: 1) Showing
+
+# extract slope and aspect of ski resorts
+
+# Map of aspect for hot spot month
+
+# maybe after!
+
+\
+
+
+
+#### 3. Avalanche Terrain
+
+Download and read in the DEM file attached in the Canvas assignment.  
+
+
+For elevation, look at the UAC link above to see the corresponding elevation zones that are forecasted. Note, you will need to convert between meters (DEM) and feet (UAC) forecast.
+
+The rose diagram is a combination of elevation, slope, and aspect. We can now reclassify our existing terrain layers based on the conditions of the day. 
+
+Use the Remap Tool (Analysis > Raster Functions > Remap) to change values and show where conditions are met:
+
+Change the DEM layer be reclassified as a value of 10, 20, or 30 based on the elevation ranges in the diagram. You will need to either convert your data in feet or change the values in the diagram to meters (i.e. convert the ft to m with an online calculator or convert the raster in m to ft using a conversion and the raster calculator). Elevation zones are specified in the rose diagram and you likely do not need to include anything under 5000 ft (note the DEM is in meters). Be sure to check the box on the remap tool to put unspecified values to NODATA.
+Change the slope layer so that slope values that are prone to avalanche become a value of 1, and all other values become 0.
+Change the aspect layer so that values in green or yellow (on diagram) are reclassified as 1, and values in orange are reclassified as 2.
+We now need to combine these layers together with a simple avalanche model. This is up to you! One simple avalanche model you could use is (elevation + aspect) * slope , which will provide us with the different zones that match the rose diagram above.
+
+
+4. Use the Data above 
+
+# extract slope and aspect of ski resorts
 
 
 
 
-
+6. What other questions could you address with this dataset?
 
 \
 

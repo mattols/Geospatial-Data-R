@@ -101,6 +101,44 @@
 
 
 
+# Ideas 
+# 
+# Week 10 - Spatial Analysis I
+# - Spatial queries & the extract function
+# - Mapping - arguments
+# - basic raster?
+#   - Spatial Analysis - Scale and distance
+# - maybe autocor and interp
+# 
+# + t08
+# + cs02?
+#   + brainstorming project
+# 
+# Week 11???? - maybe remove as not everyone has taken stats - incorporate autocorrelation and interpolation in previous week.
+# Next week:
+#   - Spatial autocorrelation
+# - Interpolation
+# - Spatial distribution models of regression?
+#   
+#   Week 11 - Spatial Analysis II
+# - Raster terrain analysis
+# - Raster data specifics
+# + t09/cs02 - avalanche analysis? or world
+# + Project 
+# 
+# Week 12 - Remote Sensing
+# - Remote Sensing 1
+# - Remote sensing basics
+# + sk02 - spatial data Tues
+# + t10
+# 
+# Week 13-15
+# - More remote sensing examples (students)
+# + Project work
+# + cs03
+# + sk03 (last week)
+# + Final Project - Geospatial data science application - Creating a tutorial that explores a uniqe aspect of GDS
+
 
 # Ideas from course:
 # https://geo511.wilsonlab.io/Syllabus.html

@@ -103,7 +103,7 @@ dfpx1$wavelength = (df_8$Center_wavelength_nm)[as.factor(dfpx1$name)]
 dfpx1 %>%  
   mutate(grain_size=as.factor(grain_size)) %>%
   ggplot(aes(x=wavelength, y=value, group=grain_size)) + 
-  geom_line(aes(colour=grain_size))
+  geom_line(aes(colour=grain_size)) +theme_classic()
 
 #############
 # NDGSI
@@ -175,6 +175,47 @@ dfl2 %>% filter(grain_size %in% seq(100,1500,100)) %>%
   mutate(grain_size=as.factor(grain_size)) %>% 
   ggplot(aes(x=lambda, y=reflectance, group=grain_size)) + 
   geom_line(aes(colour=grain_size))
+
+# WORKS
+dfl2 %>% filter(grain_size %in% seq(100,1500,100)) %>% 
+  mutate(grain_size=as.factor(grain_size)) %>% 
+  ggplot(aes(x=lambda, y=reflectance, group=grain_size)) + 
+  geom_line(aes(colour=grain_size)) +xlim(c(305,2400)) + theme_classic() 
+
+dfl2 %>% filter(grain_size %in% seq(100,1500,100)) %>% 
+  mutate(grain_size=as.factor(grain_size)) %>% 
+  ggplot(aes(x=lambda, y=reflectance, group=grain_size)) + 
+  geom_vline(xintercept=seq(305,4995,10),linetype="solid", col='grey',linewidth=0.5) +
+  geom_vline(xintercept=seq(305,4995,50),linetype="solid", col='black',linewidth=0.5) +
+  geom_line(aes(colour=grain_size)) +xlim(c(305,2200)) + theme_classic()
+
+dfl2 %>% filter(grain_size %in% seq(100,1500,100)) %>% 
+  mutate(grain_size=as.factor(grain_size)) %>% 
+  ggplot(aes(x=lambda, y=reflectance, group=grain_size)) + 
+  geom_vline(xintercept=c(unlist(df_8[1,4:5]),
+                          unlist(df_8[2,4:5]),
+                          unlist(df_8[3,4:5]),
+                          unlist(df_8[4,4:5]),
+                          unlist(df_8[5,4:5]),
+                          unlist(df_8[6,4:5])
+                          ),linetype="solid", col='black',linewidth=0.5) +
+  geom_vline(xintercept=c(seq(df_8[1,4],df_8[1,5],10),
+                          seq(df_8[2,4],df_8[2,5],10),
+                          seq(df_8[3,4],df_8[3,5],10),
+                          seq(df_8[4,4],df_8[4,5],10),
+                          seq(df_8[5,4],df_8[5,5],10),
+                          seq(df_8[6,4],df_8[6,5],10)
+  ),linetype="solid", 
+  col=alpha(c(rep("blue",7),
+              rep("green",6),
+              rep("red",4),
+              rep("orange",3),
+              rep("yellow",9),
+              rep("pink",19)),0.8), linewidth=0.5) +
+  annotate(geom="text",x=df_8$Center_wavelength_nm, y = 0.5, 
+           label = 2:7, col="grey20",size=3) +
+  geom_line(aes(colour=grain_size)) +xlim(c(305,2400)) + theme_classic()
+
 ### does not  produce three distinct?
 # write.csv(dfl2, "data/spectral_convolution/Lookup_long_nm.csv", row.names = F)
 # 305 - 4995 nm (10nm bandwidth)
