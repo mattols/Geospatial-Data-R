@@ -1,5 +1,5 @@
 ---
-title: "T08 Guide"
+title: "CS02 Guide"
 author: "GEOG-490R"
 date: "Spring 2024"
 output: 
@@ -14,7 +14,7 @@ library(dplyr);library(ggplot2);library(terra)
 
 ### Help Guide
 
-Use the following document to assist in completing Task 8. Specifically, this document provides a link to relevant chapters in the book on raster analysis, discusses important terrain analysis function, and describes conditions leading to various levels of avalanche hazard. Be sure to read the avalanche section and visit the UAC website to fully interpret avalanche forecasts. Feel free to reach out with other questions.
+Use the following document to assist in completing Case Study 2. Specifically, this document provides a link to relevant chapters in the book on raster analysis, discusses important terrain analysis function, and describes conditions leading to various levels of avalanche hazard. Be sure to read the avalanche section and visit the UAC website to fully interpret avalanche forecasts. Feel free to reach out with other questions.
 
 \
 
@@ -88,14 +88,16 @@ plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE)
 axis(side = 1, cex = 1.5); axis(side = 2, cex = 1.5)
 plot(slope, col=rev(colorspace::heat_hcl(10, alpha=0.6)), add=T, axes=FALSE, plg=list(title="Slope", cex=0.8, bty="o"))
 plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE); axis(side = 1, cex = 1.5)
-plot(aspect, col=c(colorspace::diverge_hcl(12, alpha=0.45),rev(colorspace::diverge_hcl(12, alpha=0.35))), add=T, axes=FALSE, plg=list(title="Aspect", cex=0.8, bty="o"))
+plot(aspect, col=rev(alpha(c("#3288BD",RColorBrewer::brewer.pal(7, "Spectral")), 0.7)), add=T, axes=FALSE, plg=list(title="Aspect", cex=0.6, bty="o"))
 plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE); axis(side = 1, cex = 1.5)
-plot(alt, col=terrain.colors(25, alpha=0.35), add=TRUE, axes=FALSE, plg=list(title="Elevation", cex=0.8, bty="o"))
+plot(alt, col=terrain.colors(25, alpha=0.5), add=TRUE, axes=FALSE, plg=list(title="Elevation", cex=0.8, bty="o"))
 ```
 
 \
 
-*Read the ?plot function doc to interpret the map plot arguments.*
+Terrain characteristics derived from the Luxembourge DEM mapped with a hillshade.
+
+|  *Read the ?plot function doc to interpret the map plot arguments. One useful function when plotting over a hillshade is alpha(), which makes a color semi-transparent*
 
 **Slope** describes the steepness of a hillside, typically represented in degrees. For slope, 0º represents a flat surface and 90º would be a vertical cliff face.
 
@@ -121,18 +123,17 @@ You are going to use forecast information to create an avalanche hazard map by c
 
 **Reclassification and Combining Data:**
 
-In the task, you will need to learn how to reclassify the values of raster and combine layers together, similar to a suitability analysis. There is more than one way to do so.
+In the assignment, you will need to learn how to reclassify the values of raster and combine layers together, similar to a suitability analysis. There is more than one way to do so.
 
-First, let's adjust the slope layer we created of Luxembourg to be a bit steeper, then we will find all slope angles greater than 20º. We can use raster algebra, specifically, boolean operations to determine where this condition is met. The result of a boolean operation on a raster is a new TRUE (1) or FALSE (0) raster showing pixels that met the condition:
+First, let's *artificially adjust* the slope layer we created of Luxembourg to be steeper, then we will find all slope angles greater than 20º. We can use raster algebra, specifically, boolean operations to determine where this condition is met. The result of a boolean operation on a raster is a new TRUE (1) or FALSE (0) raster showing pixels that met the condition:
 
 ```{r, fig.height=4.4}
 par(mfrow=c(1,2))
 plot_mar = c(2,2,3,4)
 plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE, main = "Steeper slopes")
-# axis(side = 1, cex = 1.5); axis(side = 2, cex = 1.5)
 new_slope = slope * 12
 plot(new_slope, col=rev(colorspace::heat_hcl(10, alpha=0.6)), add=T, axes=FALSE, plg=list(title="Slope", cex=0.8, bty="o"))
-plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE, main = "Slopes > 40º")
+plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE, main = "Slopes > 20º")
 slopes_20 = new_slope > 20
 plot(slopes_20, col=alpha(c(NA,"red"), 0.5), add=T, legend="topright", bty="n", axes=FALSE)
 ```
@@ -163,7 +164,7 @@ Be sure to read about other arguments in this function.
 
 \
 
-**Use the T08 doc to get started on this task!**
+**Use the CS02 doc to get started on this assignment!**
 
 \
 

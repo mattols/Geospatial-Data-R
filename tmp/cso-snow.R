@@ -36,7 +36,7 @@ cat("Object has",nlyr(bioclim19),"geographic layers")
 w <- vect("/Users/jessicaforsdick/Downloads/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp")
 plot(w,add=T)
 head(w)
-writeVector(w, "data/snow/ne_110m_admin_0countries.geojson", filetype = "GeoJSON")
+# writeVector(w, "data/snow/ne_110m_admin_0countries.geojson", filetype = "GeoJSON")
 
 
 wx <- vect("data/snow/ne_110m_admin_0countries.geojson")

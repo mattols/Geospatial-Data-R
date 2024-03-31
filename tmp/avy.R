@@ -98,6 +98,7 @@ av <- avy.csv %>% mutate(Date = as.Date(Date, "%Y-%m-%d")) %>%
   mutate(Width = as.numeric(gsub("[[:punct:]]","", Width) ) )  %>% 
   mutate(Vertical = as.numeric(gsub("[[:punct:]]","", Vertical) ) )  %>% 
   mutate(Depth = as.numeric(gsub("[[:punct:]]","", Depth) ) ) %>% 
+  mutate(Elevation = as.numeric(gsub("[[:punct:]]","", Elevation) ) ) %>% 
   # filter(!is.na(lon) & !is.na(lat)) %>%
   vect(., geom=c("lon", "lat"), crs="+proj=longlat +datum=WGS84")
 plot(av,"Vertical")
@@ -162,7 +163,7 @@ plot(d0)
 plot(av,"Vertical", add=T, legend="topright", col=blues9)
 
 # crop
-d = crop(d0, ext(-111.85,-111.50,40.50,40.75))
+d = crop(d0, ext(-111.85,-111.45,40.48,40.75))
 
 # 
 dp = project(d, "EPSG:32612")
@@ -203,14 +204,138 @@ fq = freq(ezones)*(30*30)/(1000*1000)
 fq[,3]
 area_km = values(ezones) %>% table() *(30*30)/(1000*1000)
 
-
-plot(slope, col=rev(colorspace::heat_hcl(10, alpha=0.6)), add=T, axes=FALSE, plg=list(title="Slope", cex=0.8, bty="o"))
+# ASPECT
+seq(0,360,45) # 8 classifications (must change firts and last) 9 total
+cl_ranges <- c(0, rep(seq(0,360-(45/2),45)+(45/2),each=2),360)
+asp_mat <- cbind(matrix(cl_ranges, ncol=2, byrow = TRUE),c(1:8,1))
+aspr = classify(aspect, asp_mat, othersNA=TRUE)
+aspr[dft<5500] = NA
+#
 plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE); axis(side = 1, cex = 1.5)
-plot(aspect, col=c(colorspace::diverge_hcl(12, alpha=0.45),rev(colorspace::diverge_hcl(12, alpha=0.35))), add=T, axes=FALSE, plg=list(title="Aspect", cex=0.8, bty="o"))
-plot(hill, col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE); axis(side = 1, cex = 1.5)
-plot(alt, col=terrain.colors(25, alpha=0.35), add=TRUE, axes=FALSE, plg=list(title="Elevation", cex=0.8, bty="o"))
+plot(aspr, col=rev(alpha(c("#3288BD",RColorBrewer::brewer.pal(7, "Spectral")), 0.8)), add=T)
 
+#
 # avalanche paths & resorts
+ski <- vect("data/ski_ut/SkiAreaBoundaries_-2905529762139020469/SkiAreaBoundaries.shp")
+apath <- vect("data/ski_ut/Utah_Avalanche_Paths/AvalanchePaths.shp")
+
+head(ski)
+ski
+plot(ski,"NAME")
+ski2 <- crop(ski, project(d, crs(ski))) 
+
+ski2
+# writeVector(ski2, "data/ski_ut/skiresorts_cottonwoods.geojson", filetype = "GeoJSON")
+s = project(ski2, d)
+plot(s,add=T)
+#
+
+# zonal stats
+s_rast <- rasterize(x = s, y = ss, field="NAME")
+zslope = zonal(ss, s_rast, fun="sum", na.rm=T)
+s$ssum <- round(zslope$slope * (30*30)/(1000*1000), 2)[match(s$NAME,zslope$NAME)]
+zarea = zonal(!is.na(s_rast), s_rast, fun="sum", na.rm=T)
+s$tot_area <- round(zarea[,2] * (30*30)/(1000*1000), 2)[match(s$NAME,zarea[,1])]
+s$slope_ratio = round((s$ssum/s$tot_area)*100, 2) 
+s$ssum_km <- paste(s$ssum,"km^2")
+
+# plot area of slope in km
+plot(crop(hill,s), col=grey(0:100/100), legend=FALSE, mar=plot_mar, main="Ski resort - Percent of slopes in avalanche terrain")
+plot(crop(ss,s), col=alpha(c(NA, "red"),0.5), add=T)
+plot(s, border='blue',lwd=1.5,add=T)
+text(s, "NAME", adj=c(1,2), cex=0.6, halo=TRUE,col='blue')
+text(s, "slope_ratio", halo=TRUE)
+#
+plot(crop(hill,s), col=grey(0:100/100), legend=FALSE, mar=plot_mar, main="Ski resort - km2 of slope hazard")
+plot(crop(ss,s), col=alpha(c(NA, "red"),0.5), add=T)
+plot(s, border='blue',lwd=1.5,add=T)
+text(s, "NAME", adj=c(1,-2), cex=0.6, halo=TRUE,col='blue')
+text(s, "ssum_km", halo=TRUE)
+
+
+### PART 3
+# median elevaion
+zelv = zonal(dft, s_rast, fun="mean", na.rm=T)
+s$med_e<- round(zelv$ASTGTM2_N40W112_dem , 2)[match(s$NAME,zelv$NAME)]
+plot(crop(hill,s), col=grey(0:100/100), legend=FALSE, mar=plot_mar, main="Ski Resort Elevations")
+plot(s,"med_e",add=T, col=alpha(blues9, 0.6),legend="topright",plg=list(title="Mean Elevation",bty="o"))
+text(s, "med_e", halo=TRUE)
+plot(crop(av,s),"Elevation", add=T,legend="topleft",plg=list(title="Obs Elevation",bty="o"),col=blues9)
+#
+
+
+# Avalanche paths
+plot(crop(hill,apath), col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE)
+plot(apath,add=T)
+#
+apth_rast <- rasterize(x = apath, y = ss, field="NAME")
+zslope_a = zonal(ss, apth_rast, fun="sum", na.rm=T)
+apath$ssum <- round(zslope_a$slope * (30*30)/(1000*1000), 2)[match(apath$NAME,zslope_a$NAME)]
+zarea = zonal(!is.na(apth_rast), apth_rast, fun="sum", na.rm=T)
+apath$tot_area <- round(zarea[,2] * (30*30)/(1000*1000), 2)[match(apath$NAME,zarea[,1])]
+apath$slope_ratio = round((apath$ssum/apath$tot_area)*100, 2) 
+#
+plot(crop(hill,apath), col=grey(0:100/100), legend=FALSE, mar=plot_mar, axes=FALSE)
+plot(apath, "slope_ratio", add=T)
+
+#
+zelv = zonal(dft, apth_rast, fun="mean", na.rm=T)
+apath$med_e<- round(zelv$ASTGTM2_N40W112_dem , 2)[match(apath$NAME,zelv$NAME)]
+plot(crop(hill,apath), col=grey(0:100/100), legend=FALSE, mar=plot_mar, main="Ski resort - km2 of slope hazard")
+plot(apath,"med_e",add=T, col=alpha(blues9, 0.6))
+plot(crop(av,apath),add=T)
+#
+
+# ASP zone
+#
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+zasp = zonal(aspr, apth_rast, fun="Mode")
+apath$asp <- zasp$aspect[match(apath$NAME,zasp$NAME)]
+plot(crop(hill,apath), col=grey(0:100/100), legend=FALSE, mar=plot_mar, main="Ski resort - km2 of slope hazard")
+plot(apath,"asp",add=T, col=alpha(blues9, 0.6))
+plot(crop(av, apath),add=T)
+#
+# assessing
+aspsub <- crop(av,aspr)
+aspex <- terra::extract(aspr,aspsub)
+boxplot(aspex$aspect~aspsub$Aspect)
+#
+# aspsub %>% recode(Aspect, ) %>% 
+dsub <- crop(av,dft)
+dex <- terra::extract(dft,dsub)
+boxplot(dex$ASTGTM2_N40W112_dem~dsub$Elevation)
+plot(dex$ASTGTM2_N40W112_dem~dsub$Elevation)
+abline(a=0,b=1)
+sqrt(mean((dex$ASTGTM2_N40W112_dem-dsub$Elevation)^2, na.rm=T))
+
+# 
+terra::extract(dft, dsub[1,])
+terra::extract(dft, buffer(dsub[1,], 50))
+
+
+
+### MODEL FUNCITON
+##### 
+avy.csv %>% mutate(Date = as.Date(Date, "%Y-%m-%d")) %>% 
+  filter(Region=="Salt Lake") %>%
+  filter(as.Date("2021-02-01", "%Y-%m-%d") < Date &
+           as.Date("2021-03-01", "%Y-%m-%d") > Date)  %>%
+  ggplot(aes(x=Date) ) + geom_bar()
+# 14th 16th?
+avy.csv %>% mutate(Date = as.Date(Date, "%Y-%m-%d")) %>% 
+  filter(Region=="Salt Lake") %>%
+  filter(as.Date("2021-02-01", "%Y-%m-%d") < Date &
+           as.Date("2021-03-01", "%Y-%m-%d") > Date)  %>%
+  select(Date) %>% table()
+
+
+
+
+
+
 
 
 

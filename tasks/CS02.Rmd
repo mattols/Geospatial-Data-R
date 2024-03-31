@@ -1,0 +1,164 @@
+---
+title: "Case Study 2"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr);library(ggplot2);library(terra)
+```
+
+### Avalanche Analysis
+
+Over the last few weeks you have learned to work with the two main spatial data formats (vector & raster) in R and have performed basic spatial analysis with vector objects. This assignment will continue exploring spatial analysis and add interesting aspects of  raster and terrain analysis.
+
+Your task this week is to use both csv, vector, and raster datasets to better understand avalanches in the state and spatially assess avalanche hazard in the Salt Lake region.
+
+\
+
+#### 1. Avalanche Reports
+
+Read in the "avalanche_2000_2024" csv file. You are going to investigate the frequency and distributions of avalanches in Utah. This data was downloaded directly from the UAC site.
+
+```{r, class.source = 'fold-show'}
+avy <- read.csv("https://raw.githubusercontent.com/mattols/geospat_data/main/avalanches_2012_2024.csv")
+```
+
+
+1. *(4 points)* Create four separate bar plots or histograms showing: 1) total number of avalanches by year, 2) total number of avalanches by month, and 2) total number of avalanches in each region, and 4) All avalanches (count) by date for the 2020-2021 season (recall that a season starts and ends on Oct 1st). Based on this analysis alone, write a short description (2-4 sentences) describing the frequency and distribution of avalanches in Utah.
+
+**Functions used:** *expand to reveal the functions I used in my solution*
+```{r}
+# I only used the following functions:
+#  - mutate(), as.Date(), group_by(), format(), filter(), summarise()
+#  - ggplot(), geom_bar(), geom_hist(), theme()
+
+# remember, there's more than one way to do it!
+```
+
+- **1-Advanced.** *(****required for advanced students*** - *optional for other students)* Analyze incidents where individuals were caught, carried, buried, or killed. Assume that any instance where an individual was buried or killed that they were also caught and carried. Similarly, assume that anyone killed was likely buried (this is not necessarily true as some fatalities are due to collision). What is the probability of being caught and buried (both fully and partially) in an avalanche in Utah? What is the probability of being buried and killed? Use this information to write a well-formed statistical statement about avalanche risk.
+
+\
+
+#### 2. Terrain Analysis
+
+Download this [DEM]("https://github.com/mattols/geospat_data/raw/main/ASTGTM2_N40W112_dem.tif") that covers part of the Wasatch Range, along with Salt Lake and Utah valley. This ASTER DEM is a remote sensing product with a resolution of ~30-meters spatial resolution and lists elevation in meters above sea level.
+
+Crop the extent to the following: `xmin = -111.85, xmax = -111.45, ymin = 40.48, ymax = 40.75` and create a hillshade map. This can be used in your visualizations. 
+
+You will use the elevation information to recreate zones of hazard that line up with the avalanche forecast.
+
+2. *Slope.* As stated in the guide, slope is the primary factor that determines where avalanches occur. Avalanches only occur on slope angles 30-45º. Create two plots, 1) showing the slope angle for the cropped DEM (with an applied color scheme - use the color cheatsheet), and 2) a map that clearly shows pixels that are within the slope hazard (i.e. a hillshade with hazardous slopes in red). List total number of hazardous slope pixels.
+
+3. *Elevation.* Elevation is a secondary, but important factor in determining avalanche hazard. Elevation hazard varies from day-to-day and across different zones of elevation. Revisit the [UAC forecast tutorial](https://utahavalanchecenter.org/forecast/tutorial) page and look at the rose diagram. There are three elevation zones in the UAC forecasts. Use the zones defined in the UAC rose diagram to create a map showing each zone in a new color. Choose green for low-elevations, yellow for mid-elevations, and orange for high-elevations. No need to include anything under 6,000 ft. 
+
+**Solution hints:** *expand to reveal tips if you're stuck*
+```{r}
+# If you're not sure where to start:
+#  - Use raster algebra to convert the DEM elevation from meters to feet
+#  - Use either boolean expression or the classify function to define elevation zones
+#  - for area estimation, you can either:
+#      1) extract the values() and find the number of pixels with each value
+#      2) use the terra::freq() function to count values
+#         
+
+# You can set all values below 6,000 ft to NA
+
+# remember, there's more than one way to do it!
+```
+
+4. *Aspect.* Similar to elevation, the hazard along aspect varies day-to-day and across elevation zones. Reclassify the DEM into cardinal zones of North (1), NE (2), East (3), SE (4), South (5), SW (6), West (7), and NW (8). Plot this using an array of distinct colors. List the number of pixels for each aspect above 6,000 ft.
+
+Now that you have all three key pieces of terrain information, you can combine information to assess avalanche hazard. Revisit your avalanche observation data to gather a bit more information and also to create a spatial object. Remember that you can save these raster files with the `writeRaster()` function in case you need to close your project. 
+
+*Filter* the avalanche data to only include the 2020-2021 season in the "Salt Lake" Region. Use this information to help with answering the next two questions. It might be a good idea to save this as a csv file on your computer using `write.csv()` in case you have to close your project.
+
+5. Create histrograms or bar charts for the Salt Lake 2020-2021 season that show: 1) the frequency of avalanches by aspect, and 2) the number of avalanches by month for this season. Alternatively, combine this information into one plot. What are the "hot" months and aspects for avalanches during this time period in this location?
+
+6. *(2 points)* Create two map plots by combining your raster layers above to highlight: 1) the aspect that experienced most avalanches during the month with the most avalanches for this area and season, and 2) The second most frequent aspect to experience avalanches during the highest month of avalanches. Alternatively, combine this information into one plot. You can include all elevation zones and slopes prone to avalanche hazard. *If you're not sure where to start, revisit the help guide.*
+
+\
+
+#### 3. Spatial Statistics
+
+Continue working with the subset of the avalanche data focusing on the 2020-21 season for the Salt Lake region. Clean and use the Coordinates attribute to convert this layer into a `vect()` object. While you're at it, clean and convert the Elevation value to a numerical value (hint below Q8 if needed).
+
+7. Create a map plot with your new vect avalanche object showing Aspect over the hillshade map of the area. Discuss the distribution of observations and how they align with your maps in the previous section.
+
+8. *(2 points)* Let's assess the accuracy of elevation values reported in the observations. Extract the DEM (in ft) elevation at each point. Then create a scatterplot showing the relationship between reported elevation and extracted elevation. Add a 1:1 line to show when both values matched and report the RMSE (root mean square error). The RMSE is a way to measure how far predictions are from observations. Where do you think the error comes from and which do you think is more correct?
+
+- **8-Advanced.** *(****required for advanced students*** - *optional for other students)* Create both a 30- and 50-meter buffer around each point, extract values, and assess RMSE again to see if your value is better or worse.
+
+**Solution hints:** *expand to reveal a little help*
+```{r}
+# some ideas:
+#  - Use the `terra::extract()` functions to get the elevation at each point
+#  - NOTE: there are extract functions in other libraries that may be loaded so specify terra::
+#  - The Elevation attribute in data can be cleaned with "[[:punct:]]" and gsub to remove all punctuation, don't forget to convert to numeric
+#  - 1:1 lines can be added in `abline()` in base R
+#  - RMSE is a commonly used method so you should find good information online. No need to install other libraries. Hopefully this helps you remember it. The RMSE is the ROOT (sqrt()), MEAN (mean()), SQUARED ERROR ((error)^2) - the error is basically the difference between elevation values in our case. So start with the squared error, then take the mean of that, and so forth.
+#  - the units of RMSE are in the units of our data and lower values are better.
+
+#  - error can come from many sources. There is no correct answer here, though in assessment we typically assume one source to be the "truth" and the other to be a prediciton.  
+```
+
+
+There is a lot of power in combining vector and raster data, particularly if we are interested in calculating spatial statistics. For example, What if we wanted to better understand avalanche hazard within specified boundaries or locations?
+
+Read in the following vector object showing the six main ski resorts near Salt Lake County:
+
+```{r, class.source = 'fold-show'}
+ski <- vect("https://raw.githubusercontent.com/mattols/geospat_data/main/skiresorts_cottonwoods.geojson")
+```
+
+9. *(2 points)* Use zonal statistics to calculate the mean elevation (ft) for each ski resort based on the DEM, add this as a new variable to your vect object. Crop the hillshade and create a map plot showing the hillshade, ski resorts colored by mean elevation, text stating the mean elevation value (round to 2 decimel places), and point avalanche observations near the resort displaying Elevation as type="interval". Which resort has the highest average elevation? Which elevations appear to have experienced the most avalanches based on the observations?
+
+- **9-Advanced.** *(****required for advanced students*** - *optional for other students)* Calculate the percent of pixels in each ski resort that have hazardous avalanche slopes, display this similar to the previous question in color and text. Based on this information alone, describe which resorts might require the most avalanche mitigation work before opening?
+
+\
+
+#### 4. Hazard Modeling
+
+One benefit of using R is the ability to create custom functions that will take unique inputs and provide unique outputs. For example, we can input the avalanche forecast conditions for a given day and produce a hazard map that can be used to warn resorts and the public about hazardous terrain.
+
+This will require some amount of basic modeling. In our case, we will create a simple avalanche hazard model that combines all three layers together based on the avalanche forecast to produce a hazard map.
+
+10. *(5 points)* Create a function that uses your DEM and reclassfied layers in combination with a forecast to create a unique hazard map for [Feb 6, 2021](https://utahavalanchecenter.org/forecast/salt-lake/2/6/2021) and [Feb 11, 2021](https://utahavalanchecenter.org/forecast/salt-lake/2/10/2021). This will require you to create a basic avalanche hazard model that uniquely combines all layers together in a way that you can assign the hazard to each aspect and elevation for any suitable slope. Be sure to follow the same hazard levels and color code that the UAC uses.
+
+**Solution hints:** *expand to reveal a little help*
+```{r}
+# some ideas:
+#  - revisit the guide again to think about combining layers
+#  - you will create a new function that combines slope, aspect, and elevation and provides a value that can be determined low, moderate, considerable, high, and extreme danger
+#  - Consider several arithmetic operators 
+#  - It may be useful if your different layer have different ranges (for example one layer could be in 10s rather than increments of 1 before combining layers)
+#  - test and assess to see if your results are valid.
+#  - a good way to input your data might be a 8 x 3 matrix or dataframe that provides all data in the rose diagram (one value for each aspect at each elevation).
+
+# One possible combination is (elevation + aspect) * slope - however, you will need to make sure that elevation and aspect are distinct ranges so that all unique values can be acheived
+
+# remember, there's more than one way to do it!
+```
+
+- **10-Advanced.** *(****required for advanced students*** - *optional for other students)* Look through the [UAC archives](https://utahavalanchecenter.org/archives/forecasts) and observe the rose diagrams for Feb 11-16th. You can also use the links for the dates above and adjust the date in the url. Run your function for these days to create an avalanche hazard map, then extract the avalanche hazard level (low, moderate, etc.) for each observation point on that same day. Indicate the frequency of avalanches per hazard level as observed in the dataset. This can be included as text in your map plots or as a separate bar plot. Crop the data to show avalanche observations over your 
+
+Just for fun, you should check out the forecast for [Feb 17, 2021](https://utahavalanchecenter.org/forecast/salt-lake/2/17/2021). How many avalanches were reported on this day based on your observation data?
+
+Well done! Hopefully you've learned how to wrangle and work with spatial data!
+
+\
+
+#### Submitting
+
+Upload your R Markdown output as an html file to Canvas
+
+\
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**
+
+\
+
+
