@@ -1,0 +1,50 @@
+---
+title: "Final Project"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r echo=FALSE, message=FALSE}
+library(dplyr);library(ggplot2)
+```
+
+### Final Project
+
+Welcome to the end
+
+\
+
+#### 1. Objectives
+
+Noah demonstrated 
+
+```{r, class.source = 'fold-show', eval=FALSE}
+
+```
+
+more more more...
+
+
+\
+
+#### 2. Objectives
+
+Noah
+
+Sort
+
+
+\
+
+#### Submitting
+
+Upload an html file written in R Markdown to Canvas
+
+\
+
+**This assignment is due in one week but may be turned for an additional week with a late penalty of -5%**
+
+\

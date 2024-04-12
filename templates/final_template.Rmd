@@ -1,0 +1,50 @@
+---
+title: "Final Project"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: html_document
+---
+
+
+### Final Project Template
+
+Your final project should be organized into a cohesive narrative. It does not need to be  long or exhaustive. Include important information, code and figures.
+
+\
+
+#### 1. Question and Data
+
+Define your question, cite all datasets, and describe your data using R functions. Provide a statement that clearly defines your objective or plan for the project.
+
+Any background information can go here.
+
+\
+
+#### 2. Analysis
+
+This section should show your data preparation (cleaning/modifying) and analysis. Justify any steps you took and show your code.
+
+```{r}
+print("Show your work!")
+```
+
+- a list might be useful
+
+You should include quantitative results in this or the next section.
+
+\
+
+#### 3. Results
+
+This section will include your final maps, figures, and conclusion.
+
+```{r}
+v = 1:10
+plot(v**4~v, main="Fourth power plot")
+```
+
+Your maps and figures don't need to be perfect, but put some time into creating each. Consider balance, color, and other aesthetics.
+
+Ask questions if you are not sure about the expectations.
+
+\

@@ -1,0 +1,143 @@
+---
+title: "Final Project"
+author: "GEOG-490R"
+date: "Spring 2024"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(terra)
+```
+
+
+### Investigating snow cover changes in the Karakoram
+
+The Karakoram is the second-highest mountain range on Earth and is part of the largest mountain convergence zone that also includes the Himalaya, Hindu Kush, and Pamir ranges. High mountain Asia is known as the third pole due to the large amount of snow and glacier ice in the area, with the Karakoram being the most highly concentrated zone for glaciers and snowpack. Subsequently there are several disputed country border in this area.
+
+```{r, fig.height=3, echo=FALSE}
+maps::map("world", c("Pakistan","India$", "China$", "Tajikistan$", "Afghanistan"), bg = "grey60", mar=c(0,0,0,0))
+bb = terra::as.polygons(ext(c(69.79, 83.21, 33.12, 37.50)))
+crs(bb) <- "EPSG:4326"
+plot(bb , add=T, border='firebrick', lty=3, lwd=2)
+maps::map.text("world", c("Pakistan","India$", "China$", "Tajikistan$", "Afghanistan"), add=T, col='white', cex=0.5)
+```
+
+In selecting this option, you will use several datasets provided below to answer a question about this region.
+
+
+\
+
+#### 1. The Question
+
+The general question that you will answer in this project relates to understanding how quickly snow cover retreats from spring through early summer in 2014. The datasets provided will allow you to analyze this across different elevation zones and for several glaciers that are in the region. There is likely to be some variability in snowmelt or snow cover retreat at different elevations and from glacier to glacier.
+
+*More specifically, your question is:* **How does the timing and amount of snow melt vary across elevation and over large glaciers in the Karakoram from April-June.**
+
+Because snow and ice in the Karakoram is one of the primary water sources for the Indus River, this project will shed light on the timing and amount of water that can be expected in the river due to snow melt and spring runoff.
+
+\
+
+#### 2. The Data
+
+Three datasets and an outline are provided for you to answer the question above.
+
+**First**, the outline of the Karakoram is to help constrain your analysis to the region of interest:
+
+```{r}
+kara_outline <- vect("https://raw.githubusercontent.com/mattols/geospat_data/main/karakoram_outline.geojson")
+```
+
+**Second**, download the [SRTM DEM](https://github.com/mattols/geospat_data/raw/main/SRTM_Karakoram_reproj.tif) of the area, which has already been mosaiced and masked to the region. The DEM can be used to create elevation zones in order to compare how snow cover retreats differently across varying elevations. I would suggest 3-4 zones that span the elevations of the region.
+
+**Third**, load in a subset of 100 digitized glacier outlines for the region with the following link:
+
+```{r, fig.height=3}
+glaciers_subset <- vect("https://raw.githubusercontent.com/mattols/geospat_data/main/kara_glaciers_subset100.geojson")
+head(glaciers_subset, 3) # show variables
+plot(glaciers_subset[98,], "Area", mar=1.5, legend = F, main= glaciers_subset[98,]$Name, col='deepskyblue') # plot single glacier (98th on the list)
+```
+
+These outlines were created through a combination of programming and manual delineation. Each glacier has morphological attributes, including the Area, average Slope, and Aspect of the glacier. It also includes the length (Lmax) and min/max/median elevation (Zmin/Zmax/Zmed). Feel free to explore how these attributes relate to one another (e.g. how length and area relate), but your main goal is observe how snow cover changes over the dates of imagery differently for at least 5 of the top 10 glaciers with the greatest area in the region. This will require you to extract snow cover values within these 5 glacier polygons and provide a metric for each that shows how snow cover retreats over the time period. 
+
+**Finally**, the most important dataset, is the zipped folder in the Canvas assignment that contains a remote sensing product showing per-pixel snow cover (%) for several dates in 2014. This per-pixel snow cover product, called MODSCAG, was created from MODIS imagery that was passed through an algorithm to determine the percentage of snow cover within each pixel. It is generally assumed that a pixel with 20% snow cover can be considered a snow covered pixel, though some studies have used a higher threshold (30%) to determine snow cover. A cloud and water masking algorithm also flag certain pixel. Read the key below to interpret the value of each pixel in this dataset.
+
+**MODSCAG Key:**
+
+- 0-100 Fraction of pixel covered in snow (e.g. 72 -> 72% snow cover)
+- 230 Pixel off grid
+- 235 Pixel not run
+- 250 Clouds
+- 253 Water Masked
+- 255 No Data
+
+Be sure to omit pixels that you do not intend to use (e.g. pixels with clouds).
+
+*Filenames:* The file name contains useful information about the image. Here is how to read it:
+
+- *example:* "MOD09GA.A2014001.h23v05.006.2015272045045.snow_fraction.tif"
+- *interpretation:* "ProductName.DateofImage.Location.Version.ProcessingInfo.Product.tif"
+- You will need to extract the DateofImage for each image, which is in Year and Julian Date `%j`
+- There are two tile Locations (i.e. two images side by side) that you will need to `mosaic()` together for each date. For each date, there will be a "h23v05" and a "h24v05" tile.
+
+I have provided you with the code below so you do not need to figure out how to extract the date and tile information on your own
+
+```{r}
+filenm = "MOD09GA.A2014098.h23v05.006.2015272045045.snow_fraction.tif"
+tile_name = gsub(".*(h.*).006.*$","\\1", filenm) # extract location from name
+date_extract = gsub(".*GA.A(.*).h.*$","\\1", filenm) # extract date
+date_convert = as.Date(date_extract, "%Y%j") # convert year and Julian day
+paste("Image date is", date_convert, "or julian day", format(date_convert,"%j"), "over tile", tile_name, "location") 
+```
+
+Set this up by programmatically reading in files from the same date and mosaic, crop,  etc. so values can be compared by elevation and over certain glaciers of interest.
+
+**Determining snow cover:**
+Snow cover can be observed in terms of per-pixel fraction, and you could directly calculate statistics from these values for different areas of interest. Alternatively, *and a more correct approach*, would be to use a threshold (e.g., any pixel with more than 20% snow cover is considered as being a snow-covered pixel). Snow cover extent is probably best understood in terms of area or as percent of the total area. 
+
+\
+
+#### 3. General Steps
+
+There are many different ways to answer the question above. Here are the general steps to keep you on track for this project.
+
+A few things to keep in mind: projection, resolution, and spatial reference matter when comparing different datasets. Managing and manipulating data has been a common theme in class.
+
+In general, you should:
+
+- read in the snow cover rasters and account for any joining of imagery and spatial reference or area changes
+- The snow cover data will need to be modified based on the key and explanation for determining snow cover above (e.g. snow_cover_values > 20)
+- Make any changes necessary to the DEM or glacier datasets
+- Show variations in snow melt over the time period by elevation zones
+- Show variations in snow melt over the time period across different large glaciers in the region
+
+*Some questions you might consider:*
+
+- Which elevations, zones, or glaciers are losing snow at a faster rate?
+- Is there a month or time period where melt happens more rapidly
+- What is the total amount of snow cover lost over the full time period?
+- What is the amount of snow lost between each date?
+- How does snow cover relate to different glacier attributes (e.g. Area, Lmax)?
+
+\
+
+#### 4. Results
+
+You should have a combination of 3-4 figures and map plots that demonstrate how snow cover changes across elevation and over at least 5 of the top 10 largest glaciers.
+
+The figures do not need to be perfect, but should use good aesthetics. 
+
+Provide something quantitative (values), and consider using statistical functions (e.g. `lm()`) if it makes sense.
+
+Follow the template in the Canvas assignment, and reach out with any questions.
+
+**This option is to be completed on YOUR OWN**, you may only discuss this project with me.
+
+*Good luck!*
+
+
+
+\
+
+
