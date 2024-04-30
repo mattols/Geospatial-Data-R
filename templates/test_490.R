@@ -10,7 +10,7 @@ plot(dem, type='interval', breaks=4)
 
 
 kshp = vect("data/shapefiles/karakoram.shp")
-writeVector(k, "data/shapefiles/karakoram_outline.geojson", filetype="GeoJSON")
+# writeVector(k, "data/shapefiles/karakoram_outline.geojson", filetype="GeoJSON")
 plot(kshp,add=T,border='blue')
 
 # mosaic files
@@ -18,7 +18,11 @@ plot(kshp,add=T,border='blue')
 
 # glacier data?
 load("data/glaciers.RData")
-writeVector(g, "data/shapefiles/kara.geojson", filetype="GeoJSON")
+# writeVector(g, "data/shapefiles/kara.geojson", filetype="GeoJSON")
+
+
+
+
 g = vect("data/shapefiles/kara.geojson")
 head(g)
 dim(g)
